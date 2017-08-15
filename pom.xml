@@ -15,34 +15,22 @@
 		<module>commons/log</module>
 		<module>commons/server</module>
 		<module>commons/utils</module>
-		<module>commons/validation</module>
 
-		<module>remote/config</module>
 		<module>remote/order</module>
-		<module>remote/pay</module>
 		<module>remote/store</module>
 		<module>remote/user</module>
-		<module>remote/activity</module>
 
-		<module>services/config</module>
-		<module>services/activity</module>
 		<module>services/order</module>
-		<module>services/pay</module>
 		<module>services/store</module>
 		<module>services/user</module>
 		<module>services/xcloud</module>
 		<module>services/xcommon</module>
 		<module>services/xcore</module>
 
-		<module>tasks/consumer</module>
-		<module>tasks/timer</module>
-
 		<module>web/api</module>
         <module>web/api-spring</module>
 		<module>web/backend-admin</module>
         <module>web/web-common</module>
-		<module>web/web-mobile</module>
-		<module>web/web-user</module>
 	</modules>
 
 	<properties>
