@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	  http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	  http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+	  http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+	  http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean id="beanFactory" class="com.mazing.commons.server.context.MainframeBeanFactory" >
+		<property name="configPath" value="${CONFIG_PATH:/data/app/mazing/config/${PROJENV}/}" />
+	</bean>
+	
+
+	<bean id="desPropertiesEncoder" class="com.mazing.commons.utils.cfg.DesPropertiesEncoder" />
+
+	<!-- 配置文件装载器 -->
+	<bean id="propertyConfigurer" class="com.mazing.commons.utils.cfg.EncryptionPropertyPlaceholderConfigurer">
+		<property name="encoder" ref="desPropertiesEncoder" />
+		<property name="ignoreResourceNotFound" value="true" />
+		<property name="ignoreUnresolvablePlaceholders" value="true" />
+		<property name="locations">
+			<list>
+				<!-- modul.properties中用于加载各个环境在打包时 传进来的模块名， 如：config,pay,user... 用于区分装载数据源 -->
+				<value>classpath*:modul.properties</value>
+				
+				<!-- 测试、生成环境 总配置文件存放路径 -->
+				<value>file:/data/app/mazing/config/${PROJENV}/app.properties</value>
+				
+				<!-- 本地 -->
+				<value>file:${CONFIG_PATH}*.properties</value>
+				
+				<!--<value>file:#{beanFactory.configPath}*.properties</value>-->
+			</list>
+		</property>
+	 </bean>
+
+
+	<context:annotation-config />
+	<aop:aspectj-autoproxy />
+
+	<import resource="classpath*:mazingContext-datasource.xml" />
+	<!-- 
+	<import resource="classpath*:mazingContext-server.xml" />
+	<import resource="classpath*:mazingContext-xmemcached.xml" />
+	<import resource="classpath*:mazingContext-validation.xml" />
+	 -->
+	<import resource="classpath*:mazingContext-cache-ext.xml" />
+
+	<!--<context:load-time-weaver aspectj-weaving="on"/>-->
+
+	<context:component-scan base-package="com.mazing" />
+
+</beans>

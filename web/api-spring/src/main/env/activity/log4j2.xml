@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- status=debug 可以查看log4j的装配过程 -->
+<configuration status="warn">
+	<properties>
+		<!-- 指定日志文件的目录（其中一个目录，比如：/data/log/XXX/  ；XXX有可能是resin，也可能是tomcat） -->
+		<!-- 这里默认是resin目录，如果是ts启动（tomcat）在脚本中指定了-DlogDir=tomcat，则会切换到tomcat目录 -->
+		<property name="logDir">resin</property>
+	</properties>
+
+	<appenders>
+		<!-- 定义控制台输出 -->
+		<Console name="Console" target="SYSTEM_OUT" follow="true">
+			<PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %level [%thread][%file:%line] - %msg%n" />
+		</Console>
+
+		<!-- 日志 -->
+		<RollingFile name="FILE" fileName="/data/log/${sys:logDir}/activityapi/activity-api.log" filePattern="/data/log/${sys:logDir}/activityapi/activity-api.log.%d{yyyy-MM-dd}.gz">
+			<PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %X{traceId} [%thread] %level [%class] - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+			</Policies>
+		</RollingFile>
+
+		<!-- 用户登录信息日志 -->
+		<RollingFile name="TokenInfo" fileName="/data/log/${sys:logDir}/activityapi/token-info.log" filePattern="/data/log/${sys:logDir}/activityapi/token-info.log.%d{yyyy-MM-dd}.gz">
+			<PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %X{traceId} [%thread] %level [%class] - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+			</Policies>
+		</RollingFile>
+
+		<!-- MQ日志 -->
+		<RollingFile name="MQLog" fileName="/data/log/${sys:logDir}/activityapi/rocketmq.log" filePattern="/data/log/${sys:logDir}/activityapi/rocketmq.log.%d{yyyy-MM-dd}.gz">
+			<PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %X{traceId} [%thread] %level [%class] - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+			</Policies>
+		</RollingFile>
+	</appenders>
+
+	<loggers>
+		<!-- 3rdparty Loggers -->
+		<logger name="org.glassfish.jersey.servlet.WebComponent" level="error" />
+		<logger name="org.springframework.context" level="info" />
+		<logger name="org.springframework.jdbc" level="info" />
+		<logger name="org.springframework.web" level="info" />
+		<logger name="com.mchange.v2" level="warn" />
+
+		<logger name="LoginTokenInfo" level="INFO" additivity="false">
+			<AppenderRef ref="TokenInfo" />
+		</logger>
+		<logger name="RocketmqClient" level="INFO" additivity="false">
+			<AppenderRef ref="MQLog" />
+		</logger>
+
+		<!-- Root Logger -->
+		<root level="info">
+			<appender-ref ref="FILE" />
+		</root>
+	</loggers>
+</configuration>

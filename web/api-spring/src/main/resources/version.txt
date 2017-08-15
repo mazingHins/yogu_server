@@ -1,0 +1,40 @@
+
+##Maven--Version
+project.version					= ${project.version}
+
+##Git--Version
+git.commit.id.abbrev			= ${git.commit.id.abbrev}
+git.commit.user.email			= ${git.commit.user.email}
+git.commit.message.full			= ${git.commit.message.full}
+git.commit.id					= ${git.commit.id}
+git.commit.id.describe-short	= ${git.commit.id.describe-short}
+git.commit.message.short		= ${git.commit.message.short}
+git.commit.user.name			= ${git.commit.user.name}
+git.build.user.name				= ${git.build.user.name}
+git.commit.id.describe			= ${git.commit.id.describe}
+git.build.user.email			= ${git.build.user.email}
+git.branch						= ${git.branch}
+git.commit.time					= ${git.commit.time}
+git.build.time					= ${git.build.time}
+
+##Other Maven-Version
+junit.version					= ${junit.version}
+jaxrs.version					= ${jaxrs.version}
+servlet.version					= ${servlet.version}
+javax.json.version				= ${javax.json.version}
+javax.anno.api.version			= ${javax.anno.api.version}
+validation.api.version			= ${validation.api.version}
+slf4j.version					= ${slf4j.version}
+jersey.version					= ${jersey.version}
+aspectj.version					= ${aspectj.version}
+javassist.version				= ${javassist.version}
+rabbitmq.version				= ${rabbitmq.version}
+ehcache.version					= ${ehcache.version}
+httpcore.version				= ${httpcore.version}
+httpclient.version				= ${httpclient.version}
+xmemcached.version				= ${xmemcached.version}
+spring.version					= ${spring.version}
+jackson.jsr353.version			= ${jackson.jsr353.version}
+mysql.version					= ${mysql.version}
+mybatis.version					= ${mybatis.version}
+mybatis.spring.versio			= ${mybatis.spring.versio}

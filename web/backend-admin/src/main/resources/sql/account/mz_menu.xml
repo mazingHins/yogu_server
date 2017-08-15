@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.backend.admin.dao.MenuDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.backend.admin.entry.MenuPO" useGeneratedKeys="false" >
+		insert into mz_admin.mz_menu (menu_id,parent_menu_id,app_id,menu_name,url,sequence,operator,last_modify,hide,create_time) values (#{menuId},#{parentMenuId},#{appId},#{menuName},#{url},#{sequence},#{operator},#{lastModify},#{hide},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据 -->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_admin.mz_menu WHERE menu_id=#{menuId}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.backend.admin.entry.MenuPO">
+		update mz_admin.mz_menu set parent_menu_id=#{parentMenuId},app_id=#{appId},menu_name=#{menuName},url=#{url},sequence=#{sequence},operator=#{operator},last_modify=#{lastModify},hide=#{hide} where menu_id=#{menuId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.backend.admin.entry.MenuPO">
+		SELECT * FROM mz_admin.mz_menu WHERE menu_id=#{menuId}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.backend.admin.entry.MenuPO">
+		SELECT * FROM mz_admin.mz_menu
+	</select>
+
+	<!-- lastModify不用now() -->
+	<update id="updateMenu" parameterType="com.mazing.services.backend.admin.entry.MenuPO">
+		update mz_admin.mz_menu set url=#{url},parent_menu_id=#{parentMenuId},sequence=#{sequence},operator=#{operator},hide=#{hide}, last_modify=#{lastModify} where app_id=#{appId} and menu_name=#{menuName} limit 1
+	</update>
+
+	<select id="listByAppId" parameterType="Map" resultType="com.mazing.services.backend.admin.entry.MenuPO">
+		<![CDATA[
+		select * from mz_admin.mz_menu where app_id=#{appId} and hide=0 order by parent_menu_id desc, sequence desc
+	 	]]>
+	</select>
+
+	<select id="getByAppIdAndMenuName" parameterType="Map" resultType="com.mazing.services.backend.admin.entry.MenuPO">
+		<![CDATA[
+		select * from mz_admin.mz_menu where app_id=#{appId} and menu_name=#{menuName}
+	 	]]>
+
+	</select>
+
+	<!-- 获取父菜单的子菜单主键 -->
+	<select id="listMenuIdByParent" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select menu_id from mz_admin.mz_menu where parent_menu_id = #{parentMenuId}
+	</select>
+
+	<!-- 统计父菜单的子菜单数量 -->
+	<select id="countByParent" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+		select count(1) from mz_admin.mz_menu where parent_menu_id = #{parentMenuId}
+	</select>
+
+</mapper>

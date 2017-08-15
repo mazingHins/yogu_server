@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+    <display-name>web-backend-admin</display-name>
+
+	<listener>
+    	<listener-class>com.mazing.commons.server.clean.CleanServletContextListener</listener-class>
+    </listener>
+
+	<servlet>
+		<servlet-name>springServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/applicationContext.xml,/WEB-INF/config/web-servlet.xml</param-value>
+		</init-param>
+
+		<!-- 默认情况下，spring会初始化很多异常解析器，如果想让spring使用我们自定义的异常解析器，就需要加上这个参数。取消spring的默认设置 -->
+
+		<init-param>
+			<param-name>detectAllHandlerExceptionResolvers</param-name>
+			<param-value>false</param-value>
+		</init-param>
+
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>springServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<!-- 日志增加traceId -->
+	<filter>
+		<filter-name>mdcFilter</filter-name>
+		<filter-class>com.mazing.commons.server.forward.LoggerMDCFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>mdcFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>adminFilter</filter-name>
+		<filter-class>com.mazing.services.backend.admin.context.AdminFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>adminFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+    <servlet>
+		<servlet-name>PulseServlet</servlet-name>
+		<servlet-class>com.mazing.commons.server.pulse.PulseServlet</servlet-class>
+	</servlet>
+    <servlet-mapping>
+		<servlet-name>PulseServlet</servlet-name>
+		<url-pattern>/pulse</url-pattern>
+	</servlet-mapping>
+
+    <servlet>
+        <servlet-name>VersionServlet</servlet-name>
+        <servlet-class>com.mazing.commons.server.version.VersionServlet</servlet-class>
+        <init-param>
+        	<param-name>version.file.path</param-name>
+        	<param-value>/version.txt</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>VersionServlet</servlet-name>
+        <url-pattern>/version</url-pattern>
+    </servlet-mapping>
+
+	<!-- 帐号系统登录的filter -->
+	<filter>
+		<filter-name>mazingLogin</filter-name>
+		<filter-class>com.mazing.commons.sdk.user.MazingLoginFilter</filter-class>
+		<init-param>
+			<param-name>appkey</param-name>
+			<param-value>F58A1328D42DB1F5A981CA9713F7586D5BD97FCF2AE76CF29356D46EA8673E0D</param-value>
+		</init-param>
+		<init-param>
+			<param-name>appsecret</param-name>
+			<param-value>E427F543AEF922C5931C0BB7807414C533F533690FC1EB8D5715A100BF5A9081</param-value>
+		</init-param>
+		<init-param>
+			<!-- appkey 和 appsecret 解密的类，实现 com.mazing.commons.sdk.user.encrypt.ConfigurationDecoder -->
+			<param-name>decoder</param-name>
+			<param-value>com.mazing.commons.sdk.user.encrypt.DefaultConfigurationDecoder</param-value>
+		</init-param>
+		<init-param>
+			<!-- 必须使用 https -->
+			<param-name>callback</param-name>
+			<param-value>https://admin.mazing.com/open/mazing/login</param-value>
+		</init-param>
+		<init-param>
+			<param-name>exclude</param-name>
+			<param-value>/open/mazing/*, /open/health/status, /admin/error, /admin/exception</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>mazingLogin</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+    <jsp-config>
+        <taglib>
+            <taglib-uri>http://www.springframework.org/tags/form</taglib-uri>
+            <taglib-location>/WEB-INF/tld/spring-form.tld</taglib-location>
+        </taglib>
+		<jsp-property-group>
+			<url-pattern>*.jsp</url-pattern>
+			<el-ignored>false</el-ignored>
+			<page-encoding>utf-8</page-encoding>
+		</jsp-property-group>
+    </jsp-config>
+</web-app>

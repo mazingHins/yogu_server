@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- status=debug 可以查看log4j的装配过程 -->
+<configuration status="warn">
+	<properties>
+		<!-- 指定日志文件的目录（其中一个目录，比如：/data/log/XXX/  ；XXX有可能是resin，也可能是tomcat） -->
+		<!-- 这里默认是resin目录，如果是ts启动（tomcat）在脚本中指定了-DlogDir=tomcat，则会切换到tomcat目录 -->
+		<property name="logDir">resin</property>
+	</properties>
+
+	<appenders>
+		<!-- 定义控制台输出 -->
+		<Console name="Console" target="SYSTEM_OUT" follow="true">
+			<PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %X{traceId} [%thread] %level [%class] - %msg%n" />
+		</Console>
+
+		<!-- 日志 -->
+		<RollingFile name="FILE" fileName="/data/log/${sys:logDir}/admin/admin.log" filePattern="/data/log/${sys:logDir}/admin/admin.log.%d{yyyy-MM-dd}.gz">
+			<PatternLayout pattern="%date{yyyy-MM-dd HH:mm:ss.SSS} %X{traceId} [%thread] %level [%class] - %msg%n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+			</Policies>
+		</RollingFile>
+	</appenders>
+
+	<loggers>
+		<!-- 3rdparty Loggers -->
+		<logger name="org.glassfish.jersey.servlet.WebComponent" level="error" />
+		<logger name="com.mazing.commons.utils.HttpClientUtils" level="INFO" />
+		<logger name="org.springframework.context" level="info" />
+		<logger name="org.springframework.jdbc" level="info" />
+		<logger name="org.springframework.web" level="info" />
+		<logger name="com.mchange.v2" level="warn" />
+		<logger name="RocketmqClient" level="warn" />
+
+		<!-- Root Logger -->
+		<root level="info">
+			<appender-ref ref="FILE" />
+		</root>
+	</loggers>
+</configuration>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.backend.admin.dao.UrlResourceDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.backend.admin.entry.UrlResourcePO" useGeneratedKeys="false" >
+		insert into mz_admin.mz_url_resource (res_id,parent_res_id,name,uri,operator,last_modify,sequence,app_id,type,create_time) values (#{resId},#{parentResId},#{name},#{uri},#{operator},#{lastModify},#{sequence},#{appId},#{type},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据 -->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_admin.mz_url_resource WHERE res_id=#{resId}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.backend.admin.entry.UrlResourcePO">
+		update mz_admin.mz_url_resource set parent_res_id=#{parentResId},name=#{name},uri=#{uri},operator=#{operator},last_modify=#{lastModify},sequence=#{sequence},app_id=#{appId},type=#{type} where res_id=#{resId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.backend.admin.entry.UrlResourcePO">
+		SELECT * FROM mz_admin.mz_url_resource WHERE res_id=#{resId}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.backend.admin.entry.UrlResourcePO">
+		SELECT * FROM mz_admin.mz_url_resource
+	</select>
+
+	<select id="listByAppId" parameterType="Map" resultType="com.mazing.services.backend.admin.entry.UrlResourcePO">
+		<![CDATA[
+		select * from mz_admin.mz_url_resource where app_id=#{appId}
+	 	]]>
+	</select>
+	<select id="getByAppIdAndUri" parameterType="Map" resultType="com.mazing.services.backend.admin.entry.UrlResourcePO">
+		<![CDATA[
+		select * from mz_admin.mz_url_resource where app_id=#{appId} and uri=#{uri}
+	 	]]>
+
+	</select>
+
+	<!-- lastModify不用now() -->
+	<update id="updateRes" parameterType="com.mazing.services.backend.admin.entry.UrlResourcePO">
+		update mz_admin.mz_url_resource set name=#{name},parent_res_id=#{parentResId},operator=#{operator},type=#{type},sequence=#{sequence}, last_modify=#{lastModify} where app_id=#{appId} and uri=#{uri}
+	</update>
+
+	<!-- 查询资源(依据Id列表) -->
+	<select id="listByIds" parameterType="List" resultType="com.mazing.services.backend.admin.entry.UrlResourcePO">
+		select * from mz_admin.mz_url_resource where res_id in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			(#{item})
+		</foreach>
+	</select>
+
+	<!-- 依据应用获取资源 -->
+	<select id="listByApp" parameterType="java.lang.Integer" resultType="com.mazing.services.backend.admin.entry.UrlResourcePO">
+		select * from mz_admin.mz_url_resource where app_id = #{appId}
+	</select>
+</mapper>

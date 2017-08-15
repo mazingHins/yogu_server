@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.0" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+
+    <display-name>api</display-name>
+
+    <context-param>
+    	<param-name>contextConfigLocation</param-name>
+    	<param-value>classpath*:META-INF/mazing-applicationContext.xml</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <listener>
+    	<listener-class>com.yogu.commons.server.clean.CleanServletContextListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>encodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter
+        </filter-class>
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>encodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+    <!-- 日志增加traceId -->
+    <filter>
+        <filter-name>mdcFilter</filter-name>
+        <filter-class>com.yogu.commons.server.forward.LoggerMDCFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>mdcFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+
+	<filter>
+		<filter-name>RestForward</filter-name>
+		<filter-class>com.yogu.commons.server.forward.RestForwardFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>RestForward</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+    <servlet>
+		<servlet-name>MockManageServlet</servlet-name>
+		<servlet-class>com.yogu.commons.server.mock.MockManageServlet</servlet-class>
+		<init-param>
+			<param-name>mock.file.key</param-name>
+			<param-value>api.mock.file</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+    <servlet-mapping>
+		<servlet-name>MockManageServlet</servlet-name>
+		<url-pattern>/mock</url-pattern>
+	</servlet-mapping>
+
+    <servlet>
+		<servlet-name>PulseServlet</servlet-name>
+		<servlet-class>com.yogu.commons.server.pulse.PulseServlet</servlet-class>
+	</servlet>
+    <servlet-mapping>
+		<servlet-name>PulseServlet</servlet-name>
+		<url-pattern>/pulse</url-pattern>
+	</servlet-mapping>
+
+    <servlet>
+        <servlet-name>VersionServlet</servlet-name>
+        <servlet-class>com.yogu.commons.server.version.VersionServlet</servlet-class>
+        <init-param>
+        	<param-name>version.file.path</param-name>
+        	<param-value>/version.txt</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>VersionServlet</servlet-name>
+        <url-pattern>/version</url-pattern>
+    </servlet-mapping>
+
+	<servlet>
+        <servlet-name>Jersey Web Application</servlet-name>
+        <servlet-class>org.glassfish.jersey.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>javax.ws.rs.Application</param-name>
+            <param-value>com.yogu.core.server.CoreApplicationConfig</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Jersey Web Application</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
+	<!-- 增加对jsp的支持，要用filter的形式
+	<filter>
+		<filter-name>Jersey Web Application</filter-name>
+		<filter-class>org.glassfish.jersey.servlet.ServletContainer</filter-class>
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>com.mazing.core.server.CoreApplicationConfig</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>Jersey Web Application</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+	 -->
+
+</web-app>
