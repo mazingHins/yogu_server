@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:rabbit="http://www.springframework.org/schema/rabbit"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+            http://www.springframework.org/schema/rabbit http://www.springframework.org/schema/rabbit/spring-rabbit-1.0.xsd
+            http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+	<!-- <task:executor id="taskExecutorForTracker" pool-size="10-200" queue-capacity="1000" 
+		rejection-policy="CALLER_RUNS" /> -->
+
+	<!-- java.util.concurrent.ThreadPoolExecutor : org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor -->
+	<!-- java.util.concurrent.ExecutorService    : org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean -->
+	<bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolExecutorFactoryBean" destroy-method="destroy">
+		<property name="beanName" value="xserver" />
+		<property name="corePoolSize" value="${server.pool.size}" />
+		<property name="maxPoolSize" value="${server.pool.max.size}" />
+		<property name="queueCapacity" value="${server.pool.queue.size}" />
+		<property name="keepAliveSeconds" value="${server.pool.keepAliveSeconds}" />
+	</bean>
+
+	<bean class="com.yogu.commons.concurrent.ExecutorFactory" >
+		<property name="executorService" ref="taskExecutor" />
+	</bean>
+
+</beans>

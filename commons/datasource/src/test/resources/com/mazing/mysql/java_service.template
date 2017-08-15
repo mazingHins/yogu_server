@@ -1,0 +1,42 @@
+package ${package};
+
+import java.util.List;
+
+import ${dtoModel};
+
+/**
+ * ${tableComment} <br>
+ * 的操作接口
+ * 
+ * @author ${author} ${date}
+ */
+public interface ${serviceClass} {
+
+	/**
+	 * 保存数据
+	 * 
+	 * @param dto 对象
+	 */
+	public void save(${dto} dto);
+
+	/**
+	 * 修改数据，以主键更新
+	 * 
+	 * @param dto - 要更新的数据
+	 * @return 更新的行数
+	 */
+	public int update(${dto} dto);
+
+	/**
+	 * 根据主键读取记录
+	 */
+	public ${dto} getById(${pksStr});
+
+	/**
+	 * 查询全部记录
+	 * 
+	 * @return 返回所有的数据，如果没有数据，返回emtpy list
+	 */
+	public List<${dto}> listAll();
+
+}

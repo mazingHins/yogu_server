@@ -1,0 +1,78 @@
+package ${package};
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import ${dao};
+import ${dtoModel};
+import ${model};
+import ${service};
+import com.mazing.commons.utils.VOUtil;
+
+/**
+ * ${serviceClass} 的实现类
+ * 
+ * @author ${author} ${date}
+ */
+@Named
+public class ${daoImplClass} implements ${serviceClass} {
+
+	@Inject
+	private ${daoClass} dao;
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void save(${dto} dto) {
+		${po} po = dto2po(dto);
+		dao.save(po);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int update(${dto} dto) {
+		${po} po = dto2po(dto);
+		return dao.update(po);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ${dto} getById(${pksStr}) {
+		${po} po = dao.getById(${pkParamsStr});
+		return po2dto(po);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<${dto}> listAll() {
+		List<${po}> list = dao.listAll();
+		return VOUtil.fromList(list, ${dto}.class);
+	}
+
+	// ####
+	// ## private func
+	// ####
+
+	public ${dto} po2dto(${po} po) {
+		if (null == po)
+			return null;
+		return VOUtil.from(po, ${dto}.class);
+	}
+
+	public ${po} dto2po(${dto} dto) {
+		if (null == dto)
+			return null;
+		return VOUtil.from(dto, ${po}.class);
+	}
+
+}

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.commons.datasources.dao.BookInfoDao">
+
+	<!-- 这里的id必须和接口中的方法名相同，不然运行的时候也要报错 -->
+	<insert id="insert" parameterType="bookInfo" flushCache="false">
+		<![CDATA[
+			insert into book_info(book_id, book_name, author, price, type, book_description, translater, publish_house,last_modify,book_page,author_intro,pubdate,binding,allow_brow_day) 
+			values(#{book_id}, #{book_name}, #{author}, #{price}, #{type}, #{book_description}, #{translater}, #{publish_house},now(),#{book_page},#{author_intro},#{pubdate},#{binding},#{allow_brow_day})
+		]]>
+    </insert>
+    
+    <delete id="delete" parameterType="string" flushCache="false">
+		<![CDATA[update book_info set  del_flag=1 where book_id = #{book_id}]]>
+	</delete>
+	
+    <update id="update" parameterType="bookInfo" flushCache="false">
+		update book_info set 
+			<![CDATA[
+				book_name = #{book_name},
+				author = #{author},
+				price = #{price},
+				type = #{type},
+				book_description = #{book_description},
+				translater = #{translater}, 
+				publish_house = #{publish_house},
+				last_modify=now(),
+				allow_brow_day = #{allow_brow_day}
+			]]>
+ 			where id = #{id}
+	</update>
+    
+	<select id="get" resultType="bookInfoVO" parameterType="java.lang.Integer">
+		<![CDATA[
+			select * from book_info where id = #{id}
+		]]>
+	</select>
+	<select id="getByBookId" resultType="bookInfoVO" parameterType="string" >
+		<![CDATA[
+			select * from book_info where book_id = #{book_id}
+		]]>
+	</select>	
+	
+	<select id="count" resultType="int" parameterType="bookInfo">
+		<![CDATA[select count(*) from book_info where del_flag=0]]>
+		<if test="book_name != null and book_name != ''" >
+			<![CDATA[and book_name like '%${book_name}%']]>
+		</if>
+		<if test="type != null and type != ''" >
+			<![CDATA[and type=#{type}]]>
+		</if>	
+	</select>
+
+	<select id="listByName" resultType="BookInfo" parameterType="string">
+		<![CDATA[select bi.* from book_info bi where bi.del_flag=0]]>
+		<![CDATA[and bi.book_name like CONCAT('%',#{book_name},'%')]]>
+	</select>
+	<select id="listByName10" resultType="BookInfo" parameterType="string">
+		<![CDATA[select bi.* from book_info bi where bi.del_flag=0]]>
+		<![CDATA[and bi.book_name like CONCAT('%',#{book_name},'%')]]>
+		limit 10
+	</select>	
+</mapper>

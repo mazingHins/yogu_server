@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<aop:aspectj-autoproxy />
+
+	<context:annotation-config />
+
+	<!-- 选择一种缓存的实现方式 -->
+	<!-- 引入的配置中，必须包含一个id为cacheExtendService的实现 -->
+	<import resource="cache-redis.xml"/>
+	<!-- <import resource="cache-xmemcached.xml"/> -->
+
+	<!-- Aspect -->
+	<!-- 在装载这个配置文件之前，需要初始化一个 name为cacheExtendService的实现类 -->
+	<bean id="annoCacheExtendAspecter" class="com.yogu.commons.cache.aspect.AnnoCacheExtendAspecter">
+		<property name="preventPenetration" value="${cache.anno.prevent:false}" />
+		<property name="extendService" ref="cacheExtendService" />
+	</bean>
+
+</beans>

@@ -1,0 +1,213 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.yogu</groupId>
+	<artifactId>server</artifactId>
+	<packaging>pom</packaging>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>yogu the parent package</name>
+
+	<modules>
+		<module>commons/cache</module>
+		<module>commons/datasource</module>
+		<module>commons/json</module>
+		<module>commons/log</module>
+		<module>commons/server</module>
+		<module>commons/utils</module>
+		<module>commons/validation</module>
+
+		<module>remote/config</module>
+		<module>remote/order</module>
+		<module>remote/pay</module>
+		<module>remote/store</module>
+		<module>remote/user</module>
+		<module>remote/activity</module>
+
+		<module>services/config</module>
+		<module>services/activity</module>
+		<module>services/order</module>
+		<module>services/pay</module>
+		<module>services/store</module>
+		<module>services/user</module>
+		<module>services/xcloud</module>
+		<module>services/xcommon</module>
+		<module>services/xcore</module>
+
+		<module>tasks/consumer</module>
+		<module>tasks/timer</module>
+
+		<module>web/api</module>
+        <module>web/api-spring</module>
+		<module>web/backend-admin</module>
+        <module>web/web-common</module>
+		<module>web/web-mobile</module>
+		<module>web/web-user</module>
+	</modules>
+
+	<properties>
+		<jdk.version>1.7</jdk.version>
+		<tomcat.port>8080</tomcat.port>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<jstl.version>1.2</jstl.version>
+		<junit.version>4.12</junit.version>
+		<jaxrs.version>2.0.1</jaxrs.version>
+		<taglibs.version>1.1.2</taglibs.version>
+		<servlet.version>3.0.1</servlet.version>
+		<javax.el.version>2.2.4</javax.el.version>
+		<javax.json.version>1.0</javax.json.version>
+		<javax.anno.api.version>1.2</javax.anno.api.version>
+		<validation.api.version>1.1.0.Final</validation.api.version>
+		<ali.os.version>2.1.3</ali.os.version>
+		<ali.ons.version>1.2.3</ali.ons.version>
+		<ali.oss.version>2.3.0</ali.oss.version>
+		<commons.io.version>2.4</commons.io.version>
+		<commons.lang3.version>3.4</commons.lang3.version>
+		<commons.beanutils.version>1.9.2</commons.beanutils.version>
+		<commons.fileupload.version>1.3.1</commons.fileupload.version>
+
+		<cglib.version>3.1</cglib.version>
+		<jedis.version>2.9.0</jedis.version>
+		<slf4j.version>1.7.5</slf4j.version>
+		<hk2.version>2.3.0-b10</hk2.version>
+		<jersey.version>2.13</jersey.version>
+		<quartz.version>2.2.1</quartz.version>
+		<aspectj.version>1.8.6</aspectj.version>
+		<logback.version>1.1.3</logback.version>
+		<log4j.version>2.4.1</log4j.version>
+		<rabbitmq.version>3.1.3</rabbitmq.version>
+		<javassist.version>3.12.1.GA</javassist.version>
+		<google.guava.version>18.0</google.guava.version>
+		<google.zxing.version>3.2.1</google.zxing.version>
+		<ehcache.version>2.6.9</ehcache.version>
+		<httpcore.version>4.4.4</httpcore.version>
+		<httpclient.version>4.5.1</httpclient.version>
+		<xmemcached.version>2.0.0</xmemcached.version>
+		<spring.version>4.1.7.RELEASE</spring.version>
+		<jackson.jsr353.version>2.4.0</jackson.jsr353.version>
+		<spring.rabbit.version>1.1.2.RELEASE</spring.rabbit.version>
+
+		<c3p0.version>0.9.5.1</c3p0.version>
+		<mysql.version>5.1.22</mysql.version>
+		<mybatis.version>3.2.3</mybatis.version>
+		<mybatis.spring.version>1.2.2</mybatis.spring.version>
+		<hibernate.validator.version>5.0.0.Final</hibernate.validator.version>
+		<apache.poi.version>3.11</apache.poi.version>
+
+		<aliyun.sdk.core.ver>3.0.7</aliyun.sdk.core.ver>
+		<aliyun.sdk.cdn.ver>2.2.3</aliyun.sdk.cdn.ver>
+		<aliyun.sdk.slb.ver>2.1</aliyun.sdk.slb.ver>
+	</properties>
+
+	<build>
+		<!-- 开启的话，证书读取有问题
+		<resources>
+			<resource>
+				<filtering>true</filtering>
+				<directory>${basedir}/src/main/resources</directory>
+			</resource>
+			<resource>
+				<filtering>true</filtering>
+				<directory>${basedir}/src/main/env/${env}</directory>
+			</resource>
+		</resources>
+		 -->
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.5.1</version>
+				<inherited>true</inherited>
+				<configuration>
+					<source>${jdk.version}</source>
+					<target>${jdk.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.8</version>
+				<configuration>
+					<wtpversion>2.0</wtpversion>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.tomcat.maven</groupId>
+				<artifactId>tomcat7-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<path>/</path>
+					<port>${tomcat.port}</port>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<packagingExcludes>
+						WEB-INF/lib/jersey-test*.jar,
+						WEB-INF/lib/asm-debug*.jar
+					</packagingExcludes>
+				</configuration>
+			</plugin>
+
+		</plugins>
+	</build>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.glassfish.jersey</groupId>
+				<artifactId>jersey-bom</artifactId>
+				<version>${jersey.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<!-- Test -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+		</dependency>
+	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>springsource-repo</id>
+			<name>SpringSource Repository</name>
+			<url>http://repo.springsource.org/release</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>snapshot-repository.java.net</id>
+			<name>Java.net Snapshot Repository for Maven</name>
+			<url>https://maven.java.net/content/repositories/public/</url>
+			<layout>default</layout>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
+</project>

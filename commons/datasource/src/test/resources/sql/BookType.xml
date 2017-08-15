@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.commons.datasources2.BookTypeDao">
+
+	<!-- 这里的id必须和接口中的方法名相同，不然运行的时候也要报错 -->
+	<insert id="insert" parameterType="bookType" flushCache="false">
+		<![CDATA[
+			insert into book_type
+				(type_id,super_type_id,type_name,weight,status) 
+			values
+				(#{type_id},#{super_type_id},#{type_name},#{weight},#{status})
+		]]>
+    </insert>
+    
+    <delete id="delete" parameterType="int">
+		<![CDATA[delete from book_type where id = #{id}]]>
+	</delete>
+	
+    <update id="update" parameterType="bookType" flushCache="false">
+		update book_type set 
+		type_id=#{type_id},super_type_id=#{super_type_id},type_name=#{type_name},weight=#{weight},status=#{status}
+ 		where id = #{id}
+	</update>
+    
+	<select id="get" resultType="bookType" parameterType="java.lang.Integer" >
+		<![CDATA[
+			select * from book_type where id = #{id}
+		]]>
+	</select>
+	
+	<select id="listByParentId" resultType="bookType" parameterType="string" >
+		<![CDATA[
+			select * from book_type where super_type_id = #{super_type_id} order by weight desc
+		]]>
+	</select>
+	<select id="listAll" resultType="bookType"  >
+		<![CDATA[
+			select * from book_type where status=1
+		]]>
+	</select>		
+	<select id="getByName" resultType="bookType" parameterType="bookType" >
+		<![CDATA[
+			select * from book_type where type_name = #{type_name} and super_type_id=#{super_type_id}
+		]]>
+	</select>	
+	<select id="getMaxId" resultType="int" >
+		<![CDATA[select max(id) as maxId from book_type]]>
+	</select>
+	
+</mapper>

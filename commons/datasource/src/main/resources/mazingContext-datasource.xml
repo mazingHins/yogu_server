@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<!-- ================================= -->
+	<!-- 使用何种事务管理，在当前xml中最下面import -->
+	<!-- ================================= -->
+
+	<aop:aspectj-autoproxy /><!-- expose-proxy="true" -->
+
+	<context:annotation-config />
+
+	<!-- @TheDataSource 指定主、备数据库 -->
+	<bean id="dataSourceDeciderAspecter" class="com.yogu.commons.datasource.aop.DataSourceDeciderAspecter" />
+
+	<!-- 主数据库源 -->
+	<bean name="dataSourceMaster" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="jdbcUrl" value="${db.${modul}.url}" />
+		<property name="user" value="${db.username}" />
+		<property name="password" value="${db.password}" />
+		<property name="driverClass" value="${db.driverclass}" />
+		
+		<property name="maxIdleTime" value="${db.${modul}.maxIdle}" />
+		<property name="minPoolSize" value="${db.${modul}.minActive}" />
+		<property name="maxPoolSize" value="${db.${modul}.maxActive}" />
+		<property name="initialPoolSize" value="${db.${modul}.initialSize}" />
+		<property name="idleConnectionTestPeriod" value="${db.${modul}.idleCheckTime}" />
+	</bean>
+
+	<!-- 只读数据源 -->
+	<bean name="dataSourceReadonly" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="jdbcUrl" value="${db.${modul}.readonly.url}" />
+		<property name="user" value="${db.username}" />
+		<property name="password" value="${db.password}" />
+		<property name="driverClass" value="${db.driverclass}" />
+		
+		<property name="maxIdleTime" value="${db.${modul}.maxIdle}" />
+		<property name="minPoolSize" value="${db.${modul}.minActive}" />
+		<property name="maxPoolSize" value="${db.${modul}.maxActive}" />
+		<property name="initialPoolSize" value="${db.${modul}.initialSize}" />
+		<property name="idleConnectionTestPeriod" value="${db.${modul}.idleCheckTime}" />
+	</bean>
+
+	<!-- 主数据源的SessionFactory -->
+	<!-- 使用mybatisTemplate方式，减少数据库代码量 -->
+	<bean id="myBaitsSessionFactory" class="com.yogu.commons.datasource.mybatis.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceMaster" />
+		<property name="typeAliasAnnoBasicPackage" value="com.yogu" />
+		<property name="configLocation" value="classpath:/mybatis-igwmgr-config.xml" />
+		<property name="mapperLocations">
+        	<list>
+        		<value>classpath*:sql/*.xml</value>
+        		<value>classpath*:sql/*/*.xml</value>
+        	</list>
+        </property>
+	</bean>
+
+	<!-- 只读数据源的SessionFactory -->
+	<!-- 使用mybatisTemplate方式，减少数据库代码量 -->
+	<bean id="myBaitsReadonlySessionFactory" class="com.yogu.commons.datasource.mybatis.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSourceReadonly" />
+		<property name="typeAliasAnnoBasicPackage" value="com.yogu" />
+		<property name="configLocation" value="classpath:/mybatis-igwmgr-config.xml" />
+		<property name="mapperLocations">
+        	<list>
+        		<value>classpath*:sql/*.xml</value>
+        		<value>classpath*:sql/*/*.xml</value>
+        	</list>
+        </property>
+	</bean>
+
+	<!-- 自动扫描Mapper -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.yogu.services.**.dao" />
+		<property name="sqlSessionFactoryBeanName" value="myBaitsSessionFactory" />
+		<property name="annotationClass" value="com.yogu.commons.datasource.annocation.TheDataDao" />
+	</bean>
+
+	<!-- 事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSourceMaster" />
+	</bean>
+
+	<!-- 引入事务管理 -->
+	<import resource="datasource-transaction-anno.xml" />
+
+</beans>

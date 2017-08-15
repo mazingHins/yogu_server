@@ -1,0 +1,65 @@
+package ${package};
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.inject.Named;
+
+import com.mazing.commons.datasource.mybatis.MyBatisDao;
+import ${dao};
+import ${model};
+
+/**
+ * ${daoClass} 的 MyBatis 实现
+ * 
+ * @author ${author} ${date}
+ */
+@Named
+public class ${daoImplClass} extends MyBatisDao implements ${daoClass} {
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void save(${po} po) {
+		super.insert("${model}.insert", po);
+	}
+
+	/**
+	 * {@inheritDoc}
+	@Override
+	public int deleteById(${pksStr}) {
+		Map<String, Object> params = new HashMap<String, Object>();
+${setKeyParams}
+		return super.delete("${model}.deleteById", params);
+	}
+	*/
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public int update(${po} po) {
+		return super.update("${model}.update", po);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public ${po} getById(${pksStr}) {
+		Map<String, Object> params = new HashMap<String, Object>();
+${setKeyParams}
+		return super.get("${model}.getById", params);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<${po}> listAll() {
+		return super.list("${model}.listAll");
+	}
+
+}

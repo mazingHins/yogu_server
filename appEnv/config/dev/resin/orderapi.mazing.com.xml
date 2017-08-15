@@ -1,0 +1,187 @@
+<!--
+   - Resin 4.0 configuration file.
+  -->
+<resin xmlns="http://caucho.com/ns/resin"
+       xmlns:resin="urn:java:com.caucho.resin">
+
+  <!-- property-based Resin configuration -->
+  <resin:properties path="${__DIR__}/resin.properties" optional="true"/>
+
+  <resin:if test="${properties_import_url}">
+     <resin:properties path="${properties_import_url}"
+                    optional="true" recover="true"/>
+  </resin:if>
+
+
+  <!-- Logging configuration for the JDK logging API -->
+  <log-handler name="" level="all" path="stdout:"
+               timestamp="[%y-%m-%d %H:%M:%S.%s]"
+               format=" {${thread}} ${log.message}"/>
+               
+  <!-- 
+     - Alternative pseudo-TTCC log format
+     -
+     - <log-handler name="" level="all" path="stdout:"
+     -           timestamp="%y-%m-%d %H:%M:%S.%s"
+     -           format=" [${thread}] ${log.level} ${log.shortName} - ${log.message}"/>
+    -->
+   
+  <!--
+     - level='info' for production
+     - 'fine' or 'finer' for development and troubleshooting
+    -->
+  <logger name="" level="${log_level?:'info'}"/>
+
+  <logger name="com.caucho.java" level="config"/>
+  <logger name="com.caucho.loader" level="config"/>
+
+  <!--
+     - Default configuration applied to all clusters, including
+     - HTTP, HTTPS, and /resin-admin configuration.
+    -->
+  <resin:import path="${__DIR__}/cluster-default.xml"/>
+  
+  <!--
+     - health configuration
+  <resin:import path="${__DIR__}/health.xml"/>
+    -->
+
+  
+  <!--
+     - Remote management requires at least one enabled admin user.
+    -->
+  <resin:AdminAuthenticator>
+    <user name="${admin_user}" password="${admin_password}"/>
+    
+    <resin:import path="${__DIR__}/admin-users.xml" optional="true"/>
+  </resin:AdminAuthenticator>
+
+  <!--
+     - For clustered systems, create a password in as cluster_system_key
+    -->
+  <cluster-system-key>${cluster_system_key}</cluster-system-key>
+
+  <!--
+     - For production sites, change dependency-check-interval to something
+     - like 600s, so it only checks for updates every 10 minutes.
+    -->
+  <dependency-check-interval>-1</dependency-check-interval>
+
+  <!-- For resin.properties dynamic cluster joining -->
+  <home-cluster>${home_cluster}</home-cluster>
+  <home-server>${home_server}</home-server>
+  <elastic-server>${elastic_server}</elastic-server>
+  <elastic-dns>${elastic_dns}</elastic-dns>
+
+  <!--
+     - Configures the main application cluster.  Load-balancing configurations
+     - will also have a web cluster.
+    -->
+  <cluster id="app">
+		<!-- defaults for each server, i.e. JVM -->
+		<server-default>
+			<keepalive-timeout>15s</keepalive-timeout>
+            <socket-timeout>60s</socket-timeout>
+			<keepalive-max>64</keepalive-max>
+            <thread-max>32</thread-max>
+
+			<!-- <jvm-arg>-Xmx256m</jvm-arg>
+			<jvm-arg>-Xms128m</jvm-arg>
+
+			<jvm-arg>-server</jvm-arg>
+			<jvm-arg>-d64</jvm-arg> -->
+            <jvm-arg>-Xmx180m</jvm-arg>
+            <jvm-arg>-Xms128m</jvm-arg>
+			<jvm-arg>-server</jvm-arg>
+			<jvm-arg>-d64</jvm-arg>
+			
+			<jvm-arg>-XX:MaxPermSize=128m</jvm-arg>
+			
+			<jvm-arg>-XX:MaxGCPauseMillis=200</jvm-arg>
+			<jvm-arg>-Dnetworkaddress.cache.ttl=600</jvm-arg>
+			<jvm-arg>-Dlog4j2.disable.jmx=true</jvm-arg>
+
+			<jvm-arg>-verbose.gc</jvm-arg>
+			<jvm-arg>-XX:+PrintGC</jvm-arg>
+			<jvm-arg>-XX:+PrintGCDetails</jvm-arg>
+			<jvm-arg>-XX:+PrintGCDateStamps</jvm-arg>
+			<jvm-arg>-Xloggc:/data/log/resin/orderapi/gc.log</jvm-arg>
+
+			<!-- debug -->
+			<jvm-arg>-Xdebug</jvm-arg>
+			<jvm-arg>-Xnoagent</jvm-arg>
+			<jvm-arg>-Djava.compiler=NONE</jvm-arg>
+			<!--<jvm-arg>-Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=5004</jvm-arg>-->
+
+			<resin:if test="${resin.userName == 'root'}">
+				<user-name>www-data</user-name>
+				<group-name>www-data</group-name>
+			</resin:if>
+		</server-default>
+
+    <!-- define the servers in the cluster -->
+    <!--
+    <server-multi id-prefix="app-" address-list="${app_servers}" port="6800"/>
+    -->
+    <server id="mazing-api-order" address="127.0.0.1" port="5304">
+		<watchdog-port>5404</watchdog-port>
+        <http address="*" port="5204" />
+	</server>
+
+    <host-default>
+      <!-- creates the webapps directory for .war expansion -->
+      <web-app-deploy path="webapps"
+                      expand-preserve-fileset="WEB-INF/work/**"
+                      multiversion-routing="${webapp_multiversion_routing}"
+                      path-suffix="${elastic_webapp?resin.id:''}"/>
+    </host-default>
+
+    <!-- auto virtual host deployment in hosts/foo.example.com/webapps -->
+    <host-deploy path="hosts">
+      <host-default>
+        <resin:import path="host.xml" optional="true"/>
+      </host-default>
+    </host-deploy>
+
+    <!-- the default host, matching any host name -->
+    <host id="orderapi.mazing.com">
+      <!--
+         - webapps can be overridden/extended in the resin.xml
+        -->
+        <host-name>orderapi.mazing.com</host-name>
+        <host-alias>orderapi.internal.mazing.com</host-alias>
+
+        <web-app id="/" document-directory="/data/webapps/orderapi.mazing.com/" archive-path="/data/app/mazing/web/mazing-api-order.war" redeploy-mode="manual">
+            <form-parameter-max>200</form-parameter-max>
+            <character-encoding>UTF-8</character-encoding>
+            <session-config>
+                <enable-url-rewriting>false</enable-url-rewriting>
+            </session-config>
+            <stdout-log path="/data/log/resin/orderapi/mazing-api-order.stdout.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
+            	<rollover-size>32mb</rollover-size>
+                <archive-format>mazing-api-order.stdout.log.%m-%d.gz</archive-format>
+            </stdout-log>
+            <stderr-log path="/data/log/resin/orderapi/mazing-api-order.stderr.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
+            	<rollover-size>32mb</rollover-size>
+                <archive-format>mazing-api-order.stderr.log.%m-%d.gz</archive-format>
+            </stderr-log>
+            <!-- 
+            <access-log path="/data/log/resin/orderapi/mazing-api-order.access.log" >
+            	<rollover-size>64mb</rollover-size>
+                <rollover-period>1D</rollover-period>
+                <archive-format>mazing-api-order.access.log.%m-%d.gz</archive-format>
+            </access-log>
+             -->
+      </web-app>
+
+    </host>
+      
+    <resin:if test="${resin_doc}">
+      <host id="${resin_doc_host}" root-directory="${resin_doc_host}">
+        <web-app id="/resin-doc" root-directory="${resin.root}/doc/resin-doc"/>
+      </host>
+    </resin:if>
+  </cluster>
+
+
+</resin>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd
+        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+        http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<!-- Redis实例化工厂；主要用于【单机、集群】模式的统一构造 -->
+	<!-- 这里的参数完全按照Jedis的基本配置 -->
+	<bean id="redisFactory" class="com.yogu.commons.cache.redis.RedisFactory">
+		<property name="timeBetweenEvictionRunsMillis" value="${redis.timeBetweenEvictionRunsMillis}" />
+		<property name="minEvictableIdleTimeMillis" value="${redis.minEvictableIdleTimeMillis}" />
+		<property name="numTestsPerEvictionRun" value="${redis.numTestsPerEvictionRun}" />
+		<!-- <property name="whenExhaustedAction" value="${redis.whenExhaustedAction}" /> -->
+		<property name="testWhileIdle" value="${redis.testWhileIdle}" />
+		<property name="maxWaitMillis" value="${redis.maxWaitMillis}" />
+		<property name="testOnBorrow" value="${redis.testOnBorrow}" />
+		<property name="testOnReturn" value="${redis.testOnReturn}" />
+		<property name="maxTotal" value="${redis.maxTotal}" />
+		<property name="minIdle" value="${redis.minIdle}" />
+		<property name="maxIdle" value="${redis.maxIdle}" />
+		<property name="connectionTimeout" value="${redis.connectionTimeout}" />
+		<property name="soTimeout" value="${redis.soTimeout}" />
+		<property name="jmxEnabled" value="false" />
+	</bean>
+
+	<!-- 用于消息广播 -->
+	<!-- defaultModel -->
+	<bean id="redisMsg" factory-bean="redisFactory" factory-method="initRedis" destroy-method="destroy">
+		<constructor-arg index="0" value="${redis.msg.server}" />
+	</bean>
+
+	<!-- 业务数据cache -->
+	<!-- useSentinelModel -->
+	<bean id="redis" factory-bean="redisFactory" factory-method="initRedisSentinel" destroy-method="destroy">
+		<constructor-arg index="0" value="${redis.sentinel.server}" />
+	</bean>
+
+	<!-- 此id不能变更 -->
+	<!-- 使用Redis来做 @Cacher实现 -->
+	<bean id="cacheExtendService" class="com.yogu.commons.cache.redis.impl.RedisCacheExtendServiceImpl">
+		<property name="cacheExtendEnable" value="${cache.anno.enable}" />
+		<property name="defaultTime" value="${cache.anno.defTime}" />
+		<property name="redis" ref="redis" />
+	</bean>
+
+</beans>
