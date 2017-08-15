@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.user.base.dao.UserNicknameDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.user.base.entry.UserNicknamePO" useGeneratedKeys="false" >
+		insert into mz_user.mz_user_nickname (uid,im_id,country_code,passport,nickname,register_ip,register_city_code,register_lang,create_time) values (#{uid},#{imId},#{countryCode},#{passport},#{nickname},#{registerIp},#{registerCityCode},#{registerLang},#{createTime})
+	</insert>
+
+	<!-- 更新 -->
+	<update id="updateNickname" parameterType="Map">
+		update mz_user.mz_user_nickname set nickname=#{nickname} where uid=#{uid}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.user.base.entry.UserNicknamePO">
+		SELECT * FROM mz_user.mz_user_nickname WHERE uid=#{uid}
+	</select>
+
+	<!-- 根据IMID读取记录 -->
+	<select id="getByImid" parameterType="Map" resultType="com.yogu.services.user.base.entry.UserNicknamePO">
+		SELECT * FROM mz_user.mz_user_nickname WHERE im_id=#{imId}
+	</select>
+
+	<!-- 判定昵称是否存在，所以limit 1 -->
+	<select id="actuallyExists" parameterType="Map" resultType="com.yogu.services.user.base.entry.UserNicknamePO">
+		SELECT * FROM mz_user.mz_user_nickname WHERE nickname=#{nickname} limit 1
+	</select>
+
+</mapper>

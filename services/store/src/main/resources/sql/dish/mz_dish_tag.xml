@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.dish.dao.DishTagDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.dish.entry.DishTagPO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_dish_tag (tag_id,name,create_time) values (#{tagId},#{name},#{createTime})
+	</insert>
+
+	<!-- 获取全部的TAG数据 -->
+	<select id="listAllTag" resultType="com.mazing.services.store.dish.entry.DishTagPO">
+		SELECT * FROM mz_merchant.mz_dish_tag ORDER BY tag_id ASC
+	</select>
+
+	<!-- 查询某个菜品（dishKey）的全部tag配置 -->
+	<select id="queryByIds" parameterType="Map" resultType="com.mazing.services.store.dish.entry.DishTagPO">
+		SELECT * FROM mz_merchant.mz_dish_tag WHERE tag_id in <foreach item="item" collection="ids" open="(" separator="," close=")">#{item}</foreach>
+	</select>
+
+	<!-- 查询某个菜品（dishKey）的全部tag配置 -->
+	<select id="queryByDishKey" parameterType="Map" resultType="com.mazing.services.store.dish.entry.DishTagPO">
+		SELECT * FROM mz_merchant.mz_dish_tag WHERE tag_id in (SELECT tag_id FROM mz_merchant.mz_dish_tag_mp WHERE dish_key=#{dishKey})
+	</select>
+
+</mapper>

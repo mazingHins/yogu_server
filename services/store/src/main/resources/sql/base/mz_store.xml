@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.base.dao.StoreDao">
+
+	<!-- 新增 -->
+	<!-- modify by kimmy 2017-01-04 增加保存字段store_name_en -->
+	<insert id="save" parameterType="com.mazing.services.store.base.entry.StorePO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_store (store_id,uid,store_name,store_name_en,store_name_update_time,logo_path,topic_img,status,star,lat,lng,zip,address,phone,open_hours,service_hours,biz_type,adv_booking_days,accept_order_deadline,content,currency_type,advance_reserve_days,order_meal_num,order_feature_content,fav_count,comment_count,country_code,province_code,city_code,district_code,create_time,self_pick,pick_comment,support_cash,default_dish_group,support_mazing_pay,is_support_sf,cuisine_type) values (#{storeId},#{uid},#{storeName},#{storeNameEn},#{storeNameUpdateTime},#{logoPath},#{topicImg},#{status},#{star},#{lat},#{lng},#{zip},#{address},#{phone},#{openHours},#{serviceHours},#{bizType},#{advBookingDays},#{acceptOrderDeadline},#{content},#{currencyType},#{advanceReserveDays},#{orderMealNum},#{orderFeatureContent},#{favCount},#{commentCount},#{countryCode},#{provinceCode},#{cityCode},#{districtCode},#{createTime},#{selfPick},#{pickComment},#{supportCash},#{defaultDishGroup},#{supportMazingPay},#{isSupportSf},#{cuisineType})
+	</insert>
+
+	<!-- 修改门店名称，如果指定了updateTime，则一并修改（只有管理员修改时才不设定updateTime） -->
+	<update id="updateName" parameterType="com.mazing.services.store.base.entry.StorePO">
+		update mz_merchant.mz_store set store_name=#{storeName},store_name_en=#{storeNameEn}<if test="null != updateTime">,store_name_update_time=#{updateTime}</if> where store_id=#{storeId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.store.base.entry.StorePO">
+		SELECT * FROM mz_merchant.mz_store WHERE store_id=#{storeId}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.store.base.entry.StorePO">
+		SELECT * FROM mz_merchant.mz_store
+	</select>
+
+	<!-- 更改收藏数，收藏或者取消收藏，一次只+-1 -->
+	<update id="updateFavNum">
+		update mz_merchant.mz_store set fav_count=<if test="fav">fav_count+1</if><if test="!(fav)">fav_count-1</if> where store_id=#{storeId} 
+		<if test="!(fav)">AND fav_count>0</if>
+	</update>
+
+	<!-- 对评论数进行+1操作 -->
+	<update id="additiveCommentNum">
+		update mz_merchant.mz_store set comment_count=comment_count+1 where store_id=#{storeId}
+	</update>
+	
+	<!-- 对评论数进行-1操作 -->
+	<update id="reduceCommentNum">
+		update mz_merchant.mz_store set comment_count=comment_count-1 where store_id=#{storeId} and comment_count>0
+	</update>
+
+	<!-- 更改门店的营业时间 -->
+	<update id="updateOpenHours">
+		update mz_merchant.mz_store set open_hours=#{openHours} where store_id=#{storeId}
+	</update>
+
+	<!-- 更改门店的配送时间 -->
+	<update id="updateServiceHours">
+		update mz_merchant.mz_store set service_hours=#{serviceHours} where store_id=#{storeId}
+	</update>
+	
+	<!-- 根据门店名称查询门店数量   检查是否已经存在 -->
+	<select id="getCountByName" resultType="java.lang.Integer">
+		SELECT count(*) FROM mz_merchant.mz_store WHERE store_name=#{storeName}
+	</select>
+	
+	<!-- 根据门店英文名称查询门店数量   检查是否已经存在 -->
+	<select id="getCountByNameEn" resultType="java.lang.Integer">
+		SELECT count(*) FROM mz_merchant.mz_store WHERE store_name_en=#{storeNameEn}
+	</select>
+
+	<!-- 修改餐厅客户经理信息 jfan 2015-11-30 -->
+	<update id="updateClientServiceManager" parameterType="Map">
+		UPDATE mz_merchant.mz_store SET csm_name=#{csmName}, csm_phone=#{csmPhone} WHERE store_id=#{storeId}
+	</update>
+
+	<!-- 修改餐厅可以接受预定的天数 ten 2015/8/25 -->
+	<update id="updateAdvanceReserveDays" parameterType="Map">
+		UPDATE mz_merchant.mz_store SET advance_reserve_days=#{days} WHERE store_id=#{storeId}
+	</update>
+
+	<!-- 查询符合条件的商店数据，后台管理测试界面使用 teny 2015/9/1 -->
+	<select id="listStoreByPage" parameterType="Map" resultType="com.mazing.services.store.base.entry.StorePO">
+		SELECT * FROM mz_merchant.mz_store WHERE 1=1
+		<if test="excludeStatus > 0">
+			AND status != #{excludeStatus}
+		</if>
+		<if test="storeStatus > 0">
+			AND status = #{storeStatus}
+		</if>
+		order by create_time desc LIMIT #{offset},#{limit}
+	</select>
+	
+	<!-- 修改餐厅订单特征 hins 2015/9/03 -->
+	<update id="updateOrderFeature" parameterType="Map">
+		UPDATE mz_merchant.mz_store SET order_feature_content=#{feature} WHERE store_id=#{storeId}
+	</update>
+	
+		<!-- 更新 门店 是否自提 设置   sky 2015/09/09 -->
+	<update id="updateSelfPick" parameterType="Map">
+		UPDATE mz_merchant.mz_store SET self_pick=#{selfPick} WHERE store_id=#{storeId}
+	</update>
+	
+			<!-- 更新 门店 经营状态 status   sky 2015/09/10 -->
+	<update id="updateStatus" parameterType="Map">
+		UPDATE mz_merchant.mz_store SET status=#{status} 
+		<if test="remark != null">
+			,remark = #{remark}
+		</if>
+		WHERE store_id=#{storeId}
+	</update>
+	<!-- 更新 门店 是否支持米星支付状态    sky 2016/06/14 -->
+	<update id="updateMazingPayStatus" parameterType="Map">
+		UPDATE mz_merchant.mz_store SET support_mazing_pay=#{status} WHERE store_id=#{storeId}
+	</update>
+		<!-- 更新 门店 是否支持顺丰配送状态    sky 2016/09/30 -->
+	<update id="updateSfDeliveryStatus" parameterType="Map">
+		UPDATE mz_merchant.mz_store SET is_support_sf=#{status} WHERE store_id=#{storeId}
+	</update>
+	
+	<!-- 更新 门店 温馨提示信息    sky 2016/11/03 -->
+	<update id="updateStoreWarmTip" parameterType="Map">
+		UPDATE mz_merchant.mz_store SET warm_tip_zh=#{warmTipZh}, warm_tip_en=#{warmTipEn} WHERE store_id=#{storeId}
+	</update>
+	
+	<!-- 更新 门店 推荐首页展示logo图    sky 2016/12/16 -->
+	<update id="updateStoreIndexShowImg" parameterType="Map">
+		UPDATE mz_merchant.mz_store SET index_show_img=#{indexShowImg}  WHERE store_id=#{storeId}
+	</update>
+	
+		<!-- 更新 餐厅  顺丰餐点类型    sky 2016/09/30 -->
+	<update id="updateStoreSfCuisineType" parameterType="Map">
+		UPDATE mz_merchant.mz_store SET cuisine_type=#{cuisineType} WHERE store_id=#{storeId}
+	</update>
+	
+	
+	<!-- 修改门店部分数据 -->
+	<update id="updateStore" parameterType="com.mazing.services.store.base.entry.StorePO">
+		UPDATE mz_merchant.mz_store 
+		SET 
+			logo_path = #{logoPath},
+			phone = #{phone},
+			support_cash = #{supportCash},
+			content = #{content}
+		where store_id = #{storeId}
+	</update>
+	
+	<!-- 更改门店瀑布流图片地址 hins 2015/9/15 新增-->
+	<update id="updateTopicImg">
+		update mz_merchant.mz_store set topic_img=#{path} where store_id=#{storeId} 
+	</update>
+	
+	<!-- 获取门店总数 sky 2015/09/24 -->
+	<select id="getStoreCount" parameterType="Map" resultType="java.lang.Integer">
+		SELECT count(*) FROM mz_merchant.mz_store 
+	</select>
+	<!-- 根据时间倒排序  分页获取  门店ID  sky 2015/09/25 -->
+	<select id="getStoreIds" parameterType="Map"  resultType="java.lang.Long">
+		SELECT store_id FROM mz_merchant.mz_store ORDER BY create_time DESC LIMIT #{offset},#{limit}
+	</select>
+	
+	<!-- 更新 门店 星级评分   sky 2015/09/25 -->
+	<update id="updateStoreStar" parameterType="Map">
+		UPDATE mz_merchant.mz_store SET star=#{star} WHERE store_id=#{storeId}
+	</update>
+
+	<!-- 门店转让，后台管理使用 ten 2015/10/22 -->
+	<update id="transferStoreOwner" parameterType="Map">
+		UPDATE mz_merchant.mz_store SET uid=#{newUid}, phone=#{phone} WHERE store_id=#{storeId} and uid=#{oldUid}
+	</update>
+	
+	<!-- 更新 门店评论总数   sky 2015/11/04 -->
+	<update id="updateStoreCommentCount" parameterType="Map">
+		update mz_merchant.mz_store set comment_count=#{newCount} where store_id=#{storeId} and comment_count=#{oldCount}
+	</update>
+
+	<!-- 获取用户的门店列表，ten 2015/11/12 -->
+	<select id="listStoreByUid" parameterType="Map" resultType="com.mazing.services.store.base.entry.StorePO">
+		SELECT * FROM mz_merchant.mz_store WHERE uid=#{uid} order by create_time desc
+	</select>
+	<!-- 修改餐厅截单时间 Felix 2015-11-12 -->
+	<update id="updateAcceptOrderDeadline" parameterType="Map">
+		update mz_merchant.mz_store set accept_order_deadline=#{deadline} where store_id=#{storeId} and accept_order_deadline=#{oldDeadline}
+	</update>
+	
+	<!-- 修改餐厅营业类型 Felix 2015-11-12 -->
+	<update id="updateBizType" parameterType="Map">
+		update mz_merchant.mz_store set biz_type=#{bizType} where store_id=#{storeId}
+	</update>
+
+	<!-- 更新门店地址 ten 2015/11/26 -->
+	<update id="updateAddress" parameterType="Map">
+		update mz_merchant.mz_store set address=#{newAddress}, lng=#{newLng}, lat=#{newLat} WHERE store_id=#{storeId}
+	</update>
+	
+	<!-- 统计在指定营业状态下餐厅的数量 hins 2016/01/22 -->
+	<select id="statByStatus" resultType="java.lang.Integer">
+		SELECT count(*) FROM mz_merchant.mz_store WHERE status=#{status}
+	</select>
+	
+	<update id="addDishSequenceOperation">
+		update mz_merchant.mz_store set dish_sequence_operation=dish_sequence_operation+1 where store_id=#{storeId} 
+	</update>
+	
+	<update id="addGroupSequenceOperation">
+		update mz_merchant.mz_store set group_sequence_operation=group_sequence_operation+1 where store_id=#{storeId} 
+	</update>
+	
+	<!-- 修改餐厅提现类型 -->
+	<update id="changeWithdrawType" parameterType="Map">
+		update mz_merchant.mz_store set withdraw_type=#{withdrawType} where store_id=#{storeId}
+	</update>
+</mapper>

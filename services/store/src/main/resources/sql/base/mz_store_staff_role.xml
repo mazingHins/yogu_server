@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.base.dao.StoreStaffRoleDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.base.entry.StoreStaffRolePO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_store_staff_role (store_id,uid,name,im_id,role,create_time) values (#{storeId},#{uid},#{name},#{imId},#{role},#{createTime})
+	</insert>
+
+	<!-- 根据门店id,用户uid 删除用户的员工信息(店主 角色信息将不会被删除) -->
+	<delete id="deleteByStoreIdAndUid" parameterType="Map">
+		DELETE FROM mz_merchant.mz_store_staff_role WHERE  store_id=#{storeId} AND uid=#{uid} AND role!=1
+	</delete>
+
+	<!-- 删除角色，除了指定的角色（roleValue）不删除，其他的一律删除 -->
+	<delete id="deleteOtherRoleExceptKeep" parameterType="Map">
+		DELETE FROM mz_merchant.mz_store_staff_role WHERE store_id=#{storeId} AND uid=#{uid}<if test="null != keep"> AND role != #{keep}</if>
+	</delete>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.store.base.entry.StoreStaffRolePO">
+		update mz_merchant.mz_store_staff_role set im_id=#{imId}, name=#{name} where role=#{role} and store_id=#{storeId} and uid=#{uid}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.store.base.entry.StoreStaffRolePO">
+		SELECT * FROM mz_merchant.mz_store_staff_role WHERE role=#{param1} AND store_id=#{param2} AND uid=#{param3}
+	</select>
+	
+	<!-- 根据门店Id 和 用户Id 读取记录 -->
+	<select id="getByStoreAndUid" parameterType="Map" resultType="com.mazing.services.store.base.entry.StoreStaffRolePO">
+		SELECT * FROM mz_merchant.mz_store_staff_role WHERE store_id=#{storeId} AND uid=#{uid}
+	</select>
+	
+	<!-- 获取门店下指定类型的全部人员 -->
+	<select id="listStaffByType" resultType="com.mazing.services.store.base.entry.StoreStaffRolePO">
+		SELECT * FROM mz_merchant.mz_store_staff_role WHERE store_id = #{storeId} AND role = #{role} ORDER BY create_time DESC
+	</select>
+	
+	<!-- 获取门店下指定类型的员工，以分页形式返回 -->
+	<select id="pageStaffByType" resultType="com.mazing.services.store.base.entry.StoreStaffRolePO">
+		SELECT * FROM mz_merchant.mz_store_staff_role WHERE store_id = #{storeId} AND role = #{role} LIMIT #{offset}, #{rows}
+	</select>
+	
+	<!-- 获取门店下所有员工 (店主除外) sky 2015-09-17 -->
+	<select id="listAllByStoreId" resultType="com.mazing.services.store.base.entry.StoreStaffRolePO">
+		SELECT * FROM mz_merchant.mz_store_staff_role WHERE store_id = #{storeId} AND role!=1
+	</select>
+	
+	<!-- 查询某个用户的员工信息   sky -->
+	<select id="listByUid" resultType="com.mazing.services.store.base.entry.StoreStaffRolePO">
+		SELECT * FROM mz_merchant.mz_store_staff_role WHERE uid=#{uid}  ORDER BY role ASC
+	</select>
+
+	<!-- 门店转让，店主要转让，后台管理使用 2015/10/22 ten -->
+	<update id="transferStoreOwner" parameterType="Map">
+		UPDATE mz_merchant.mz_store_staff_role SET uid=#{newUid}, name=#{nickname}, im_id=#{imId} WHERE store_id=#{storeId} AND uid=#{oldUid} AND role=#{role}
+	</update>
+	
+	<!-- 分页查询所有的B端用户信息，去重 -->
+	<select id="listAllGroupByUid" parameterType="Map" resultType="com.mazing.services.store.base.entry.StoreStaffRolePO">
+		SELECT * FROM mz_merchant.mz_store_staff_role group by uid LIMIT #{offset}, #{limit}
+	</select>
+	
+	<!-- 获取门店下的所有角色信息 -->
+	<select id="listStoreAllRole" resultType="com.mazing.services.store.base.entry.StoreStaffRolePO">
+		SELECT * FROM mz_merchant.mz_store_staff_role WHERE store_id = #{storeId}  order by role DESC, create_time ASC
+	</select>
+	
+</mapper>

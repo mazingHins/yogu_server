@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.user.base.dao.UserSettingDao">
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="Map" useGeneratedKeys="false" >
+		insert into ${tableName} (uid,default_city_code,default_language_id,default_pay_mode,is_push,create_time) values (#{entity.uid},#{entity.defaultCityCode},#{entity.defaultLanguageId},#{entity.defaultPayMode},#{entity.isPush},#{entity.createTime})
+	</insert>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.user.base.entry.UserSettingPO">
+		SELECT * FROM ${tableName} WHERE uid=#{uid}
+	</select>
+	
+	<!-- 根据表名更新 -->
+	<update id="update" parameterType="Map">
+		update ${tableName}
+		<set>
+			<if test="entity.defaultCityCode != null">
+				default_city_code = #{entity.defaultCityCode,jdbcType=VARCHAR},
+			</if>
+			<if test="entity.defaultLanguageId != null">
+				default_language_id = #{entity.defaultLanguageId,jdbcType=VARCHAR},
+			</if>
+			<if test="entity.defaultPayMode != null and entity.defaultPayMode>0">
+				default_pay_mode = #{entity.defaultPayMode,jdbcType=TINYINT},
+			</if>
+			<if test="entity.isPush != null and entity.isPush >0">
+				is_push = #{entity.isPush,jdbcType=TINYINT},
+			</if>
+		</set>
+		where uid=#{entity.uid}
+	</update>
+	
+		<!-- 更新用户的接收推送消息字段 -->
+	<update id="updateIosPush" parameterType="Map">
+		update ${tableName} set is_push=#{isPush} where uid=#{uid}
+	</update>
+	
+</mapper>

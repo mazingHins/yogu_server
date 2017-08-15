@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.user.base.dao.UserDao">
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="Map" useGeneratedKeys="false" >
+		insert into ${tableName} (uid,country_code,passport,password,source,status,create_time) values (#{entity.uid},#{entity.countryCode},#{entity.passport},#{entity.password},#{entity.source},#{entity.status},#{entity.createTime})
+	</insert>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.user.base.entry.UserPO">
+		SELECT * FROM ${tableName} WHERE uid=#{uid}
+	</select>
+	
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getByPassport" parameterType="Map" resultType="com.yogu.services.user.base.entry.UserPO">
+		SELECT * FROM ${tableName} WHERE country_code=#{countryCode} and passport=#{passport}
+	</select>
+
+
+	<!-- 更新密码 -->
+	<update id="udpatePasswordByUid" parameterType="Map" >
+		update ${tableName} set password=#{password} WHERE uid=#{uid}
+	</update>
+	
+	
+	<select id="getAll" parameterType="Map" resultType="com.yogu.services.user.base.entry.UserPO">
+		SELECT * FROM ${tableName} 
+	</select>
+
+	<!-- 修改帐号状态 ten 2015/9/17 -->
+	<update id="updateUserStatus" parameterType="Map">
+		update ${tableName} set status=#{newStatus} WHERE uid=#{uid} and status=#{oldStatus}
+	</update>
+	
+	<!-- 查看账户状态 felix 2015/10/22 -->
+	<select id="getUserStatusById" parameterType="Map" resultType="java.lang.Short">
+		select status from ${tableName} WHERE uid=#{uid}
+	</select>
+</mapper>

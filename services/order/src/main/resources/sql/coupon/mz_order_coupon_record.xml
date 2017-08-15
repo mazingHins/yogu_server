@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.order.coupon.dao.OrderCouponRecordDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.order.coupon.entry.OrderCouponRecordPO" useGeneratedKeys="false" >
+		insert into mz_order.mz_order_coupon_record (record_id,order_id,coupon_rule_id,coupon_id,coupon_name,coupon_type,coupon_bear_type,face_value,coupon_fee,use_status,create_time) values (#{recordId},#{orderId},#{couponRuleId},#{couponId},#{couponName},#{couponType},#{couponBearType},#{faceValue},#{couponFee},#{useStatus},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_order.mz_order_coupon_record WHERE record_id=#{param1}
+	</delete>
+	 -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.order.coupon.entry.OrderCouponRecordPO">
+		update mz_order.mz_order_coupon_record set order_id=#{orderId},coupon_rule_id=#{couponRuleId},coupon_id=#{couponId},coupon_name=#{couponName},coupon_type=#{couponType},coupon_bear_type=#{couponBearType},face_value=#{faceValue},coupon_fee=#{couponFee},use_status=#{useStatus} where record_id=#{recordId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.order.coupon.entry.OrderCouponRecordPO">
+		SELECT * FROM mz_order.mz_order_coupon_record WHERE record_id=#{recordId}
+	</select>
+
+	<!-- 查询订单指定使用状态的优惠券使用记录，不排序 -->
+	<select id="listByOrderAndStatus" parameterType="Map" resultType="com.mazing.services.order.coupon.entry.OrderCouponRecordPO">
+		SELECT * FROM mz_order.mz_order_coupon_record WHERE order_id=#{orderId} AND use_status=#{useStatus}
+	</select>
+	
+	<update id="updateUseStatus">
+		update mz_order.mz_order_coupon_record set use_status=#{newStatus} where order_id=#{orderId} and use_status=#{oldStatus}
+	</update>
+	
+	<select id="listByOrder" parameterType="Map" resultType="com.mazing.services.order.coupon.entry.OrderCouponRecordPO">
+		SELECT * FROM mz_order.mz_order_coupon_record WHERE order_id=#{orderId} order by create_time DESC
+	</select>
+	
+	<!-- 根据日期获取订单使用优惠券的记录 -->
+	<select id="listByDate" parameterType="Map" resultType="com.mazing.services.order.coupon.entry.OrderCouponRecordPO">
+		SELECT * FROM mz_order.mz_order_coupon_record WHERE 1=1
+		<if test="date != null and date != ''">
+			and create_time like #{date}
+		</if>
+		order by create_time DESC
+	</select>
+</mapper>

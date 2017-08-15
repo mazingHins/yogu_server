@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.order.base.dao.OrderRefundDetailDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.order.base.entry.OrderRefundDetailPO" useGeneratedKeys="false" >
+		insert into mz_order.mz_order_refund_detail (refund_id,ticket_id,ticket_no,ticket_rule_id,refund_fee,uid,create_time) values (#{refundId},#{ticketId},#{ticketNo},#{ticketRuleId},#{refundFee},#{uid},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_order.mz_order_refund_detail WHERE refund_id=#{param1} AND ticket_id=#{param2}
+	</delete>
+	 -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.order.base.entry.OrderRefundDetailPO">
+		update mz_order.mz_order_refund_detail set ticket_no=#{ticketNo},ticket_rule_id=#{ticketRuleId},refund_fee=#{refundFee},uid=#{uid} where refund_id=#{refundId} and ticket_id=#{ticketId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderRefundDetailPO">
+		SELECT * FROM mz_order.mz_order_refund_detail WHERE refund_id=#{param1} AND ticket_id=#{param2}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.order.base.entry.OrderRefundDetailPO">
+		SELECT * FROM mz_order.mz_order_refund_detail
+	</select>
+
+	<!-- 批量插入 -->
+	<insert id="saveAll" parameterType="java.util.List">
+        insert into mz_order.mz_order_ticket_detail (refund_id,ticket_id,ticket_no,ticket_rule_id,refund_fee,uid,create_time)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{refundId},#{ticketId},#{ticketNo},#{ticketRuleId},#{refundFee},#{uid},#{createTime})
+        </foreach>
+    </insert>
+</mapper>

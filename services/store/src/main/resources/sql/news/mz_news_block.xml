@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.news.dao.NewsBlockDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.news.entry.NewsBlockPO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_news_block (bid,city_code,lang_code,type,action,img,title,author,author_pic,pub_time,read_count,url,can_share,status,sequence,create_time,update_time,admin_id,share_img,share_title,share_timeline_title,share_content,show_pub) values (#{bid},#{cityCode},#{langCode},#{type},#{action},#{img},#{title},#{author},#{authorPic},#{pubTime},#{readCount},#{url},#{canShare},#{status},#{sequence},#{createTime},#{updateTime},#{adminId},#{shareImg},#{shareTitle},#{shareTimelineTitle},#{shareContent},#{showPub})
+	</insert>
+
+	<!-- 根据主键，删除数据-->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_merchant.mz_news_block WHERE bid=#{param1}
+	</delete>
+	 
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.store.news.entry.NewsBlockPO">
+		update mz_merchant.mz_news_block set city_code=#{cityCode},lang_code=#{langCode},type=#{type},action=#{action},img=#{img},title=#{title},author=#{author},author_pic=#{authorPic},pub_time=#{pubTime},read_count=#{readCount},url=#{url},can_share=#{canShare},status=#{status},sequence=#{sequence},update_time=#{updateTime},admin_id=#{adminId},share_img=#{shareImg},share_title=#{shareTitle},share_timeline_title=#{shareTimelineTitle},share_content=#{shareContent},show_pub=#{showPub} where bid=#{bid}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.store.news.entry.NewsBlockPO">
+		SELECT * FROM mz_merchant.mz_news_block WHERE bid=#{param1}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.store.news.entry.NewsBlockPO">
+		SELECT * FROM mz_merchant.mz_news_block
+	</select>
+	
+	<select id="pageAll" resultType="com.mazing.services.store.news.entry.NewsBlockPO">
+		SELECT * FROM mz_merchant.mz_news_block where city_code=#{cityCode} AND lang_code=#{langCode} ORDER BY pub_time DESC LIMIT #{offset}, #{rows}
+	</select>
+	
+	<select id="listByPage" resultType="com.mazing.services.store.news.entry.NewsBlockPO">
+		SELECT * FROM mz_merchant.mz_news_block  LIMIT #{offset}, #{pageSize}
+	</select>
+	
+	
+	<!-- 查询阅读数 -->
+	<select id="getReadCount" parameterType="Map" resultType="java.lang.Integer">
+		SELECT read_count FROM mz_merchant.mz_news_block WHERE bid=#{bid}
+	</select>
+	
+	
+	<!-- 增加 阅读数 -->
+	<update id="increaseReadCount" parameterType="Map">
+		UPDATE mz_merchant.mz_news_block set read_count=read_count+1 where bid=#{bid}
+	</update>
+	
+
+	<!-- 查询今日可用的资讯信息 -->
+	<select id="pageTodayAvailableData" resultType="com.mazing.services.store.news.entry.NewsBlockPO">
+		SELECT * FROM mz_merchant.mz_news_block where status=1  
+		
+		<![CDATA[ 
+			AND	CONVERT(pub_time,DATE) <= CURDATE()
+		]]>
+		 AND city_code=#{cityCode} AND lang_code=#{langCode} ORDER BY pub_time DESC LIMIT #{offset}, #{rows}
+	</select>
+
+
+	<!-- 获取cityCode下 sequence 最大的那条记录 -->
+	<select id="getMaxSequenceBlock" parameterType="Map"
+		resultType="com.mazing.services.store.news.entry.NewsBlockPO">
+		SELECT * FROM mz_merchant.mz_news_block where
+		city_code=#{cityCode} order by sequence DESC limit 1
+	</select>
+
+	<!-- 更新块 的状态 -->
+	<update id="updateBlockStatus" parameterType="Map">
+		update
+		mz_merchant.mz_news_block set
+		status=#{newStatus},admin_id=#{adminId}, update_time=now() where
+		bid=#{bid} AND
+		status=#{oldStatus}
+	</update>
+	
+	
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.news.dao.NewsStoreStoreinfoMpDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.news.entry.NewsStoreStoreinfoMpPO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_news_store_storeinfo_mp (store_id,sinfo_id,create_time) values (#{storeId},#{sinfoId},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_merchant.mz_news_store_storeinfo_mp WHERE sinfo_id=#{param1} AND store_id=#{param2}
+	</delete>
+	 -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.store.news.entry.NewsStoreStoreinfoMpPO">
+		update mz_merchant.mz_news_store_storeinfo_mp set  where sinfo_id=#{sinfoId} and store_id=#{storeId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.store.news.entry.NewsStoreStoreinfoMpPO">
+		SELECT * FROM mz_merchant.mz_news_store_storeinfo_mp WHERE sinfo_id=#{param1} AND store_id=#{param2}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.store.news.entry.NewsStoreStoreinfoMpPO">
+		SELECT * FROM mz_merchant.mz_news_store_storeinfo_mp
+	</select>
+	<!-- 分页查询推荐的餐厅关系列表， create_time 倒排序   -->
+	<select id="listByPage" resultType="com.mazing.services.store.news.entry.NewsStoreStoreinfoMpPO">
+		SELECT * FROM mz_merchant.mz_news_store_storeinfo_mp order by create_time DESC LIMIT #{offset},#{pageSize} 
+	</select>
+	
+	<!-- 根据资讯餐厅的Id获取关联米星餐厅的id -->
+	<select id="getRelationStoreId" parameterType="Map" resultType="java.lang.Long">
+		SELECT store_id FROM mz_merchant.mz_news_store_storeinfo_mp WHERE sinfo_id = #{sinfoId}
+	</select>
+	
+	<!-- 根据米星餐厅的id获取关联的资讯餐厅id -->
+	<select id="getSinfoIdbyStoreId" parameterType="Map" resultType="java.lang.Long">
+		SELECT sinfo_id FROM mz_merchant.mz_news_store_storeinfo_mp WHERE store_id = #{storeId}
+	</select>
+</mapper>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.dish.dao.DishGroupDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.dish.entry.DishGroupPO" useGeneratedKeys="true" keyProperty="groupId" >
+		insert into mz_merchant.mz_dish_group (group_id,group_name,sequence,store_id,is_default,default_show,create_time) values (#{groupId},#{groupName},#{sequence},#{storeId},#{isDefault},#{defaultShow},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据 -->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_merchant.mz_dish_group WHERE group_id=#{param1}
+	</delete>
+	 
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.store.dish.entry.DishGroupPO">
+		update mz_merchant.mz_dish_group set group_name=#{groupName},sequence=#{sequence},store_id=#{storeId},is_default=#{isDefault},default_show=#{defaultShow} where group_id=#{groupId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.store.dish.entry.DishGroupPO">
+		SELECT * FROM mz_merchant.mz_dish_group WHERE group_id=#{param1}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.store.dish.entry.DishGroupPO">
+		SELECT * FROM mz_merchant.mz_dish_group
+	</select>
+	
+	<!-- 查询门店下的美食分组记录，结果按照sequence顺序排序  2016-03-24 add by hins -->
+	<select id="listByStoreId" parameterType="Map" resultType="com.mazing.services.store.dish.entry.DishGroupPO">
+		SELECT * FROM mz_merchant.mz_dish_group WHERE store_id=#{storeId} order by sequence ASC
+	</select>
+
+	<!-- 根据storeId 查询该店内最大排序值的分组 -->
+	<select id="getMaxSeqGroupByStoreId" resultType="com.mazing.services.store.dish.entry.DishGroupPO" parameterType="Map">
+		SELECT * FROM mz_merchant.mz_dish_group where store_id=#{storeId} ORDER BY sequence DESC LIMIT 0,1;
+	</select>
+	
+	<!-- 设置菜品分组是否进入餐厅默认展示 -->
+	<update id="updateDefaultShowByStoreId" parameterType="Map">
+		UPDATE mz_merchant.mz_dish_group SET default_show=#{show} WHERE store_id=#{storeId}
+	</update>
+	
+	<!-- 获取比该排序值排前一位的分组 -->
+	<select id="getUpperGroup" resultType="com.mazing.services.store.dish.entry.DishGroupPO" parameterType="Map">
+		SELECT * FROM mz_merchant.mz_dish_group WHERE 
+		store_id=#{storeId} 
+		<![CDATA[ 
+			and sequence<#{seq} 
+		]]>
+		ORDER BY sequence DESC LIMIT 0,1;
+	</select>
+	
+	<!-- 获取比该排序值排后一位的分组 -->
+	<select id="getLowerGroup" resultType="com.mazing.services.store.dish.entry.DishGroupPO" parameterType="Map">
+		SELECT * FROM mz_merchant.mz_dish_group WHERE 
+		store_id=#{storeId} 
+		<![CDATA[ 
+			and sequence>#{seq} 
+		]]>
+		ORDER BY sequence ASC LIMIT 0,1;
+	</select>
+	
+	<update id="updateSequence" parameterType="Map">
+		UPDATE mz_merchant.mz_dish_group SET sequence=#{newSequence} WHERE group_id=#{groupId} and store_id=#{storeId} and sequence=#{oldSequence}
+	</update>
+</mapper>

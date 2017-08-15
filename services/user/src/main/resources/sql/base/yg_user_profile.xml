@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.user.base.dao.UserProfileDao">
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="Map" useGeneratedKeys="false" >
+		insert into ${tableName} (uid,country_code,city_code,passport,nickname,sex,im_id,profile_pic,user_type,vip_level,score,concern_stores,concern_dishes,create_time,last_update_time,register_ip,lang) values (#{entity.uid},#{entity.countryCode},#{entity.cityCode},#{entity.passport},#{entity.nickname},#{entity.sex},#{entity.imId},#{entity.profilePic},#{entity.userType},#{entity.vipLevel},#{entity.score},#{entity.concernStores},#{entity.concernDishes},#{entity.createTime},#{entity.lastUpdateTime},#{entity.registerIp},#{entity.lang})
+	</insert>
+
+	<!-- 更新昵称 -->
+	<update id="updateNickName" parameterType="Map">
+		update ${tableName}
+		<set>
+			nickname = #{nickname},
+			last_update_time = #{updateTime},
+		</set>
+		where uid=#{uid}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.user.base.entry.UserProfilePO">
+		SELECT * FROM ${tableName} WHERE uid=#{uid}
+	</select>
+
+	<!-- 更新用户的头像信息 -->
+	<update id="updateProfilePic" parameterType="Map">
+		update ${tableName} set profile_pic=#{profilePic},last_update_time=#{lastUpdateTime} where uid=#{uid}
+	</update>
+	
+	<!-- 语言标识  2016/03/18 by sky -->
+	<update id="updateLanguage" parameterType="Map">
+		update ${tableName} set lang=#{langCode},city_code=#{cityCode} where uid=#{uid}
+	</update>
+	
+	<!--
+	根据表名读取一页数据, 2016/2/1 by ten，仅用于后台管理推送
+	-->
+	<select id="listUidByPage" parameterType="Map" resultType="java.lang.Long">
+		SELECT uid FROM ${tableName} LIMIT #{offset},#{pageSize}
+	</select>
+
+	<!--
+	根据表名读取一页数据, 2016/2/2 by ten，仅用于后台管理推送
+	-->
+	<select id="listPassportByPage" parameterType="Map" resultType="java.util.Map">
+		SELECT uid,country_code,passport FROM ${tableName} LIMIT #{offset},#{pageSize}
+	</select>
+</mapper>

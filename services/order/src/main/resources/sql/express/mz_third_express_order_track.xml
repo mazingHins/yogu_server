@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.order.express.dao.ThirdExpressOrderTrackDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.order.express.entry.ThirdExpressOrderTrackPO" useGeneratedKeys="false" >
+		insert into mz_order.mz_third_express_order_track (third_track_id,express_code,store_id,uid,order_id,order_no,third_order_no,deliver_name,deliver_phone,operate_time,express_status,express_status_desc,order_status,lat,lng,content,create_time) values (#{thirdTrackId},#{expressCode},#{storeId},#{uid},#{orderId},#{orderNo},#{thirdOrderNo},#{deliverName},#{deliverPhone},#{operateTime},#{expressStatus},#{expressStatusDesc},#{orderStatus},#{lat},#{lng},#{content},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_order.mz_third_express_order_track WHERE third_track_id=#{param1}
+	</delete>
+	 -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.order.express.entry.ThirdExpressOrderTrackPO">
+		update mz_order.mz_third_express_order_track set express_code=#{expressCode},store_id=#{storeId},uid=#{uid},order_id=#{orderId},order_no=#{orderNo},third_order_no=#{thirdOrderNo},deliver_name=#{deliverName},deliver_phone=#{deliverPhone},operate_time=#{operateTime},express_status=#{expressStatus},express_status_desc=#{expressStatusDesc},order_status=#{orderStatus},lat=#{lat},lng=#{lng},content=#{content} where third_track_id=#{thirdTrackId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.order.express.entry.ThirdExpressOrderTrackPO">
+		SELECT * FROM mz_order.mz_third_express_order_track WHERE third_track_id=#{param1}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.order.express.entry.ThirdExpressOrderTrackPO">
+		SELECT * FROM mz_order.mz_third_express_order_track
+	</select>
+
+</mapper>

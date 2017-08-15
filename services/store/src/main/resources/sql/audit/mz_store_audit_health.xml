@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.audit.dao.StoreAuditHealthDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.audit.entry.StoreAuditHealthPO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_store_audit_health (hid,store_id,realname,rolename,role_id,status,h_pic1,h_pic2,h_pic3,h_pic4,effective,create_time,up_time) values (#{hid},#{storeId},#{realname},#{rolename},#{roleId},#{status},#{hPic1},#{hPic2},#{hPic3},#{hPic4},#{effective},#{createTime},#{upTime})
+	</insert>
+
+	<!-- 根据主键，删除数据
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_merchant.mz_store_audit_health WHERE hid=#{param1}
+	</delete>
+	 -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.store.audit.entry.StoreAuditHealthPO">
+		update mz_merchant.mz_store_audit_health set store_id=#{storeId},realname=#{realname},rolename=#{rolename},role_id=#{roleId},status=#{status},h_pic1=#{hPic1},h_pic2=#{hPic2},h_pic3=#{hPic3},h_pic4=#{hPic4},effective=#{effective},up_time=#{upTime} where hid=#{hid}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.store.audit.entry.StoreAuditHealthPO">
+		SELECT * FROM mz_merchant.mz_store_audit_health WHERE hid=#{param1}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.store.audit.entry.StoreAuditHealthPO">
+		SELECT * FROM mz_merchant.mz_store_audit_health
+	</select>
+<!-- 查询门店下的所有健康认证信息   sky-->
+	<select id="listAllByStoreId" resultType="com.mazing.services.store.audit.entry.StoreAuditHealthPO">
+		SELECT * FROM mz_merchant.mz_store_audit_health where store_id=#{storeId}
+	</select>
+	
+	
+	<!-- 更新 审核状态 -->
+	<update id="updateStatus" parameterType="Map">
+		UPDATE mz_merchant.mz_store_audit_health SET status=#{status} WHERE hid=#{hid}
+	</update>
+	
+
+
+</mapper>

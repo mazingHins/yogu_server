@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.ticket.dao.EventDetailDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.ticket.entry.EventDetailPO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_event_detail (event_id,lang_code,name,description,address,content,rights,notice) values (#{eventId},#{langCode},#{name},#{description},#{address},#{content},#{rights},#{notice})
+	</insert>
+
+	<!-- 根据主键，删除数据
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_merchant.mz_event_detail WHERE event_id=#{param1} AND lang_code=#{param2}
+	</delete>
+	 -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.store.ticket.entry.EventDetailPO">
+		update mz_merchant.mz_event_detail set name=#{name},description=#{description},address=#{address},content=#{content},rights=#{rights},notice=#{notice} where event_id=#{eventId} and lang_code=#{langCode}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.store.ticket.entry.EventDetailPO">
+		SELECT * FROM mz_merchant.mz_event_detail WHERE event_id=#{param1} AND lang_code=#{param2}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.store.ticket.entry.EventDetailPO">
+		SELECT * FROM mz_merchant.mz_event_detail
+	</select>
+
+</mapper>

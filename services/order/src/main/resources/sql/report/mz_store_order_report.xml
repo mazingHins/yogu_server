@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.order.report.dao.StoreOrderReportDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.order.report.entry.StoreOrderReportPO" useGeneratedKeys="false" >
+		insert into mz_order.mz_store_order_report (record_id,store_id,date_serial,mazing_pay_finish_orders_fee,mazing_pay_finish_orders,mazing_pay_refund_orders_fee,mazing_pay_refund_orders,mazing_pay_store_coupon_fee,finish_orders_fee,online_finish_orders_fee,cash_finish_orders_fee,finish_orders,online_finish_orders,cash_finish_orders,refund_orders,refund_orders_fee,cancel_orders,cancel_orders_fee,create_orders_fee,create_orders,online_create_orders,cash_create_orders,online_create_orders_fee,cash_create_orders_fee,online_store_coupon_fee,create_time) values (#{recordId},#{storeId},#{dateSerial},#{mazingPayFinishOrdersFee},#{mazingPayFinishOrders},#{mazingPayRefundOrdersFee},#{mazingPayRefundOrders},#{mazingPayStoreCouponFee},#{finishOrdersFee},#{onlineFinishOrdersFee},#{cashFinishOrdersFee},#{finishOrders},#{onlineFinishOrders},#{cashFinishOrders},#{refundOrders},#{refundOrdersFee},#{cancelOrders},#{cancelOrdersFee},#{createOrdersFee},#{createOrders},#{onlineCreateOrders},#{cashCreateOrders},#{onlineCreateOrdersFee},#{cashCreateOrdersFee},#{onlineStoreCouponFee},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_order.mz_store_order_report WHERE record_id=#{param1}
+	</delete>
+	 -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.order.report.entry.StoreOrderReportPO">
+		update mz_order.mz_store_order_report set store_id=#{storeId},date_serial=#{dateSerial},mazing_pay_finish_orders_fee=#{mazingPayFinishOrdersFee},mazing_pay_finish_orders=#{mazingPayFinishOrders},mazing_pay_refund_orders_fee=#{mazingPayRefundOrdersFee},mazing_pay_refund_orders=#{mazingPayRefundOrders},mazing_pay_store_coupon_fee=#{mazingPayStoreCouponFee},finish_orders_fee=#{finishOrdersFee},online_finish_orders_fee=#{onlineFinishOrdersFee},cash_finish_orders_fee=#{cashFinishOrdersFee},finish_orders=#{finishOrders},online_finish_orders=#{onlineFinishOrders},cash_finish_orders=#{cashFinishOrders},refund_orders=#{refundOrders},refund_orders_fee=#{refundOrdersFee},cancel_orders=#{cancelOrders},cancel_orders_fee=#{cancelOrdersFee},create_orders_fee=#{createOrdersFee},create_orders=#{createOrders},online_create_orders=#{onlineCreateOrders},cash_create_orders=#{cashCreateOrders},online_create_orders_fee=#{onlineCreateOrdersFee},cash_create_orders_fee=#{cashCreateOrdersFee},online_store_coupon_fee=#{onlineStoreCouponFee} where record_id=#{recordId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.order.report.entry.StoreOrderReportPO">
+		SELECT * FROM mz_order.mz_store_order_report WHERE record_id=#{recordId}
+	</select>
+
+	<!-- 查询某个时间天数段内的门店报表数据 -->
+	<select id="queryStoreReport" resultType="com.mazing.services.order.report.entry.StoreOrderReportPO">
+		SELECT * FROM mz_order.mz_store_order_report WHERE store_id=#{storeId} AND date_serial BETWEEN #{beginTime} AND #{endTime}
+	</select>
+
+	<!-- 修改门店每日报表的完成订单总数量 hins 2015/9/21 新增 -->
+	<update id="updFinishOrders">
+		update mz_order.mz_store_order_report set
+		finish_orders=finish_orders+1,finish_orders_fee=finish_orders_fee+#{onlineFee}+#{cashFee}
+		<if test="onlineFee >0">
+			,online_finish_orders_fee=online_finish_orders_fee+#{onlineFee}
+		</if>
+		<if test="cashFee >0">
+			,cash_finish_orders_fee=cash_finish_orders_fee+#{cashFee}
+		</if>
+		where store_id=#{storeId} AND date_serial=#{dateSerial}
+	</update>
+
+	<!-- 修改门店每日报表的取消订单总数量 hins 2015/9/21 新增 -->
+	<update id="updCancelOrders">
+		update mz_order.mz_store_order_report set
+		cancel_orders=cancel_orders+1,cancel_orders_fee=cancel_orders_fee+#{cancelFee} where store_id=#{storeId} AND
+		date_serial=#{dateSerial}
+	</update>
+
+	<!-- 修改门店每日报表的退款单数量 hins 2015/9/21 新增 -->
+	<update id="updRefundOrders">
+		update mz_order.mz_store_order_report set
+		refund_orders=refund_orders+1,refund_orders_fee=refund_orders_fee+#{refundFee}
+		where store_id=#{storeId} AND date_serial=#{dateSerial}
+	</update>
+
+	<!-- 修改门店每日报表的下单成功总数量和费用 hins 2015/9/21 新增 -->
+	<update id="updCreateOrders">
+		update mz_order.mz_store_order_report set
+		create_orders=create_orders+1,create_orders_fee=create_orders_fee+#{createFee}
+		where store_id=#{storeId} AND date_serial=#{dateSerial}
+	</update>
+	
+	<!-- 修改门店每日报表的下单成功总数量和费用 hins 2016/8/8 新增 -->
+	<update id="updateMazingPayFinish">
+		update mz_order.mz_store_order_report set
+		mazing_pay_finish_orders=mazing_pay_finish_orders+1,mazing_pay_finish_orders_fee=mazing_pay_finish_orders_fee+#{totalFee}
+		where store_id=#{storeId} AND date_serial=#{dateSerial}
+	</update>
+	
+	<!-- 根据门店ID和报表日期读取记录 hins 2015/9/21 新增   -->
+	<select id="getByStoreDate" parameterType="Map" resultType="com.mazing.services.order.report.entry.StoreOrderReportPO">
+		SELECT * FROM mz_order.mz_store_order_report WHERE store_id=#{storeId}  AND date_serial=#{dateSerial}
+	</select>
+	
+	<update id="updateNotUnique" parameterType="com.mazing.services.order.report.entry.StoreOrderReportPO">
+		update mz_order.mz_store_order_report set mazing_pay_finish_orders_fee=#{mazingPayFinishOrdersFee},mazing_pay_finish_orders=#{mazingPayFinishOrders},mazing_pay_refund_orders_fee=#{mazingPayRefundOrdersFee},mazing_pay_refund_orders=#{mazingPayRefundOrders},mazing_pay_store_coupon_fee=#{mazingPayStoreCouponFee},finish_orders_fee=#{finishOrdersFee},online_finish_orders_fee=#{onlineFinishOrdersFee},cash_finish_orders_fee=#{cashFinishOrdersFee},finish_orders=#{finishOrders},online_finish_orders=#{onlineFinishOrders},cash_finish_orders=#{cashFinishOrders},refund_orders=#{refundOrders},refund_orders_fee=#{refundOrdersFee},cancel_orders=#{cancelOrders},cancel_orders_fee=#{cancelOrdersFee},create_orders_fee=#{createOrdersFee},create_orders=#{createOrders},online_create_orders=#{onlineCreateOrders},cash_create_orders=#{cashCreateOrders},online_create_orders_fee=#{onlineCreateOrdersFee},cash_create_orders_fee=#{cashCreateOrdersFee},online_store_coupon_fee=#{onlineStoreCouponFee} where store_id=#{storeId} AND date_serial=#{dateSerial}
+		
+	</update>
+	
+	<!-- 修改门店每日报表的退款单数量，该方法适用于：已完成订单退款的场景 hins 2016/8/16 新增 -->
+	<update id="updRefundFinishOrders">
+		update mz_order.mz_store_order_report set
+		refund_orders=refund_orders+1,refund_orders_fee=refund_orders_fee+#{refundFee},
+		finish_orders_fee=finish_orders_fee-#{refundFee},finish_orders_fee=finish_orders_fee-1,online_finish_orders_fee=online_finish_orders_fee-#{refundFee}
+		where store_id=#{storeId} AND date_serial=#{dateSerial} and finish_orders_fee>#{refundFee} and finish_orders_fee>1 and online_finish_orders_fee>#{refundFee}
+	</update>
+	
+	<!-- 修改门店每日报表的米星付退款单数量，该方法适用于：已完成订单退款的场景 hins 2016/8/16 新增 -->
+	<update id="updMazingPayRefund">
+		update mz_order.mz_store_order_report set
+		mazing_pay_refund_orders=mazing_pay_refund_orders+1,
+		mazing_pay_refund_orders_fee=mazing_pay_refund_orders_fee+#{refundFee},
+		mazing_pay_finish_orders_fee=mazing_pay_finish_orders_fee-#{refundFee},
+		mazing_pay_finish_orders=mazing_pay_finish_orders-1
+		where store_id=#{storeId} AND date_serial=#{dateSerial} and mazing_pay_finish_orders_fee>=#{refundFee} and mazing_pay_finish_orders>=1
+	</update>
+
+</mapper>

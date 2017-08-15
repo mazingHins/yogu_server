@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.dish.dao.SpecSupplementDao">
+
+	<!-- 新增 -->
+	<insert id="save"
+		parameterType="com.mazing.services.store.dish.entry.SpecSupplementPO"
+		useGeneratedKeys="false">
+		insert into mz_merchant.mz_spec_supplement
+		(supplement_id,supplement_name,spec_key,store_id,dish_key,create_time)
+		values
+		(#{supplementId},#{supplementName},#{specKey},#{storeId},#{dishKey},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据 <delete id="deleteById" parameterType="Map"> DELETE FROM 
+		mz_merchant.mz_spec_supplement WHERE supplement_id=#{param1} </delete> -->
+
+	<!-- 更新 -->
+	<update id="update"
+		parameterType="com.mazing.services.store.dish.entry.SpecSupplementPO">
+		update mz_merchant.mz_spec_supplement set
+		supplement_name=#{supplementName},spec_key=#{specKey},store_id=#{storeId},dish_key=#{dishKey}
+		where supplement_id=#{supplementId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map"
+		resultType="com.mazing.services.store.dish.entry.SpecSupplementPO">
+		SELECT * FROM mz_merchant.mz_spec_supplement WHERE
+		supplement_id=#{param1}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll"
+		resultType="com.mazing.services.store.dish.entry.SpecSupplementPO">
+		SELECT * FROM mz_merchant.mz_spec_supplement
+	</select>
+
+	<!-- 通过菜品规格 specKey查询规格下的备注信息 -->
+	<select id="listBySpecKey" resultType="com.mazing.services.store.dish.entry.SpecSupplementPO">
+		SELECT * FROM mz_merchant.mz_spec_supplement where spec_key=#{specKey} ORDER BY supplement_id ASC
+	</select>
+
+	<!-- 通过菜品Key查询规格下的备注信息 -->
+	<select id="listByDishKey" resultType="com.mazing.services.store.dish.entry.SpecSupplementPO">
+		SELECT * FROM mz_merchant.mz_spec_supplement where dish_key=#{dishKey} ORDER BY supplement_id ASC
+	</select>
+
+	<!-- 查询餐厅下，所有美食所有规格，之下全部的备注信息 -->
+	<select id="listByStoreId" resultType="com.mazing.services.store.dish.entry.SpecSupplementPO">
+		SELECT * FROM mz_merchant.mz_spec_supplement where store_id=#{storeId} ORDER BY supplement_id ASC
+	</select>
+
+	<!-- 根据规格Key, 删除不在list的备注 -->
+	<delete id="deleteNotInList" parameterType="Map"> 
+		DELETE FROM mz_merchant.mz_spec_supplement WHERE spec_key=#{specKey} and  supplement_id NOT IN (
+			<foreach collection="supplementIds" item="item" index="index" separator="," >
+				#{item}
+			</foreach>
+		)
+	</delete>
+	
+	<!-- 根据规格key, 删除所有备注 -->
+	<delete id="deleteBySpecKey" parameterType="Map"> 
+		DELETE FROM mz_merchant.mz_spec_supplement WHERE spec_key=#{specKey}
+	</delete>
+	
+	<!-- 根据菜品key和指定的规格key, 删除所有备注 -->
+	<delete id="deleteByDishKeyAndSpecKey" parameterType="Map"> 
+		DELETE FROM mz_merchant.mz_spec_supplement WHERE dish_key=#{dishKey}
+		<if test="specKeys != null">
+			AND spec_key IN (
+			<foreach collection="specKeys" item="item" index="index" separator="," >
+				#{item}
+			</foreach>
+			)
+		</if>
+	</delete>
+</mapper>

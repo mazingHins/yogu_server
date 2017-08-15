@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.audit.dao.StoreAuditFacilityDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.audit.entry.StoreAuditFacilityPO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_store_audit_facility (store_id,kitchen_type,kitchen_address,scale,pics,remark,effective,create_time,up_time) values (#{storeId},#{kitchenType},#{kitchenAddress},#{scale},#{pics},#{remark},#{effective},#{createTime},#{upTime})
+	</insert>
+
+	<!-- 根据主键，删除数据
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_merchant.mz_store_audit_facility WHERE store_id=#{param1}
+	</delete>
+	 -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.store.audit.entry.StoreAuditFacilityPO">
+		update mz_merchant.mz_store_audit_facility set kitchen_type=#{kitchenType},kitchen_address=#{kitchenAddress},scale=#{scale},pics=#{pics},remark=#{remark},effective=#{effective},up_time=#{upTime},status=#{status} where store_id=#{storeId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.store.audit.entry.StoreAuditFacilityPO">
+		SELECT * FROM mz_merchant.mz_store_audit_facility WHERE store_id=#{param1}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.store.audit.entry.StoreAuditFacilityPO">
+		SELECT * FROM mz_merchant.mz_store_audit_facility
+	</select>
+
+	<!-- 更新 审核状态 -->
+	<update id="updateStatus" parameterType="Map">
+		UPDATE mz_merchant.mz_store_audit_facility SET status=#{status} WHERE store_id=#{storeId}
+	</update>
+
+</mapper>

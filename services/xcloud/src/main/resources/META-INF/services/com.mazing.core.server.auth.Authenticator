@@ -1,0 +1,3 @@
+com.mazing.core.server.auth.ApiAuthenticatorImpl
+com.mazing.core.web.auth.TestAuthenticatorImpl
+com.mazing.core.web.auth.SApiAuthenticatorImpl

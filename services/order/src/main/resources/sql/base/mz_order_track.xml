@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.order.base.dao.OrderTrackDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.order.base.entry.OrderTrackPO" useGeneratedKeys="false" >
+		insert into mz_order.mz_order_track (track_id,order_id,status,past_status,duration,content,oper,create_time) values (#{trackId},#{orderId},#{status},#{pastStatus},#{duration},#{content},#{oper},#{createTime})
+	</insert>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.order.base.entry.OrderTrackPO">
+		update mz_order.mz_order_track set order_id=#{orderId},status=#{status},past_status=#{pastStatus},duration=#{duration},content=#{content},oper=#{oper} where track_id=#{trackId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderTrackPO">
+		SELECT * FROM mz_order.mz_order_track WHERE order_id=#{orderId} AND status=#{status}
+	</select>
+
+	<!-- 根据订单ID，查询数据-->
+	<select id="listInByOrderId" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderTrackPO">
+		SELECT * FROM mz_order.mz_order_track WHERE order_id=#{orderId} 
+		AND status IN ( 
+			<foreach collection="status" item="item" index="index" separator="," >
+				#{item}
+			</foreach>)
+		ORDER BY create_time ASC
+	</select>
+	
+	
+	<!-- 根据订单ID，查询所有数据，升序排列-->
+	<select id="listAllByOrderId" parameterType="java.lang.Long" resultType="com.mazing.services.order.base.entry.OrderTrackPO">
+		SELECT * FROM mz_order.mz_order_track WHERE order_id=#{orderId} ORDER BY create_time ASC
+	</select>
+	
+	
+	
+	<!-- 根据订单ID，上一个订单状态查询订单轨迹数据-->
+	<select id="listByOrderIdAndPastStatus" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderTrackPO">
+		SELECT * FROM mz_order.mz_order_track WHERE order_id=#{orderId} 
+		AND past_status IN ( 
+			<foreach collection="status" item="item" index="index" separator="," >
+				#{item}
+			</foreach>)
+		ORDER BY create_time ASC
+	</select>
+	
+	<!-- 根据订单ID，获得最新的订单记录-->
+	<select id="getLastTrack" parameterType="java.lang.Long" resultType="com.mazing.services.order.base.entry.OrderTrackPO">
+		SELECT * FROM mz_order.mz_order_track WHERE order_id=#{orderId} ORDER BY create_time DESC limit 0,1
+	</select>
+	
+	<!-- 根据订单ID和订单状态查询最后一条订单轨迹(退回可能导致多条) Felix 2015-11-09 -->
+	<select id="getTrackByOrderIdAndStatus" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderTrackPO">
+		SELECT * FROM mz_order.mz_order_track WHERE order_id=#{orderId} 
+		AND status IN ( 
+			<foreach collection="status" item="item" index="index" separator="," >
+				#{item}
+			</foreach>)
+		ORDER BY create_time DESC 
+		LIMIT 0,1
+	</select>
+</mapper>

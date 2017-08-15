@@ -1,0 +1,1312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.order.base.dao.OrderDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.order.base.entry.OrderPO" useGeneratedKeys="false" >
+		insert into mz_order.mz_order (order_id,order_no,pay_no,uid,im_id,store_id,deliver_id,pay_type,pay_mode,order_channel,currency_type,total_fee,actual_fee,delivery_fee,discount_fee,goods_fee,use_coupon,address,full_address,contacts,phone,pick_type,delivery_time,lat,lng,meal_number,feature_content,status,cancel_source,remark,delivery_remark,order_begin_time,accept_time,user_confirm_time,store_confirm_time,sys_confirm,is_back,back_time,back_number,back_source_status,serial_number,sequence,print_number,reject_remark,user_table_no_remark,store_remark,service_range_id,service_range_name,service_time,is_third_express,is_store_express,service_day,making_time,comment_id,create_time,update_time,finish_time,object_id,invoice_title) values (#{orderId},#{orderNo},#{payNo},#{uid},#{imId},#{storeId},#{deliverId},#{payType},#{payMode},#{orderChannel},#{currencyType},#{totalFee},#{actualFee},#{deliveryFee},#{discountFee},#{goodsFee},#{useCoupon},#{address},#{fullAddress},#{contacts},#{phone},#{pickType},#{deliveryTime},#{lat},#{lng},#{mealNumber},#{featureContent},#{status},#{cancelSource},#{remark},#{deliveryRemark},#{orderBeginTime},#{acceptTime},#{userConfirmTime},#{storeConfirmTime},#{sysConfirm},#{isBack},#{backTime},#{backNumber},#{backSourceStatus},#{serialNumber},#{sequence},#{printNumber},#{rejectRemark},#{userTableNoRemark},#{storeRemark},#{serviceRangeId},#{serviceRangeName},#{serviceTime},#{isThirdExpress},#{isStoreExpress},#{serviceDay},#{makingTime},#{commentId},#{createTime},#{updateTime},#{finishTime},#{objectId},#{invoiceTitle})
+	</insert>
+
+	<!-- 根据主键，删除数据 <delete id="deleteById" parameterType="Map"> DELETE FROM 
+		mz_order.mz_order WHERE order_id=#{param1} </delete> -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.order.base.entry.OrderPO">
+		update mz_order.mz_order set order_no=#{orderNo},pay_no=#{payNo},uid=#{uid},im_id=#{imId},store_id=#{storeId},deliver_id=#{deliverId},pay_type=#{payType},pay_mode=#{payMode},order_channel=#{orderChannel},currency_type=#{currencyType},total_fee=#{totalFee},actual_fee=#{actualFee},delivery_fee=#{deliveryFee},discount_fee=#{discountFee},goods_fee=#{goodsFee},use_coupon=#{useCoupon},address=#{address},full_address=#{fullAddress},contacts=#{contacts},phone=#{phone},pick_type=#{pickType},delivery_time=#{deliveryTime},lat=#{lat},lng=#{lng},meal_number=#{mealNumber},feature_content=#{featureContent},status=#{status},cancel_source=#{cancelSource},remark=#{remark},delivery_remark=#{deliveryRemark},order_begin_time=#{orderBeginTime},accept_time=#{acceptTime},user_confirm_time=#{userConfirmTime},store_confirm_time=#{storeConfirmTime},sys_confirm=#{sysConfirm},is_back=#{isBack},back_time=#{backTime},back_number=#{backNumber},back_source_status=#{backSourceStatus},serial_number=#{serialNumber},sequence=#{sequence},print_number=#{printNumber},reject_remark=#{rejectRemark},user_table_no_remark=#{userTableNoRemark},store_remark=#{storeRemark},service_range_id=#{serviceRangeId},service_range_name=#{serviceRangeName},service_time=#{serviceTime},is_third_express=#{isThirdExpress},is_store_express=#{isStoreExpress},service_day=#{serviceDay},making_time=#{makingTime},comment_id=#{commentId},update_time=#{updateTime},finish_time=#{finishTime} where order_id=#{orderId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order
+		WHERE order_id=#{orderId}
+	</select>
+
+	<!-- 根据订单编号和下单人读取记录 -->
+	<select id="getByOrderNoUid" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE uid=#{uid} AND
+		order_no=#{orderNo}
+	</select>
+
+	<!-- 根据订单编号读取记录 -->
+	<select id="getByOrderNo" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM
+		mz_order.mz_order WHERE order_no=#{orderNo}
+	</select>
+
+	<!-- 根据条件查询我的历史记录 -->
+	<select id="listUserHistory" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE uid=#{uid} AND
+		status IN ( 
+			<foreach collection="status" item="item" index="index" separator="," >
+				#{item}
+			</foreach>)
+		AND pay_type IN(
+			<foreach collection="payType" item="item" index="index" separator="," >
+				#{item}
+			</foreach>
+		)
+		ORDER BY create_time DESC
+		<if test="offset != null">
+			LIMIT #{offset},#{pageSize}
+		</if>
+	</select>
+
+	<!-- 分页查询订单状态在status列表下的商家完成的订单列表-->
+	<select id="listStoreFinish" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE store_id=#{storeId} AND status IN (
+		<foreach collection="status" item="item" index="index" separator="," >
+			#{item}
+		</foreach>
+		) 
+		AND pay_type IN(
+			<foreach collection="payType" item="item" index="index" separator="," >
+				#{item}
+			</foreach>
+		)
+		AND finish_time is not null
+		AND order_begin_time is not null
+		ORDER BY finish_time DESC
+		<if test="offset != null">
+			LIMIT #{offset},#{pageSize}
+		</if>
+	</select>
+	
+	<!-- 分页查询订单状态在status列表下的商家完成的订单列表。可以指定支付类型的订单，按照创建时间倒序排序 -->
+	<select id="listStoreFinishByPayType" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE store_id=#{storeId} AND status IN (
+		<foreach collection="status" item="item" index="index" separator="," >
+			#{item}
+		</foreach>
+		) 
+		AND pay_type = #{payType}
+		AND finish_time is not null
+		AND order_begin_time is not null
+		ORDER BY create_time DESC
+		<if test="offset != null">
+			LIMIT #{offset},#{pageSize}
+		</if>
+	</select>
+	
+	<!-- 查询订单状态在status列表下的商家未完成的订单列表 hins 2015/10/15 新增-->
+	<select id="listStoreOngoing" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE store_id=#{storeId} AND
+		<if test="pickType != null">
+			pick_type = #{pickType} AND
+		</if>
+		
+		status IN ( 
+		<foreach collection="status" item="item" index="index" separator="," >
+			#{item}
+		</foreach>) 
+		AND 
+		
+		<if test="deliverId != null">
+			deliver_id = #{deliverId} AND
+		</if>
+		
+		finish_time is null ORDER BY create_time DESC
+		<if test="offset != null">
+			LIMIT #{offset},#{pageSize}
+		</if>
+	</select>
+
+	<!-- 根据条件查询我的进行中订单记录 -->
+	<select id="listUserOngoing" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE uid=#{uid}
+		<if test="storeId != null">
+			AND store_id>=#{storeId}
+		</if>
+		AND status IN ( 
+		<foreach collection="status" item="item" index="index" separator="," >
+			#{item}
+		</foreach>)
+		
+		AND pay_type IN(
+			<foreach collection="payType" item="item" index="index" separator="," >
+				#{item}
+			</foreach>
+		)
+		ORDER BY create_time DESC
+	</select>
+	
+	<!-- 根据条件查询我的进行中订单记录 -->
+	<select id="listUserOngoingByPage" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE uid=#{uid}
+		<if test="storeId != null">
+			AND store_id>=#{storeId}
+		</if>
+		AND status IN ( 
+		<foreach collection="status" item="item" index="index" separator="," >
+			#{item}
+		</foreach>)
+		
+		AND pay_type IN(
+			<foreach collection="payType" item="item" index="index" separator="," >
+				#{item}
+			</foreach>
+		)
+		ORDER BY create_time DESC limit #{offset},#{pageSize}
+	</select>
+	
+	<!-- 根据用户IMID查询的进行中订单记录 -->
+	<select id="listUserOngoingByImId" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE
+			<if test="orderNo != null">
+				order_no=#{orderNo} AND 
+			</if>
+			store_id=#{storeId} AND
+			status IN ( 
+				<foreach collection="status" item="item" index="index" separator="," >
+					#{item}
+				</foreach>) AND  
+			im_id=#{imId}
+		ORDER BY create_time DESC
+	</select>
+
+	<!-- 统计用户的历史订单条数 -->
+	<select id="statUserOrder" parameterType="Map" resultType="java.lang.Integer">
+		SELECT
+		count(*) FROM mz_order.mz_order WHERE uid=#{uid} AND
+		status IN ( 
+		<foreach collection="status" item="item" index="index" separator="," >
+			#{item}
+		</foreach>)
+		AND pay_type IN(
+			<foreach collection="payType" item="item" index="index" separator="," >
+				#{item}
+			</foreach>
+		)
+	</select>
+
+	<!-- 统计商家已结束订单条数 hins 2015/9/8 -->
+	<select id="statStoreFinishOrder" parameterType="Map" resultType="java.lang.Integer">
+		SELECT
+		count(*) FROM mz_order.mz_order WHERE store_id=#{storeId} AND
+		status IN ( 
+		<foreach collection="status" item="item" index="index" separator="," >
+			#{item}
+		</foreach>) AND finish_time is not null
+		AND pay_type IN(
+			<foreach collection="payType" item="item" index="index" separator="," >
+				#{item}
+			</foreach>
+		)
+	</select>
+
+	<!-- 更新订单 -->
+	<update id="updateByParams" parameterType="Map">
+		update mz_order.mz_order set
+		<if test="commentId != null">
+			comment_id = #{commentId},
+		</if>
+		<if test="deliverId != null">
+			deliver_id=#{deliverId},
+		</if>
+		
+		status=#{status}, update_time=#{updateTime} where order_id=#{orderId}
+		and status=#{thisStatus}
+	</update>
+	
+	<update id="updateStatusAndDeliverId" parameterType="Map">
+		update mz_order.mz_order set
+		deliver_id=#{deliverId}, status=#{status}, is_store_express=#{isStoreExpress}, update_time=#{updateTime} where order_id=#{orderId}
+		and status=#{thisStatus}
+	</update>
+	
+	<!-- 退款成功，更新订单，完成时间 2015/11/07 by hins -->
+	<update id="updateRefundSunccess" parameterType="Map">
+		update mz_order.mz_order set
+		status=#{status}, update_time=#{updateTime},finish_time=#{finishTime} where order_id=#{orderId}
+		and status=#{thisStatus}
+	</update>
+
+	<!-- 更新支付类型 -->
+	<update id="updatePayTypeByCash" parameterType="Map">
+		update
+		mz_order.mz_order set pay_type=#{payType}, pay_mode=#{payMode}, status=#{newStatus}, order_begin_time=#{orderBeginTime}, update_time=#{updateTime}
+		, serial_number=#{serialNumber}, delivery_time=#{deliveryTime}, sequence=#{sequence}, use_coupon=#{useCoupon}, actual_fee=#{actualFee}, discount_fee=#{discountFee}
+		where order_id=#{orderId} and status=#{oldStatus}
+	</update>
+
+	<!-- 更新订单为已支付 -->
+	<update id="updatePayOrder" parameterType="Map">
+		update
+		mz_order.mz_order set pay_no = #{payNo}, status=#{newStatus},
+		update_time=#{updateTime},order_begin_time=#{orderBeginTime},
+		serial_number=#{serialNumber}, delivery_time=#{deliveryTime}, sequence=#{sequence}
+		where
+		order_id=#{orderId} and
+		status=#{oldStatus}
+	</update>
+
+	<!-- 查询某一订单状态下的 订单总数 -->
+	<select id="statUserOrdersCountByStatus" parameterType="Map"
+		resultType="java.lang.Integer">
+		SELECT count(*) FROM mz_order.mz_order WHERE uid=#{uid}
+		<if test="statusEGT != null">
+			AND status>=#{statusEGT}
+		</if>
+		<if test="statusELT != null">
+			<![CDATA[ 
+				AND status<=#{statusELT}
+			]]>
+		</if>
+	</select>
+
+	<!-- 更新订单支付流水号，支付类型，支付方式，修改时间   hins 2015/9/14 update-->
+	<update id="updatePayNo" parameterType="Map">
+		update mz_order.mz_order
+		set pay_no = #{payNo}, pay_type = #{payType}, pay_mode = #{payMode}, 
+		use_coupon=#{useCoupon}, update_time=#{updateTime}, discount_fee=#{discountFee}, actual_fee=#{actualFee} where order_id=#{orderId} and
+		status=#{oldStatus}
+	</update>
+	
+	<!-- 更新订订单支付流水，订单状态，支付方式，支付类型，优惠金额，实际支付金额，修改时间   hins 2015/12/31 update-->
+	<update id="updatePayNoAndSuccess" parameterType="Map">
+		update mz_order.mz_order
+		set pay_no = #{payNo}, status=#{newStatus}, pay_type = #{payType}, pay_mode = #{payMode},
+		use_coupon=#{useCoupon}, update_time=#{updateTime}, discount_fee=#{discountFee}, actual_fee=#{actualFee},
+		order_begin_time=#{orderBeginTime}, delivery_time=#{deliveryTime},serial_number=#{serialNumber},sequence=#{sequence} 
+		where order_id=#{orderId} and status=#{oldStatus}
+	</update>
+
+	<!-- 根据 store_id 查询符合条件的订单列表，用于后台管理系统 ten 2015/9/1 -->
+	<select id="listOrderByStoreId" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE store_id=#{storeId}
+		<if test="status != null">
+			and status=#{status}
+		</if>
+		ORDER by create_time DESC LIMIT #{offset},#{pageSize}
+	</select>
+
+	<!-- 增加订单的打印次数 hins 2015/9/5 -->
+	<update id="addPrint" parameterType="Map">
+		update
+		mz_order.mz_order set
+		print_number=print_number+1
+		where order_id=#{orderId}
+	</update>
+
+	<!-- 统计门店指定日期最大的订单序列号 -->
+	<select id="statMaxSerial" parameterType="Map" resultType="java.lang.Integer">
+		SELECT IFNULL(max(serial_number+0),0) FROM mz_order.mz_order WHERE
+		store_id=#{storeId} AND service_day = #{serviceDay}
+	</select>
+	
+	<!-- 根据 store_id, pickType, status 查询符合条件的订单列表 sky 2015/9/6 -->
+	<select id="listOrdersByStoreIdAndPickTypeWithStatus"
+		parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE store_id=#{storeId}
+		<if test="status != null">
+			AND status=#{status}
+		</if>
+		<if test="pickType != null">
+			<![CDATA[ 
+				AND pick_type=#{pickType}
+			]]>
+		</if>
+		ORDER by #{orderBy} DESC LIMIT #{offset},#{pageSize}
+	</select>
+
+	<!-- 修改商家确认收货时间 hins 2015/9/7 -->
+	<update id="updateStoreConfirmTime" parameterType="Map">
+		update
+		mz_order.mz_order set store_confirm_time=#{time}
+		<if test="finishTime != null">
+			,finish_time=#{finishTime}
+		</if>
+		where
+		order_id=#{orderId}
+	</update>
+
+	<!-- 商家拒单 Felix 2015/9/7 -->
+	<update id="updateRejectStatus" parameterType="Map">
+		update
+		mz_order.mz_order set
+		status=#{status},
+		<if test="rejectComment != null">
+			reject_remark=#{rejectComment},
+		</if>
+		update_time=#{updateTime}
+		where
+		order_id=#{orderId} and status=#{thisStatus}
+	</update>
+	
+	<!-- 商家按类别搜索订单 -->
+	<select id="listByField" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO" statementType="STATEMENT">
+		select * from mz_order.mz_order WHERE 
+		store_id=${storeId}
+		and status!=${status}
+		and ${category} = ${content}
+		AND pay_type IN (
+					<foreach collection="payType" item="item" index="index" separator="," >
+						${item}
+					</foreach>
+				)
+		and order_begin_time is not null
+		ORDER by delivery_time DESC
+	</select>
+	
+	<!-- 暂时去掉pay_type  sky 2015/10/16   AND pay_type=#{payType}-->
+	<select id="listByStatusAndPayModeBeforeTime"
+		parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE status=#{status} 
+		<![CDATA[ 
+				AND create_time BETWEEN #{startTime} AND #{endTime}
+		]]>
+		ORDER by create_time DESC LIMIT #{offset},#{pageSize}
+	</select>
+	<!-- 暂时去掉pay_type  sky 2015/10/16   AND pay_type=#{payType}-->
+	<select id="statCountByStatusAndPayModeBeforeTime" parameterType="Map" resultType="java.lang.Integer">
+		SELECT count(*) FROM mz_order.mz_order WHERE status=#{status} 
+		<![CDATA[ 
+				AND create_time BETWEEN #{startTime} AND #{endTime}
+		]]>
+	</select>
+	
+	<!-- 根据订单创建时间 和 订单状态, 获取订单编号, 用户ID, 门店ID 和 订单开始时间 -->
+	<select id="listByStatusAndCreateTime" parameterType="Map" resultType="com.mazing.services.order.base.entry.TinyOrderPO">
+		SELECT order_no, uid, store_id, order_begin_time FROM mz_order.mz_order WHERE 
+		<![CDATA[ 
+				create_time>#{time}
+		]]>
+		AND status=#{status}
+		AND is_back = 0
+		ORDER BY create_time ASC
+		LIMIT 1000
+	</select>
+	
+	<!-- 查询在某时间段内，商家确认收货，但用户未确认收货的订单记录 -->
+	<select id="listStoreConfirm" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE 
+			delivery_time between #{beginTime} and #{endTime}
+				AND 
+			status = #{status} 
+	</select>
+	
+	<!-- 商家退回订单的更新操作 -->
+	<update id="updateStoreReturn" parameterType="Map">
+		update
+		mz_order.mz_order set
+		status=#{curStatus},
+		is_back=1,
+		back_time=#{backTime},
+		back_source_status = #{prevStatus},
+		back_number = back_number + 1,
+		store_confirm_time = #{storeConfirmTime}
+		where
+		order_id=#{orderId} and status=#{prevStatus}
+	</update>
+	
+	<!-- 修改用户确认收货  hins 2015/10/13 新增-->
+	<update id="updateUserConfirm" parameterType="Map">
+		update mz_order.mz_order set status=#{status},update_time=#{time},user_confirm_time=#{time}
+		<if test="finishTime != null">
+			,finish_time=#{finishTime}
+		</if>
+		where order_id=#{orderId} and
+		status=#{thisStatus}
+	</update>
+	
+	<!-- 定时任务自动确认收货 -->
+	<update id="updateAutoConfirm" parameterType="Map">
+		update mz_order.mz_order set 
+			status=#{status},
+			update_time=#{time},
+			finish_time=#{time},
+			sys_confirm=#{sysConfirm}
+		where order_id=#{orderId} and
+		status=#{thisStatus}
+	</update>
+	
+	<!-- 查询待接单的订单列表, 
+		被退回的在上面, 新提交的在下面
+	 -->
+	<select id="listPendingAcceptOrders" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		(
+			SELECT * FROM mz_order.mz_order WHERE 
+				store_id=#{storeId} AND 
+				<if test="status != null">
+					status=#{status} AND
+				</if>
+				is_back = 1
+				ORDER BY delivery_time ASC
+		)
+		UNION
+		(
+			SELECT * FROM mz_order.mz_order WHERE 
+				store_id=#{storeId} AND
+				<if test="status != null">
+					status=#{status} AND
+				</if>
+				is_back = 0 
+				ORDER BY order_begin_time ASC
+		) LIMIT #{offset},#{pageSize}
+	</select>
+	
+	<!-- 查询待接单的订单列表, 
+		被退回的在上面, 新提交的在下面
+	 -->
+	<select id="listPendingAcceptOrders2" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE 
+			store_id=#{storeId} AND
+			<if test="status != null">
+				status=#{status} AND
+			</if>
+		<![CDATA[ 
+			order_begin_time > #{orderBeginTime}
+		]]>
+		ORDER BY order_begin_time ASC
+		LIMIT #{pageSize}
+	</select>
+	
+	<!-- 查询订单状态在status列表下的商家未完成的订单列表 Felix 2015/10/26 新增-->
+	<select id="listOnlyStoreDelivery" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE store_id=#{storeId} AND
+		<if test="pickType != 0">
+			pick_type = #{pickType} AND
+		</if>
+		status =#{status} AND 
+		<if test="deliverId != null">
+			deliver_id = #{deliverId} AND
+		</if>
+		finish_time is null and sequence>#{sequence} and store_confirm_time is null
+		AND pay_type IN(
+			<foreach collection="payType" item="item" index="index" separator="," >
+				#{item}
+			</foreach>
+		)
+		ORDER BY sequence ASC LIMIT #{pageSize}
+	</select>
+	
+	<!-- 查询订单状态在status列表下的只有商家确认收货订单列表 hins 2015/12/09 新增-->
+	<select id="listOnlyStoreConfirm" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE store_id=#{storeId} AND
+		<if test="pickType != 0">
+			pick_type = #{pickType} AND
+		</if>
+		status =#{status} AND 
+		<if test="deliverId != null">
+			deliver_id = #{deliverId} AND
+		</if>
+		finish_time is null and sequence>#{sequence} and store_confirm_time is not null
+		AND pay_type IN(
+			<foreach collection="payType" item="item" index="index" separator="," >
+				#{item}
+			</foreach>
+		)
+		ORDER BY sequence ASC LIMIT #{pageSize}
+	</select>
+	
+	<!-- 根据 store_id, pickType, status 查询符合条件的订单列表 Felix 2015-10-26 -->
+	<select id="listOrdersByStoreIdAndPickTypeWithStatus2"
+		parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE store_id=#{storeId}
+		<if test="status != null">
+			AND status=#{status}
+		</if>
+		<if test="pickType != null">
+			<![CDATA[ 
+				AND pick_type=#{pickType}
+			]]>
+		</if>
+		<![CDATA[ 
+		AND sequence > #{sequence}
+		]]>
+		AND pay_type IN(
+			<foreach collection="payType" item="item" index="index" separator="," >
+				#{item}
+			</foreach>
+		)
+		ORDER by sequence LIMIT #{pageSize}
+	</select>
+	
+	<!-- 根据商家退款的标识来查询退款的订单 Felix 2015/10/26 modify by hins 修改方法名称list开头，完善商家退款中条件-->
+	<select id="listStoreRefundOrders" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT od.* FROM 
+			mz_order.mz_order AS od 
+		JOIN 
+			mz_order.mz_order_refund AS rf 
+		ON od.order_id = rf.order_id
+		WHERE 
+			od.store_id=#{storeId} 
+			AND od.pay_type = #{payType}
+			AND rf.refund_type IN ( 
+			<foreach collection="refundTypes" item="item" index="index" separator="," >
+				#{item}
+			</foreach>) 
+			AND rf.status IN ( 
+			<foreach collection="status" item="item" index="index" separator="," >
+				#{item}
+			</foreach>) 
+			<![CDATA[ 
+				AND rf.create_time<#{refundCreateTime}
+			]]>
+		
+		ORDER BY rf.create_time DESC LIMIT #{pageSize}
+	</select>
+
+	<!-- 查询待接单的订单列表, 
+		被退回的在上面, 新提交的在下面 -->
+	<select id="listPendingAcceptOrders3" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		(
+			SELECT * FROM mz_order.mz_order WHERE 
+				store_id=#{storeId} AND 
+				<if test="status != null">
+					status=#{status} AND
+				</if>
+				is_back = 1 AND
+				order_begin_time > #{returnOrderBeginTime}
+				ORDER BY order_begin_time ASC
+		)
+		UNION
+		(
+			SELECT * FROM mz_order.mz_order WHERE 
+				store_id=#{storeId} AND
+				<if test="status != null">
+					status=#{status} AND
+				</if>
+				is_back = 0 AND
+				order_begin_time > #{newOrderBeginTime}
+				ORDER BY order_begin_time ASC
+		) LIMIT #{pageSize}
+	</select>
+	
+	<!-- 根据门店内所有订单状态查询退回订单 按照预计送达时间升序排序 Felix 2015-11-24 -->
+	<select id="listIsBackPendingAcceptOrders" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE 
+				store_id=#{storeId} AND 
+				<if test="status != null">
+					status=#{status} AND
+				</if>
+				is_back = 1
+				AND pay_type IN(
+				<foreach collection="payType" item="item" index="index" separator="," >
+					#{item}
+				</foreach>
+				)
+		ORDER BY delivery_time ASC
+	</select>
+	
+	<!-- 根据订单状态、是否退回和订单开始时间查询订单，按订单开始时间升序排序 Felix 2015-11-24 -->
+	<select id="listNewPendingAcceptOrders" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE 
+				store_id=#{storeId} AND
+				<if test="status != null">
+					status=#{status} AND
+				</if>
+				is_back = 0 AND
+				order_begin_time > #{newOrderBeginTime}
+				AND pay_type IN(
+				<foreach collection="payType" item="item" index="index" separator="," >
+					#{item}
+				</foreach>
+				)
+		ORDER BY order_begin_time ASC
+		LIMIT #{pageSize}
+	</select>
+	
+	<!-- 查询预计送达时间超过time时间，且订单状态等于status的列表  hins 2015/11/07 新增-->
+	<select id="listStatusAndTimeOut" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE delivery_time between #{start} AND #{end}
+		AND status = #{status}
+		AND pay_type in(
+		<foreach collection="list" item="item" index="index" separator="," >
+			#{item}
+		</foreach>
+		)
+	</select>
+	
+	<!-- 查询预计送达时间超过time时间，且订单状态在status范围的列表  -->
+	<select id="listInStatusAndTimeOut" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE delivery_time between #{start} AND #{end}
+		AND status IN ( 
+			<foreach collection="status" item="item" index="index" separator="," >
+				#{item}
+			</foreach>)
+	</select>
+	
+	<!-- 查询订单开始时间超过time时间，且订单状态等于status的列表  felix 2016/1/09 新增-->
+	<select id="listByStatusAndBeginTimeOut" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE order_begin_time between #{start} AND #{end}
+		AND status = #{status}
+	</select>
+	
+	<!-- 检测是否有新单 Felix 2015-11-07 -->
+	<select id="getIfHasOrderInStatus" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE 
+			store_id=#{storeId} AND 
+			status IN ( 
+			<foreach collection="status" item="item" index="index" separator="," >
+				#{item}
+			</foreach>)
+		ORDER BY order_begin_time DESC LIMIT 0,1
+	</select>
+	
+	<!--  以下方法查询从库   -->
+	<!-- 
+		订单统计, 此方法统计下列数据  Felix 2015-11-19
+		1, 当天现金支付订单数
+		2, 当天完成线上支付订单数
+	 -->
+	<select id="statOrderPayType" parameterType="Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM mz_order.mz_order WHERE 
+			create_time BETWEEN #{start} AND #{end}
+			<if test="payType != null">
+				AND pay_type IN (
+					<foreach collection="payType" item="item" index="index" separator="," >
+						#{item}
+					</foreach>
+				)
+			</if>
+			<if test="status != null">
+				AND status IN (
+					<foreach collection="status" item="item" index="index" separator="," >
+						#{item}
+					</foreach>
+				)
+			</if>
+	</select>
+	
+	<!--  以下方法查询从库   -->
+	<!-- 订单统计, 此方法统计下列数据 Felix 2015-11-19
+		1, 一天内完成线上支付或使用现金支付的订单总金额 
+	 -->
+	<select id="statOrderFeeSum" parameterType="Map" resultType="java.lang.Long">
+		SELECT IFNULL(SUM(total_fee),0) FROM mz_order.mz_order WHERE 
+			create_time BETWEEN #{start} AND #{end}
+			<if test="payType != null">
+				AND pay_type IN (
+					<foreach collection="payType" item="item" index="index" separator="," >
+						#{item}
+					</foreach>
+				)
+			</if>
+			<if test="status != null">
+				AND status IN (
+					<foreach collection="status" item="item" index="index" separator="," >
+						#{item}
+					</foreach>
+				)
+			</if>
+	</select>
+	
+	<!--  以下方法查询从库   -->
+	<!-- 统计: 一天内未选择支付方式的订单(未支付) Felix 2015-11-19 -->
+	<select id="statOrderWithoutPayType" parameterType="Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM mz_order.mz_order WHERE 
+			create_time BETWEEN #{start} AND #{end}
+			AND pay_type = #{payType}
+	</select>
+	
+	<!--  以下方法查询从库   -->
+	<!-- 统计某个时间段内完成订单的总数量和费用  Hins 2015-11-19 -->
+	<select id="statFinishTotal" parameterType="Map" resultType="Map">
+		SELECT count(*) as totalNumber,IFNULL(SUM(total_fee), 0) as totalFee FROM mz_order.mz_order WHERE
+		finish_time BETWEEN #{start} AND #{end} AND
+		status IN (
+		<foreach collection="status" item="item" index="index"
+			separator=",">
+			#{item}
+		</foreach>
+		)
+		AND pay_type IN(
+			<foreach collection="payType" item="item" index="index" separator="," >
+				#{item}
+			</foreach>
+		)
+	</select>
+	
+	<!-- 更新订单状态成取消，并记录取消原因 -->
+	<update id="updateToCancel" parameterType="Map">
+		update mz_order.mz_order set
+		status=#{status}, update_time=#{updateTime}, finish_time=#{finishTime}
+		,cancel_source=#{cancelSource}
+		<if test="rejectRemark != null">
+			,reject_remark=#{rejectRemark}
+		</if>
+		 where order_id=#{orderId} and status=#{thisStatus}		
+	</update>
+	
+	<!-- 获取交易中订单(线上支付)的总金额, 交易中为:已接单、制作中、待收货  Felix 2015-11-27-->
+	<!-- 此方法只读从库 -->
+	<select id="statDealingOrderAmount" parameterType="Map" resultType="java.lang.Long">
+		select IFNULL(SUM(total_fee),0) from mz_order.mz_order where 
+			store_id = #{storeId}
+			and accept_time between #{start} and #{end}
+			and status IN (
+				<foreach collection="status" item="item" index="index" separator=",">
+					#{item}
+				</foreach>)
+			and pay_type = #{payType}
+	</select>
+	
+	<select id="statCouponFeeInStoreOrderBegin" parameterType="Map" resultType="Map">
+		select IFNULL(o.store_id,0) as storeId, IFNULL(SUM(discount_fee),0) as discountFee from mz_order.mz_order as o FORCE INDEX(AK_Key_storeId_status), mz_order.mz_order_coupon_record as c
+		where
+			c.order_id = o.order_id AND 
+			o.store_id IN (
+				<foreach collection="storeIds" item="item" index="index" separator=",">
+					#{item}
+				</foreach>)
+		    AND o.status IN (
+				<foreach collection="status" item="item" index="index" separator=",">
+					#{item}
+				</foreach>)
+			and order_begin_time between #{start} and #{end}
+			and pay_type = #{payType}
+			and c.coupon_bear_type = #{couponBearType}
+	</select>
+	
+	<!-- 获取交易中订单(线上支付)的实际支付金额, 交易中为:已接单、制作中、待收货  Felix 2015-12-30-->
+	<!-- 此方法只读从库 -->
+	<select id="sumDealingActualFee" parameterType="Map" resultType="java.lang.Long">
+		select IFNULL(SUM(actual_fee),0) from mz_order.mz_order where 
+			store_id = #{storeId}
+			and accept_time between #{start} and #{end}
+			and status IN (
+				<foreach collection="status" item="item" index="index" separator=",">
+					#{item}
+				</foreach>)
+			and pay_type = #{payType}
+	</select>
+	
+	<!-- 获取交易中订单(线上支付)的总平台优惠金额, 交易中为:已接单、制作中、待收货  Felix 2015-12-31-->
+	<!-- 此方法只用于对账统计 - 切记 -->
+	<select id="sumDealingDiscountFee" parameterType="Map" resultType="java.lang.Long">
+		select IFNULL(SUM(discount_fee),0) from mz_order.mz_order as o FORCE INDEX(AK_Key_storeId_status), mz_order.mz_order_coupon_record as c
+		where
+			c.order_id = o.order_id AND 
+			store_id = #{storeId} AND 
+			o.status IN (
+				<foreach collection="status" item="item" index="index" separator=",">
+					#{item}
+				</foreach>)
+			and accept_time between #{start} and #{end}
+			and pay_type = #{payType}
+			and c.coupon_bear_type = #{couponBearType}
+	</select>
+	
+	<select id="sumDealingUserDeliveryFee" parameterType="Map" resultType="java.lang.Long">
+		select IFNULL(SUM(s.user_delivery_fee),0) from mz_order.mz_order as o FORCE INDEX(AK_Key_storeId_status), mz_order.mz_sf_express as s
+		where
+			s.order_id = o.order_id  
+			AND o.store_id = #{storeId}  
+			AND o.is_third_express=1 
+			AND o.status IN (
+				<foreach collection="status" item="item" index="index" separator=",">
+					#{item}
+				</foreach>)
+			AND o.accept_time between #{start} and #{end}
+			AND o.pay_type = #{payType}
+			AND s.express_status IN(
+				<foreach collection="expressStatus" item="item" index="index" separator=",">
+					#{item}
+				</foreach>
+			)
+	</select>
+	
+	<!-- 获取待入账订单(线上支付)的总金额, 待入账:“用户确认收货”，“已评论”的订单总金额（确认收货时间>最后一条”流水转入可提现时间”  Felix 2015-11-27-->
+	<select id="statSettlingTotalFee" parameterType="Map" resultType="java.lang.Long">
+		select IFNULL(SUM(total_fee),0) from mz_order.mz_order where 
+			store_id = #{storeId}
+			and 
+				(user_confirm_time between #{start} and #{end} or finish_time between #{start} and #{end})
+			and status IN (
+				<foreach collection="status" item="item" index="index" separator=",">
+					#{item}
+				</foreach>)
+			and pay_type = #{payType} 
+			<!-- 区分米星付和秒付 
+			-->
+			and object_id is null
+	</select>
+	
+	<select id="statSettlingActualFee" parameterType="Map" resultType="java.lang.Long">
+		select IFNULL(SUM(actual_fee),0) from mz_order.mz_order where 
+			store_id = #{storeId}
+			and 
+				(user_confirm_time between #{start} and #{end} or finish_time between #{start} and #{end})
+			and status IN (
+				<foreach collection="status" item="item" index="index" separator=",">
+					#{item}
+				</foreach>)
+			and pay_type = #{payType} 
+			<!-- 区分米星付和秒付 
+			-->
+			and object_id is null
+	</select>
+	
+	<select id="statSettlingDiscountFee" parameterType="Map" resultType="java.lang.Long">
+		select IFNULL(SUM(discount_fee),0) from mz_order.mz_order as o FORCE INDEX(AK_Key_storeId_status), mz_order.mz_order_coupon_record as c
+		where
+			c.order_id = o.order_id AND 
+			store_id = #{storeId} AND 
+			o.status IN (
+				<foreach collection="status" item="item" index="index" separator=",">
+					#{item}
+				</foreach>)
+			and o.finish_time between #{start} and #{end}
+			and pay_type = #{payType} 
+			<!-- 区分米星付和秒付 
+			-->
+			and object_id is null
+			and c.coupon_bear_type = #{couponBearType}
+	</select>
+	
+	<select id="statSettlingUserDeliveryFee" parameterType="Map" resultType="java.lang.Long">
+		select IFNULL(SUM(s.user_delivery_fee),0) from mz_order.mz_order as o FORCE INDEX(AK_Key_storeId_status), mz_order.mz_sf_express as s
+		where
+			s.order_id = o.order_id  
+			AND o.store_id = #{storeId}  
+			AND o.status IN (
+				<foreach collection="status" item="item" index="index" separator=",">
+					#{item}
+				</foreach>)
+			AND o.finish_time between #{start} and #{end}
+			AND o.pay_type = #{payType}
+			AND s.express_status IN(
+				<foreach collection="expressStatus" item="item" index="index" separator=",">
+					#{item}
+				</foreach>
+			)
+			
+	</select>
+	
+	<select id="statSettlingStoreDeliveryFee" parameterType="Map" resultType="java.lang.Long">
+		select IFNULL(SUM(s.store_delivery_fee),0) from mz_order.mz_order as o FORCE INDEX(AK_Key_storeId_status), mz_order.mz_sf_express as s
+		where
+			s.order_id = o.order_id  
+			AND o.store_id = #{storeId}  
+			AND o.status IN (
+				<foreach collection="status" item="item" index="index" separator=",">
+					#{item}
+				</foreach>)
+			AND o.finish_time between #{start} and #{end}
+			AND o.pay_type = #{payType}
+			AND s.express_status IN(
+				<foreach collection="expressStatus" item="item" index="index" separator=",">
+					#{item}
+				</foreach>
+			)
+			
+	</select>
+	
+	<!-- 获取所有订单，根据订单开始时间排序  ben 2015-11-25 -->
+	<select id="listAllOrders" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE 1=1
+		<if test="uid > 0">
+			AND uid=#{uid}
+		</if>
+		<if test="storeId > 0">
+			AND store_id=#{storeId}
+		</if>
+		AND pay_type IN(
+			<foreach collection="payType" item="item" index="index" separator="," >
+				#{item}
+			</foreach>
+		)
+		 ORDER BY create_time DESC LIMIT #{offset},#{pageSize}
+	</select>
+
+	<!--
+	//
+	// 以下是统计的内容，请在从库统计 2015/12/17 ten
+	//
+	-->
+
+	<!--
+	根据条件（状态、支付类型、创建时间范围）统计餐厅的订单数量, ten 2015/12/17
+	用于后台管理，统计餐厅收入概况。只在从库统计
+	 -->
+	<select id="statStoreOrderByCondition" parameterType="Map" resultType="Map">
+		select IFNULL(SUM(total_fee),0) as totalFee, COUNT(*) as num from mz_order.mz_order where
+		store_id = #{storeId}
+		and create_time between #{start} and #{end}
+		<if test="status != null">
+			and status IN (
+			<foreach collection="status" item="item" index="index" separator=",">
+				#{item}
+			</foreach>)
+		</if>
+		<if test="payType > 0">
+			and pay_type = #{payType}
+		</if>
+
+	</select>
+	
+	<!-- 分页查询所有订单, 此方法用于修复IMID数据, 限制使用 -->
+	<select id="listByPage" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		select * from mz_order.mz_order limit #{offset},#{pageSize}
+	</select>
+	
+	<!-- 根据服务日期查询所有已开始的订单 -->
+	<select id="listByServiceDay" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		select * from mz_order.mz_order where service_day=#{serviceDay} and status in (15,20) and order_begin_time is not null
+	</select>
+	
+	<!-- 更新IMID数据, 限制使用 -->
+	<update id="updateImid" parameterType="Map">
+		update mz_order.mz_order set
+			im_id=#{imId}
+		where order_id=#{orderId}
+	</update>
+	
+	<!-- 更新订单状态成退款 -->
+	<update id="updateToRefund" parameterType="Map">
+		update mz_order.mz_order set
+		status=#{newStatus}, update_time=#{updateTime}
+		<if test="rejectRemark != null">
+			,reject_remark=#{rejectRemark}
+		</if>
+		 where order_id=#{orderId}
+		and status=#{thisStatus}
+	</update>
+	
+	<!-- 获取未到预计送达时间, 但时间已经过了一半的订单且距离预计送达时间两小时内 -->
+	<select id="listOverMidDeliveryTime" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE 
+		STATUS IN (
+			<foreach collection="status" item="item" index="index" separator=",">
+				#{item}
+			</foreach>
+		) 
+		<![CDATA[ 
+			AND FROM_UNIXTIME((UNIX_TIMESTAMP(order_begin_time)+UNIX_TIMESTAMP(delivery_time))/2) < #{time} 
+		]]>
+		<![CDATA[ 
+			AND  DATE_SUB(delivery_time, INTERVAL #{ahead} SECOND) < #{time}
+		]]>
+		AND delivery_time > #{time}
+	</select>
+	
+	<!-- 时间到了该配送的时间, 但还没有配送的订单 -->
+	<select id="listShouldHasDeliveredOrders" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE 
+		STATUS IN (
+			<foreach collection="status" item="item" index="index" separator=",">
+				#{item}
+			</foreach>
+		) AND
+		delivery_time > #{time} AND 
+		<![CDATA[ 
+			DATE_SUB(delivery_time, INTERVAL service_time MINUTE) < #{time}
+		]]>
+	</select>
+
+	<!--
+	统计餐厅销售排行，最多返回100条数据，只统计 (pay_type=#{PayType}) 的，按totalFee倒序排列
+	时间按 create_time 并且状态是完成的订单
+	ten 2016/2/29
+	-->
+	<select id="statStoreSaleRank" parameterType="Map" resultType="Map">
+		select a.store_id as storeId, a.store_name as storeName, b.total_fee as totalFee, b.num from mz_merchant.mz_store as a inner join (
+		select store_id, sum(total_fee)/100 as total_fee, count(*) as num from mz_order.mz_order where create_time >= #{startTime} and pay_type=#{payType} group by store_id order by total_fee desc limit 100) b on a.store_id=b.store_id;
+	</select>
+
+	<!--
+	统计美食销售排行榜，最多返回100条数据，只统计 (pay_type=#{PayType}) 的，按totalFee 倒序排列
+	时间按 create_time 并且状态是完成的订单
+	ten 2016/2/29
+	-->
+	<select id="statDishSaleRank" parameterType="Map" resultType="Map">
+		select dish_key as dishKey, sum(num) as num, sum(total_fee)/100 as totalFee from(select a.dish_id, a.dish_key, a.dish_name,b.num, b.total_fee from mz_merchant.mz_dish_track a inner join (select object_id as dish_id, sum(number) as num, sum(total_fee) as total_fee from mz_order.mz_order_detail where order_id in (select order_id from mz_order.mz_order where create_time >=#{startTime}  and pay_type=#{payType} and status in (35,40)) group by dish_id) b on a.dish_id=b.dish_id) tmp group by dish_key order by totalFee desc limit 100;
+	</select>
+
+	<!--
+	 统计每个月的订单金额、订单数量 2016/3/3 by ten
+	 时间按 create_time 并且状态是完成的订单
+	-->
+	<select id="statOrderByMonth" parameterType="Map"  resultType="Map">
+		select
+			month(create_time) as month, sum(total_fee) as total, count(*) as num
+		from
+		 	mz_order.mz_order
+		where 
+		    pay_type IN 
+				(<foreach collection="payType" item="item" index="index" separator="," >
+						#{item}
+				</foreach>) 
+			AND create_time >='2016-01-01 00:00:00' and status in (35,40) and create_time between #{time1} and #{time2} 
+			AND total_fee>#{totalFeeGT}
+			group by month order by month;
+	</select>
+	
+	<!-- 
+		统计总的优惠券数据
+		2016/4/6 by jack
+	 -->
+	<select id="statTotalCoupon" resultType="Map">
+		select 
+			ifnull(b.coupon_bear_type,0) as coupon_bear_type, sum(a.total_fee) as total, sum(a.discount_fee) as discount, count(*) as num 
+		from 
+			mz_order a left join mz_order_coupon_record b on a.order_id=b.order_id 
+		where  
+			a.pay_type IN (
+					<foreach collection="payType" item="item" index="index" separator="," >
+						#{item}
+					</foreach>
+				) 
+			<![CDATA[ 
+			AND a.create_time>='2016-01-01' and a.status in (35, 40) and a.create_time <=#{endTime} group by coupon_bear_type;
+			]]>
+	</select>
+	
+	<!-- 
+		统计每月优惠券的数据
+		2016/4/6 by jack
+	 -->
+	 <select id="statCouponByMonth" parameterType="Map" resultType="Map">
+	 	select 
+	 		month(a.create_time) as month, ifnull(b.coupon_bear_type, 0) as coupon_bear_type, sum(a.total_fee) as total, sum(a.discount_fee) as discount, count(*) as num 
+	 	from 
+	 		mz_order a left join mz_order_coupon_record b on a.order_id=b.order_id 
+	 	where 
+	 		a.pay_type IN (
+					<foreach collection="payType" item="item" index="index" separator="," >
+						#{item}
+					</foreach>
+				)
+			AND a.create_time>='2016-01-01' and a.create_time between #{time1} and #{time2} and a.status in (35, 40) group by month, coupon_bear_type;
+	 </select>
+	 
+	<!-- 
+	 查询状态是完成的订单 2016/3/7 by jack
+	 根据返回数据统计最近9周的订单金额、订单数量
+	 -->
+	<select id="statOrderByWeek" parameterType="Map" resultType="com.mazing.services.order.base.dto.vo.OrderByDateVO">
+		select 
+			create_time as day,total_fee as totalFee
+		from 
+			mz_order.mz_order
+		where 
+			pay_type IN (
+					<foreach collection="payType" item="item" index="index" separator="," >
+						#{item}
+					</foreach>
+				)
+			AND create_time >= '2016-01-01 00:00:00' and status in (35,40) and create_time between #{time1} and #{time2} AND total_fee>#{totalFeeGT};
+	</select>
+	 
+	<!-- 
+		查询指定日期范围内的订单数据 2016/3/11 by jack
+		按订单创建时间排序，并且状态是完成的订单
+		查询出来的数据用于导出到Excel
+	 -->
+	 <select id="listOrderByStoreIdAndTime" parameterType="Map" resultType="com.mazing.services.order.base.dto.vo.OrderForExcelVO"> 
+		<![CDATA[ 
+		select 
+			a.store_id, a.uid, a.order_id, a.order_no, a.create_time, a.pay_mode, a.pay_type, a.total_fee, a.discount_fee, a.actual_fee, 
+			b.coupon_bear_type, a.finish_time, a.is_third_express, case a.pay_type when 1 then a.remark when 3 then a.user_table_no_remark end as remark,
+			a.object_id
+		from 
+			mz_order.mz_order a left join mz_order.mz_order_coupon_record b on b.order_id=a.order_id 
+		where 
+			a.store_id = #{storeId} and a.pay_type=#{payType} and a.create_time >= #{startTime} and a.create_time < #{endTime} and a.status in (35,40) order by a.create_time desc;
+		]]>
+	</select>
+	
+	<!-- 
+		H5中用户用户查看订单详情 2016/4/14 by jack
+	 -->
+	<select id="listOrderByUid" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		select *
+		from 
+			mz_order.mz_order 
+		where 
+			uid = #{uid} and status in (10, 15, 20, 23, 25, 45, 50) order by create_time desc;
+	</select>
+	
+	<!-- 查询用户进行中订单总数  2016/05/05 by jack  -->
+	<select id="statUserOngoingOrderCount" parameterType="Map" resultType="java.lang.Integer">
+		SELECT count(*)
+		FROM
+			mz_order.mz_order
+		WHERE 
+			uid = #{uid}
+			
+			<if test="payType != null">
+				AND pay_type IN (
+					<foreach collection="payType" item="item" index="index" separator="," >
+						#{item}
+					</foreach>
+				)
+			</if>
+			
+			 AND status IN ( 
+			<foreach collection="status" item="item" index="index" separator=",">
+				#{item}
+			</foreach>)
+		
+	</select>
+	
+	<!-- 分页获取成功下单的uid(去重) -->
+	<select id="listSuccessOrderedUids" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT uid, COUNT(DISTINCT(store_id)) AS store_id FROM mz_order WHERE STATUS IN(35,40) GROUP BY uid  LIMIT #{offset},#{pageSize}
+	</select>
+	<!-- 获取用户成功订单的订单id列表 -->
+	<select id="listSuccessOrderIds" parameterType="Map" resultType="java.lang.Long">
+		SELECT order_id FROM mz_order WHERE uid=#{uid}  AND  STATUS IN(35,40)
+	</select>
+	
+	<!-- 通知餐厅的订单 查从库 felix 2016-05-26 -->
+	<select id="countStoreOrders" parameterType="Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM mz_order.mz_order WHERE store_id = #{storeId} AND STATUS = #{status};
+	</select>
+	
+	
+	<select id="countStoreOrdersByDeliveryTime" parameterType="Map" resultType="java.lang.Integer">
+		SELECT COUNT(*) FROM mz_order.mz_order WHERE 
+			store_id = #{storeId} 
+			and status IN (
+			<foreach collection="status" item="item" index="index" separator=",">
+				#{item}
+			</foreach>)
+			and delivery_time > #{startTime}
+			<![CDATA[ 
+			and delivery_time < #{endTime}
+			]]>
+	</select>
+	
+	<!-- 更新订单为用户确认收货,针对米星付 -->
+	<update id="updateUserConfirmByMazingPay" parameterType="Map">
+		update
+		mz_order.mz_order set status=#{newStatus},
+		update_time=#{updateTime},order_begin_time=#{orderBeginTime},
+		serial_number=#{serialNumber}, finish_time=#{finishTime}, user_confirm_time=#{userConfirmTime}, sequence=#{sequence}
+		where
+		order_id=#{orderId} and
+		status=#{oldStatus}
+	</update>
+	
+	<!-- 根据订单id，查询订单 ，支持批量查询 hins 2016-7-12-->
+	<select id="listByOrderIds" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE order_id IN (
+		<foreach collection="orderIds" item="item" index="index" separator=",">
+			#{item}
+		</foreach>
+		)
+	</select>
+	
+	
+	<select id="stateActualFeeByOrderIds" parameterType="Map" resultType="java.lang.Long">
+		select IFNULL(SUM(actual_fee),0) from mz_order.mz_order 
+		where order_id IN (
+			<foreach collection="orderIds" item="item" index="index" separator=",">
+				#{item}
+			</foreach>)
+		and pay_type = #{payType}
+	</select>
+	
+	<select id="stateCouponFeeByOrderIds" parameterType="Map" resultType="java.lang.Long">
+		select IFNULL(SUM(discount_fee),0) from mz_order.mz_order as o FORCE INDEX(AK_Key_storeId_status), mz_order.mz_order_coupon_record as c
+		where
+			c.order_id = o.order_id AND 
+			o.order_id IN (
+				<foreach collection="orderIds" item="item" index="index" separator=",">
+					#{item}
+				</foreach>)
+			and o.pay_type = #{payType}
+			and c.coupon_bear_type = #{couponBearType}
+	</select>
+	
+	<!-- 查询指定的订单状态和订单完成时间段内的订单数据，结果无序 -->
+	<select id="listByStatusAndFinishTime" parameterType="Map"
+		resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE status IN (
+		<foreach collection="status" item="item" index="index" separator=",">
+			#{item}
+		</foreach>
+		) 
+		AND pay_type IN (
+		<foreach collection="payType" item="item" index="index" separator="," >
+			#{item}
+		</foreach>
+		)
+		and finish_time BETWEEN #{finishTimeBegin} AND #{finishTimeEnd}
+	</select>
+	
+	<update id="updateStoreRemark" parameterType="Map">
+		update mz_order.mz_order set
+		store_remark=#{newStoreRemark},update_time=#{updateTime} where order_id=#{orderId}
+		and store_id=#{storeId} and store_remark=#{oldStoreRemark}
+	</update>
+	
+	<select id="listDeliveryTimeAndExpress" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM mz_order.mz_order WHERE status IN (
+		<foreach collection="orderStatus" item="item" index="index" separator="," >
+			#{item}
+		</foreach>
+		) and delivery_time between #{beginTime} and #{endTime} and is_third_express=#{isThirdExpress}
+	</select>
+	
+	<!-- 根据订单开始时间（即支付时间）、订单状态、支付类型获取所有的订单 -->
+	<select id="listByBeginTimeAndStatus" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		select * from mz_order.mz_order where
+			store_id IN (
+			<foreach collection="storeIds" item="item" index="index" separator=",">
+				#{item}
+			</foreach>
+			) 
+			AND order_begin_time between #{begin} and #{end} 
+			and status  IN (
+			<foreach collection="status" item="item" index="index" separator=",">
+				#{item}
+			</foreach>
+			) 
+			and pay_type IN (
+			<foreach collection="payType" item="item" index="index" separator=",">
+				#{item}
+			</foreach>
+			) 
+	</select>
+	
+	<select id="listByStoreBeginTimeAndStatus" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		select * from mz_order.mz_order where store_id=#{storeId} 
+		 	and order_begin_time between #{begin} and #{end} 
+			and status  IN (
+			<foreach collection="status" item="item" index="index" separator=",">
+				#{item}
+			</foreach>
+			) 
+			and pay_type IN (
+			<foreach collection="payType" item="item" index="index" separator=",">
+				#{item}
+			</foreach>
+			) 
+	</select>
+	
+	<select id="statCouponFeeByStoreOrderBegin" parameterType="Map" resultType="java.lang.Long">
+		select IFNULL(SUM(o.discount_fee),0)
+		FROM mz_order.mz_order AS o FORCE INDEX(AK_Key_storeId_status), mz_order.mz_order_coupon_record as oc
+		where o.order_id=oc.order_id 
+		AND o.store_id = #{storeId}
+		AND o.order_begin_time BETWEEN #{start} AND #{start}
+		AND o.pay_type=#{payType}
+		AND o.use_coupon=1
+		AND oc.coupon_bear_type=#{couponBearType}
+	</select>
+	
+	<!-- 更新订单成接单 2016/9/26 add by hins -->
+	<update id="updateToAccept" parameterType="Map">
+		update mz_order.mz_order set status=#{newStatus}, accept_time=#{acceptTime}, update_time=#{updateTime} where order_id=#{orderId}
+		and status=#{oldStatus}
+	</update>
+	
+</mapper>

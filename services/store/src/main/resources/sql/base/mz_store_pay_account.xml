@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.base.dao.StorePayAccountDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.base.entry.StorePayAccountPO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_store_pay_account (uid,pay_mode,app_id,mch_id,is_open,create_time,update_time) values (#{uid},#{payMode},#{appId},#{mchId},#{isOpen},#{createTime},#{updateTime})
+	</insert>
+
+	<!-- 根据主键，删除数据
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_merchant.mz_store_pay_account WHERE uid=#{param1}
+	</delete>
+	 -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.store.base.entry.StorePayAccountPO">
+		update mz_merchant.mz_store_pay_account set app_id=#{appId},mch_id=#{mchId},is_open=#{isOpen},update_time=#{updateTime} where uid=#{uid} and pay_mode=#{payMode}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getByUid" parameterType="Map" resultType="com.mazing.services.store.base.entry.StorePayAccountPO">
+		SELECT * FROM mz_merchant.mz_store_pay_account WHERE uid=#{param1}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.store.base.entry.StorePayAccountPO">
+		SELECT * FROM mz_merchant.mz_store_pay_account
+	</select>
+
+	<!-- 根据uid和支付类型获取直连信息 -->
+	<select id="getByUidAndPayMode" parameterType="Map" resultType="com.mazing.services.store.base.entry.StorePayAccountPO">
+		SELECT * FROM mz_merchant.mz_store_pay_account WHERE uid=#{uid} and pay_mode=#{payMode}
+	</select>
+</mapper>

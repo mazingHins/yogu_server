@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.ticket.dao.EventDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.ticket.entry.EventPO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_event (event_id,store_id,city_code,start_day,end_day,open_hours,consult_phone,aftersale_phone,cover_img,show_imgs,can_refund,can_share,publish_time,create_time,update_time) values (#{eventId},#{storeId},#{cityCode},#{startDay},#{endDay},#{openHours},#{consultPhone},#{aftersalePhone},#{coverImg},#{showImgs},#{canRefund},#{canShare},#{publishTime},#{createTime},#{updateTime})
+	</insert>
+
+	<!-- 根据主键，删除数据
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_merchant.mz_event WHERE event_id=#{param1}
+	</delete>
+	 -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.store.ticket.entry.EventPO">
+		update mz_merchant.mz_event set store_id=#{storeId},city_code=#{cityCode},start_day=#{startDay},end_day=#{endDay},open_hours=#{openHours},consult_phone=#{consultPhone},aftersale_phone=#{aftersalePhone},cover_img=#{coverImg},show_imgs=#{showImgs},can_refund=#{canRefund},can_share=#{canShare},publish_time=#{publishTime},update_time=#{updateTime} where event_id=#{eventId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.store.ticket.entry.EventPO">
+		SELECT * FROM mz_merchant.mz_event WHERE event_id=#{param1}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.store.ticket.entry.EventPO">
+		SELECT * FROM mz_merchant.mz_event
+	</select>
+
+	<select id="getByEventId" resultType="com.mazing.services.store.activity.vo.EventVO">
+		SELECT 
+		 t1.event_id, t1.store_id, t2.name as eventName, t2.address, t1.start_time, t1.end_time, t2.lang_code, t1.cover_img, t1.consult_phone, t1.aftersale_phone,
+		 t1.can_buy, t1.can_refund, t2.rights, t2.content, t2.notice
+		 FROM mz_merchant.mz_event t1 left join mz_merchant.mz_event_detail t2 on t1.event_id = t2.event_id
+		 where t1.event_id=#{eventId}
+		 group by t2.lang_code
+	</select>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.base.dao.TeamPayDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.base.entry.TeamPayPO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_team_pay (team_pay_id,store_id,goods_id,slogan,description,members,member_limit,price,original_price,expire_time_mode,expire_time_value,over_time,start_time,end_time,create_time,update_time) values (#{teamPayId},#{storeId},#{goodsId},#{slogan},#{description},#{members},#{memberLimit},#{price},#{originalPrice},#{expireTimeMode},#{expireTimeValue},#{overTime},#{startTime},#{endTime},#{createTime},#{updateTime})
+	</insert>
+
+	<!-- 根据主键，删除数据
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_merchant.mz_team_pay WHERE team_pay_id=#{param1}
+	</delete>
+	 -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.store.base.entry.TeamPayPO">
+		update mz_merchant.mz_team_pay set store_id=#{storeId},goods_id=#{goodsId},slogan=#{slogan},description=#{description},members=#{members},member_limit=#{memberLimit},price=#{price},original_price=#{originalPrice},expire_time_mode=#{expireTimeMode},expire_time_value=#{expireTimeValue},start_time=#{startTime},end_time=#{endTime},update_time=#{updateTime} where team_pay_id=#{teamPayId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.store.base.entry.TeamPayPO">
+		SELECT * FROM mz_merchant.mz_team_pay WHERE team_pay_id=#{param1}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.store.base.entry.TeamPayPO">
+		SELECT * FROM mz_merchant.mz_team_pay
+	</select>
+
+</mapper>

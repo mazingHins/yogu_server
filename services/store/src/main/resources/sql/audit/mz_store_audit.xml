@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.audit.dao.StoreAuditDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.audit.entry.StoreAuditPO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_store_audit (store_id,ua_flag,fa_flag,ha_flag,sa_flag,bl_flag,cc_flag,permit,create_time,up_time) values (#{storeId},#{uaFlag},#{faFlag},#{haFlag},#{saFlag},#{blFlag},#{ccFlag},#{permit},#{createTime},#{upTime})
+	</insert>
+
+	<!-- 根据主键，删除数据
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_merchant.mz_store_audit WHERE store_id=#{param1}
+	</delete>
+	 -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.store.audit.entry.StoreAuditPO">
+		update mz_merchant.mz_store_audit set ua_flag=#{uaFlag},fa_flag=#{faFlag},ha_flag=#{haFlag},sa_flag=#{saFlag},bl_flag=#{blFlag},cc_flag=#{ccFlag},permit=#{permit},up_time=#{upTime} where store_id=#{storeId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.store.audit.entry.StoreAuditPO">
+		SELECT * FROM mz_merchant.mz_store_audit WHERE store_id=#{param1}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.store.audit.entry.StoreAuditPO">
+		SELECT * FROM mz_merchant.mz_store_audit
+	</select>
+
+	<!-- 设置食品安全承诺模块 认证状态标识 -->
+	<update id="setSafeAuditFlag" parameterType="Map">
+		update mz_merchant.mz_store_audit set sa_flag=#{flag},up_time=#{upTime} where store_id=#{storeId}
+	</update>
+	<!--设置  实名认证模块 认证状态标识 -->
+	<update id="setUserAuditFlag" parameterType="Map">
+		update mz_merchant.mz_store_audit set ua_flag=#{flag},up_time=#{upTime} where store_id=#{storeId}
+	</update>
+	<!-- 设置 场所设施  模块 认证状态标识 -->
+	<update id="setFacilityAuditFlag" parameterType="Map">
+		update mz_merchant.mz_store_audit set fa_flag=#{flag},up_time=#{upTime} where store_id=#{storeId}
+	</update>
+	<!-- 设置 健康模块 认证状态标识 -->
+	<update id="setHealthAuditFlag" parameterType="Map">
+		update mz_merchant.mz_store_audit set ha_flag=#{flag},up_time=#{upTime} where store_id=#{storeId}
+	</update>
+	<!-- 设置 营业执照 认证状态标识 -->
+	<update id="setBusinessLicenseAuditFlag" parameterType="Map">
+		update mz_merchant.mz_store_audit set bl_flag=#{flag},up_time=#{upTime} where store_id=#{storeId}
+	</update>
+	<!-- 设置 资质证明 认证状态标识 -->
+	<update id="setCateringCertificationAuditFlag" parameterType="Map">
+		update mz_merchant.mz_store_audit set cc_flag=#{flag},up_time=#{upTime} where store_id=#{storeId}
+	</update>
+	
+	<!-- 设置permit特殊开关标识 -->
+	<update id="updatePermit" parameterType="Map">
+		update mz_merchant.mz_store_audit set permit=#{permit},up_time=#{upTime} where store_id=#{storeId}
+	</update>
+	
+</mapper>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.dish.dao.DishSpecSnapshotDao">
+
+	<!-- 新增 -->
+	<insert id="save"
+		parameterType="com.mazing.services.store.dish.entry.DishSpecSnapshotPO"
+		useGeneratedKeys="false">
+		insert into mz_merchant.mz_dish_spec_snapshot
+		(spec_id,spec_key,dish_key,store_id,spec_name,currency_type,price,original_price,daily_num,supplement_label,max_supplement,min_supplement,create_time)
+		values
+		(#{specId},#{specKey},#{dishKey},#{storeId},#{specName},#{currencyType},#{price},#{originalPrice},#{dailyNum},#{supplementLabel},#{maxSupplement},#{minSupplement},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据 <delete id="deleteById" parameterType="Map"> DELETE FROM 
+		mz_merchant.mz_dish_spec_snapshot WHERE spec_id=#{param1} </delete> -->
+
+	<!-- 更新 -->
+	<update id="update"
+		parameterType="com.mazing.services.store.dish.entry.DishSpecSnapshotPO">
+		update mz_merchant.mz_dish_spec_snapshot set
+		spec_key=#{specKey},dish_key=#{dishKey},store_id=#{storeId},spec_name=#{specName},currency_type=#{currencyType},price=#{price},original_price=#{originalPrice},daily_num=#{dailyNum},supplement_label=#{supplementLabel},max_supplement=#{maxSupplement},min_supplement=#{minSupplement}
+		where spec_id=#{specId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map"
+		resultType="com.mazing.services.store.dish.entry.DishSpecSnapshotPO">
+		SELECT * FROM mz_merchant.mz_dish_spec_snapshot WHERE
+		spec_id=#{param1}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll"
+		resultType="com.mazing.services.store.dish.entry.DishSpecSnapshotPO">
+		SELECT * FROM mz_merchant.mz_dish_spec_snapshot
+	</select>
+	<!-- 根据specKey查询全部记录 -->
+	<select id="listByKey" parameterType="Map"
+		resultType="com.mazing.services.store.dish.entry.DishSpecSnapshotPO">
+		SELECT * FROM mz_merchant.mz_dish_spec_snapshot WHERE
+		spec_key=#{specKey}
+	</select>
+
+
+</mapper>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.recommend.dao.RecommendItemDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.recommend.entry.RecommendItemPO" useGeneratedKeys="true" keyProperty="itemId">
+		insert into mz_merchant.mz_recommend_item
+		(bid,status,img,target,target_id,name,description,logo,price,original_price,url,can_share,target_params,sequence,create_time,modify_time,admin_id,share_img,share_title,share_timeline_title,share_content)
+		values
+		(#{bid},#{status},#{img},#{target},#{targetId},#{name},#{description},#{logo},#{price},#{originalPrice},#{url},#{canShare},#{targetParams},#{sequence},#{createTime},#{modifyTime},#{adminId},#{shareImg},#{shareTitle},#{shareTimelineTitle},#{shareContent})
+	</insert>
+
+	<!-- 根据主键，删除数据 -->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM
+		mz_merchant.mz_recommend_item WHERE item_id=#{itemId}
+	</delete>
+
+	<!-- 删除块下所有 -->
+	<delete id="deleteByBlockId" parameterType="Map">
+		DELETE FROM
+		mz_merchant.mz_recommend_item WHERE bid=#{bid}
+	</delete>
+
+	<!-- 更新项 的状态 -->
+	<update id="updateItemStatus" parameterType="Map">
+		update mz_merchant.mz_recommend_item set status=#{newStatus},admin_id=#{adminId}, modify_time=now() where item_id=#{itemId} AND status=#{oldStatus}
+	</update>
+
+	<!-- 更新 -->
+	<update id="update"
+		parameterType="com.mazing.services.store.recommend.entry.RecommendItemPO">
+		update mz_merchant.mz_recommend_item set
+		bid=#{bid},status=#{status},img=#{img},target=#{target},target_id=#{targetId},name=#{name},description=#{description},logo=#{logo},price=#{price},original_price=#{originalPrice},url=#{url},can_share=#{canShare},target_params=#{targetParams},sequence=#{sequence},modify_time=#{modifyTime},admin_id=#{adminId},share_img=#{shareImg},share_title=#{shareTitle},share_timeline_title=#{shareTimelineTitle},share_content=#{shareContent}
+		where item_id=#{itemId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map"
+		resultType="com.mazing.services.store.recommend.entry.RecommendItemPO">
+		SELECT * FROM mz_merchant.mz_recommend_item WHERE
+		item_id=#{param1}
+	</select>
+
+	<!-- 查询块bid下的全部记录 -->
+	<select id="listAll" parameterType="Map"
+		resultType="com.mazing.services.store.recommend.entry.RecommendItemPO">
+		SELECT * FROM mz_merchant.mz_recommend_item where
+		bid=#{bid} order by sequence ASC
+	</select>
+
+	<!-- 查询块bid下sequence最大的那条记录 -->
+	<select id="getMaxSequenceItem" parameterType="Map"
+		resultType="com.mazing.services.store.recommend.entry.RecommendItemPO">
+		SELECT * FROM mz_merchant.mz_recommend_item where
+		bid=#{bid} order by sequence DESC limit 1
+	</select>
+
+	<!-- 更新item子项 的 排序号 , 乐观锁 -->
+	<update id="updateItemSequenceById" parameterType="Map">
+		update
+		mz_merchant.mz_recommend_item set
+		sequence=#{newSequence},
+		admin_id=#{adminId},
+		modify_time=now() where
+		item_id=#{itemId} AND
+		sequence=#{oldSequence}
+	</update>
+
+	<!-- 获取块block下 sequence小于给定的sequence的记录， sequence 由小到大排序 -->
+	<select id="getLittlerThanSequenceItems" parameterType="Map"
+		resultType="com.mazing.services.store.recommend.entry.RecommendItemPO">
+		SELECT * FROM mz_merchant.mz_recommend_item where
+		bid=#{bid}
+		<![CDATA[ 
+				AND sequence<#{sequence}
+		]]>
+		order by sequence ASC
+	</select>
+
+	<!-- 获取块block下 sequence大于给定的sequence的记录, sequence 倒排序 -->
+	<select id="getLargeThanSequenceItems" parameterType="Map"
+		resultType="com.mazing.services.store.recommend.entry.RecommendItemPO">
+		SELECT * FROM mz_merchant.mz_recommend_item where
+		bid=#{bid} 
+		<![CDATA[ 
+				AND sequence>#{sequence}
+		]]>
+
+		order by sequence DESC
+	</select>
+
+	<!-- 获取块block下排序在指定sequence 前面的一条记录 -->
+	<select id="getFrontItem" parameterType="Map"
+		resultType="com.mazing.services.store.recommend.entry.RecommendItemPO">
+		SELECT * FROM mz_merchant.mz_recommend_item where
+		bid=#{bid} 
+		<![CDATA[ 
+				AND sequence<#{sequence}
+		]]>
+		order by sequence DESC limit 1
+	</select>
+
+	<!-- 获取块block下排序在指定sequence 后面的一条记录 -->
+	<select id="getBehindItem" parameterType="Map"
+		resultType="com.mazing.services.store.recommend.entry.RecommendItemPO">
+		SELECT * FROM mz_merchant.mz_recommend_item where
+		bid=#{bid} 
+		<![CDATA[ 
+				AND sequence>#{sequence}
+		]]>
+		order by sequence ASC limit 1
+	</select>
+
+	<!-- 查询美食（dishKey）归属于哪些block -->
+	<select id="listBlockIdsByDishKey" parameterType="Map" resultType="java.lang.Long">
+		SELECT DISTINCT bid FROM mz_merchant.mz_recommend_item where target = 'dish' AND target_id = #{dishKey}
+	</select>
+</mapper>

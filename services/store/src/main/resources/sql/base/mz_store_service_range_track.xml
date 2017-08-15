@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.base.dao.StoreServiceRangeTrackDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.base.entry.StoreServiceRangeTrackPO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_store_service_range_track (range_id,store_id,name,remark,cut_type,cut_value,currency_type,minimum_money,money_type,money,full_free_freight,minute,punctuality,create_time) values (#{rangeId},#{storeId},#{name},#{remark},#{cutType},#{cutValue},#{currencyType},#{minimumMoney},#{moneyType},#{money},#{fullFreeFreight},#{minute},#{punctuality},#{createTime})
+	</insert>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.store.base.entry.StoreServiceRangeTrackPO">
+		SELECT * FROM mz_merchant.mz_store_service_range_track WHERE range_id=#{rangeId}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.store.base.entry.StoreServiceRangeTrackPO">
+		SELECT * FROM mz_merchant.mz_store_service_range_track
+	</select>
+
+</mapper>

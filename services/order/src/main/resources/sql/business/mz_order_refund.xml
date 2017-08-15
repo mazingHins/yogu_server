@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.order.business.dao.OrderRefundDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.order.business.entry.OrderRefundPO" useGeneratedKeys="false" >
+		insert into mz_order.mz_order_refund (refund_id,order_id,order_no,refund_no,refund_type,pay_type,pay_mode,object_id,store_id,total_fee,actual_fee,coupon_fee,refund_fee,uid,order_status,status,remark,create_time,finish_time) values (#{refundId},#{orderId},#{orderNo},#{refundNo},#{refundType},#{payType},#{payMode},#{objectId},#{storeId},#{totalFee},#{actualFee},#{couponFee},#{refundFee},#{uid},#{orderStatus},#{status},#{remark},#{createTime},#{finishTime})
+	</insert>
+
+	<!-- 根据主键，删除数据
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM mz_order.mz_order_refund WHERE refund_id=#{param1}
+	</delete>
+	 -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.order.business.entry.OrderRefundPO">
+		update mz_order.mz_order_refund set order_id=#{orderId},order_no=#{orderNo},refund_no=#{refundNo},refund_type=#{refundType},pay_type=#{payType},pay_mode=#{payMode},object_id=#{objectId},store_id=#{storeId},total_fee=#{totalFee},actual_fee=#{actualFee},coupon_fee=#{couponFee},refund_fee=#{refundFee},uid=#{uid},order_status=#{orderStatus},status=#{status},remark=#{remark},finish_time=#{finishTime} where refund_id=#{refundId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.order.business.entry.OrderRefundPO">
+		SELECT * FROM mz_order.mz_order_refund WHERE refund_id=#{param1}
+	</select>
+
+	<!-- 根据订单ID读取记录 -->
+	<select id="getByOrderId" resultType="com.mazing.services.order.business.entry.OrderRefundPO">
+		SELECT * FROM mz_order.mz_order_refund WHERE order_id=#{orderId}
+	</select>
+	
+	<!-- 根据退款申请对象ID、退款申请对象类型refundType 查询退款记录 2015/11/23 modify by hins refund_type支持查询多个 -->
+	<select id="listObjectApply" resultType="com.mazing.services.order.business.entry.OrderRefundPO">
+		SELECT * FROM mz_order.mz_order_refund WHERE object_id=#{objectId} AND 
+		refund_type IN ( 
+		<foreach collection="refundTypes" item="item" index="index" separator="," >
+			#{item}
+		</foreach>) 
+		AND status IN ( 
+		<foreach collection="status" item="item" index="index" separator="," >
+			#{item}
+		</foreach>) 
+		ORDER by create_time DESC LIMIT #{offset},#{pageSize}
+	</select>
+	
+	<!-- 更新 退款状态，备注，完成时间-->
+	<update id="updateStatus" parameterType="com.mazing.services.order.business.entry.OrderRefundPO">
+		update mz_order.mz_order_refund set status=#{status},remark=#{remark},finish_time=#{finishTime} where refund_id=#{refundId}
+	</update>
+	
+	<select id="listByStoreIdAndTime" parameterType="Map" resultType="com.mazing.services.order.business.entry.OrderRefundPO">
+		SELECT * FROM mz_order.mz_order_refund 
+		WHERE store_id = #{storeId}
+		AND create_time BETWEEN #{start} and #{end}
+		AND order_status IN (
+			<foreach collection="status" item="item" index="index" separator=",">
+				#{item}
+			</foreach>)
+	</select>
+
+</mapper>

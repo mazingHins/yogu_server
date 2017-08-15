@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.order.business.dao.OrderCommentDao">
+
+	<!-- 新增 -->
+	<insert id="save"
+		parameterType="com.mazing.services.order.business.entry.OrderCommentPO"
+		useGeneratedKeys="false">
+		insert into mz_order.mz_order_comment
+		(comment_id,uid,order_id,order_no,store_id,star,feedback_code,mobile,has_reply,agree_count,status,content,create_time)
+		values
+		(#{commentId},#{uid},#{orderId},#{orderNo},#{storeId},#{star},#{feedbackCode},#{mobile},#{hasReply},#{agreeCount},#{status},#{content},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据 -->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM
+		mz_order.mz_order_comment WHERE comment_id=#{commentId}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="update"
+		parameterType="com.mazing.services.order.business.entry.OrderCommentPO">
+		update mz_order.mz_order_comment set
+		uid=#{uid},order_id=#{orderId},order_no=#{orderNo},store_id=#{storeId},star=#{star},feedback_code=#{feedbackCode},mobile=#{mobile},has_reply=#{hasReply},agree_count=#{agreeCount},status=#{status},content=#{content}
+		where comment_id=#{commentId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map"
+		resultType="com.mazing.services.order.business.entry.OrderCommentPO">
+		SELECT * FROM mz_order.mz_order_comment WHERE
+		comment_id=#{commentId}
+	</select>
+
+	<!-- 根据订单ID读取记录 -->
+	<select id="getByOrderId" parameterType="java.lang.Long"
+		resultType="com.mazing.services.order.business.entry.OrderCommentPO">
+		SELECT * FROM mz_order.mz_order_comment WHERE
+		order_id=#{orderId} limit 0,1
+	</select>
+
+	<!-- 统计评论内容不为空，且评论分数大于star的总数 -->
+	<select id="statContentNotEmpty" parameterType="Map" resultType="java.lang.Integer">
+		SELECT count(*) FROM
+		mz_order.mz_order_comment where store_id = #{storeId}
+		AND star>#{star}
+		<![CDATA[AND content <> '' ]]>
+	</select>
+	
+	<!-- 统计门店下评论总数 -->
+	<select id="statNumber" resultType="java.lang.Integer">
+		SELECT count(*) FROM mz_order.mz_order_comment where store_id = #{storeId} and status=#{status}
+	</select>
+
+	<!-- 获取评论内容不为空，且评论分数大于star的列表 -->
+	<select id="listContentByStore" resultType="com.mazing.services.order.business.entry.OrderCommentPO">
+		SELECT * FROM mz_order.mz_order_comment
+		WHERE store_id = #{storeId} AND star>#{star}
+		<![CDATA[AND content <> '' ]]>
+		<if test="lastId>0">
+			<![CDATA[
+			AND comment_id <
+			#{lastId}]]>
+		</if>
+		AND status = #{status}
+		ORDER BY create_time DESC, comment_id DESC 
+		limit 0,#{pageSize}
+	</select>
+
+
+	<!--用于定时任务    计算限定记录数下的 最近  门店星级评分总和 -->
+	<select id="statStoreStarByLimitCount" resultType="java.lang.Integer">
+		SELECT SUM(star) FROM
+		mz_order.mz_order_comment where store_id = #{storeId}  ORDER BY create_time DESC LIMIT 0,#{limit}
+	</select>
+	
+	
+	<!--用于定时任务    获取有评论的门店的总数 -->
+	<select id="statStoreWithComment" resultType="java.lang.Integer">
+		SELECT COUNT(DISTINCT store_id) FROM mz_order.mz_order_comment 
+	</select>
+	
+	
+	<!--分页获取 评论数量大于10 的 门店ID  ben 2015－11-11 -->
+	<select id="listStoreIdsTenUpper" parameterType="Map"  resultType="java.lang.Long">
+		SELECT store_id,COUNT(store_id) as total FROM mz_order.mz_order_comment 
+		GROUP BY store_id HAVING total > 10 LIMIT #{offset},#{limit}
+	</select>
+
+	<!--分页获取 评论数量大于10 的 门店ID  ben 2015－11-12 -->
+	<select id="listStoreIds" parameterType="Map"  resultType="java.lang.Long">
+		SELECT store_id,COUNT(store_id) as total FROM mz_order.mz_order_comment GROUP BY store_id LIMIT #{offset},#{limit}
+	</select>
+	
+	<!--分页获取订单的评论列表 -->
+	<select id="listCommentByAdmin" parameterType="Map"  resultType="com.mazing.services.order.business.entry.OrderCommentPO">
+		SELECT * FROM mz_order.mz_order_comment where 1=1 
+		<if test="uid != null">
+			AND uid = #{uid}
+		</if>
+		<if test="orderNo != null">
+			AND order_no LIKE #{orderNo}
+		</if>
+		<if test="star != null">
+			AND star = #{star}
+		</if>
+		<if test="beginTime != null">
+			AND create_time >= #{beginTime}
+		</if>
+		<if test="endTime != null">
+			<![CDATA[
+			AND create_time <= #{endTime}
+			]]>
+		</if>
+		AND status=#{status}
+		order by create_time desc
+		LIMIT #{offset},#{limit}
+	</select>
+	
+	<!-- 修改订单评论状态  -->
+	<update id="updateStatus" parameterType="Map">
+		update mz_order.mz_order_comment set status = #{newStatus}
+		where comment_id=#{commentId}
+		and order_id=#{orderId}
+		and status=#{oldStatus}
+	</update>
+	
+	<!--查询指定订单编号的评论列表 -->
+	<select id="listByOrderNo" parameterType="Map"  resultType="com.mazing.services.order.business.entry.OrderCommentPO">
+		SELECT * FROM mz_order.mz_order_comment where order_no=#{orderNo} 
+		<if test="startTime != null">
+			AND create_time >= #{startTime}
+		</if>
+		<if test="endTime != null">
+			<![CDATA[
+			AND create_time <= #{endTime}
+			]]>
+		</if>
+		<if test="orderId > 0">
+			AND order_id = #{orderId}
+		</if>
+	</select>
+	
+	<!--  修改订单评论的“订单编号” -->
+	<update id="updateOrderNo" parameterType="Map">
+		update mz_order.mz_order_comment set order_no = #{newOrderNo}
+		where comment_id=#{commentId}
+		and order_no=#{oldOrderNo}
+	</update>
+	
+	
+</mapper>

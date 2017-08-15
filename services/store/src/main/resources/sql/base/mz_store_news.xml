@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.base.dao.StoreNewsDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.base.entry.StoreNewsPO" useGeneratedKeys="false" >
+		insert into mz_merchant.mz_store_news (news_id,store_id,content,create_time) values (#{newsId},#{storeId},#{content},#{createTime})
+	</insert>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.mazing.services.store.base.entry.StoreNewsPO">
+		SELECT * FROM mz_merchant.mz_store_news WHERE news_id=#{newsId}
+	</select>
+
+	<!-- 分页查询数据 -->
+	<select id="listByPage" resultType="com.mazing.services.store.base.entry.StoreNewsPO">
+		SELECT * FROM mz_merchant.mz_store_news WHERE store_id = #{storeId} ORDER BY create_time DESC LIMIT #{offset}, #{rows}
+	</select>
+
+</mapper>

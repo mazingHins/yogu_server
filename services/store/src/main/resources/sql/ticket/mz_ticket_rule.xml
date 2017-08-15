@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.mazing.services.store.ticket.dao.TicketRuleDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.mazing.services.store.ticket.entry.TicketRulePO"
+		useGeneratedKeys="false">
+		insert into mz_merchant.mz_ticket_rule
+		(ticket_rule_id,ticket_name,ticket_en_name,price,original_price,surplus,sold_num,limit_buy_count,img,can_share,can_transfer,is_enable,is_stop,is_third,admin_id,third_code,create_time,update_time,start_day,end_day,start_time,end_time)
+		values
+		(#{ticketRuleId},#{ticketName},#{ticketEnName},#{price},#{originalPrice},#{surplus},#{soldNum},#{limitBuyCount},#{img},#{canShare},#{canTransfer},#{isEnable},#{isStop},#{isThird},#{adminId},#{thirdCode},#{createTime},#{updateTime},#{startDay},#{endDay},#{startTime},#{endTime})
+	</insert>
+
+	<!-- 根据主键，删除数据 <delete id="deleteById" parameterType="Map"> DELETE FROM 
+		mz_merchant.mz_ticket_rule WHERE ticket_rule_id=#{param1} </delete> -->
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.mazing.services.store.ticket.entry.TicketRulePO">
+		update
+		mz_merchant.mz_ticket_rule set
+		ticket_name=#{ticketName},ticket_en_name=#{ticketEnName},price=#{price},original_price=#{originalPrice},surplus=#{surplus},sold_num=#{soldNum},limit_buy_count=#{limitBuyCount},img=#{img},can_share=#{canShare},can_transfer=#{canTransfer},is_enable=#{isEnable},is_stop=#{isStop},is_third=#{isThird},admin_id=#{adminId},third_code=#{thirdCode},update_time=#{updateTime},start_day=#{startDay},end_day=#{endDay},start_time=#{startTime},end_time=#{endTime}
+		where ticket_rule_id=#{ticketRuleId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map"
+		resultType="com.mazing.services.store.ticket.entry.TicketRulePO">
+		SELECT * FROM mz_merchant.mz_ticket_rule WHERE
+		ticket_rule_id=#{param1}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.mazing.services.store.ticket.entry.TicketRulePO">
+		SELECT * FROM
+		mz_merchant.mz_ticket_rule
+	</select>
+
+	<!-- 分页查询 -->
+	<select id="pageAll" resultType="com.mazing.services.store.ticket.entry.TicketRulePO">
+		SELECT * FROM
+		mz_merchant.mz_ticket_rule order by create_time DESC LIMIT
+		#{offset},#{rows}
+	</select>
+	
+	<!-- 更新售卖状态 -->
+	<update id="updateSaleStatus" parameterType="Map">
+		update
+		mz_merchant.mz_ticket_rule set is_stop=#{isStop}, update_time=NOW() where ticket_rule_id=#{ticketRuleId} 
+	</update>
+
+
+	<!-- 给指定的ticket规则减少库存 -->
+	<update id="decSurplusAndIncSoldNum" parameterType="Map">
+		update
+		mz_merchant.mz_ticket_rule set surplus = surplus - #{num}, sold_num =
+		sold_num +
+		#{num} where ticket_rule_id=#{ticketRuleId} and surplus >=
+		#{num}
+	</update>
+
+	<!-- 给指定的ticket规则增加库存 -->
+	<update id="incSurplusAndDesSoldNum" parameterType="Map">
+		update
+		mz_merchant.mz_ticket_rule set surplus = surplus + #{num}, sold_num =
+		sold_num -
+		#{num} where ticket_rule_id=#{ticketRuleId} and sold_num >= #{num}
+	</update>
+
+	<!-- 增加ticketRule的库存 -->
+	<update id="incSurplus" parameterType="Map">
+		update
+		mz_merchant.mz_ticket_rule set surplus = surplus + #{num} where
+		ticket_rule_id=#{ticketRuleId}
+	</update>
+
+	<select id="queryByName" resultType="com.mazing.services.store.ticket.entry.TicketRulePO">
+	SELECT * FROM
+	mz_merchant.mz_ticket_rule where ticket_name like CONCAT('%',#{ticketName},'%') or ticket_en_name
+	like CONCAT('%',#{ticketName},'%') order by create_time DESC 
+	</select>
+
+</mapper>
