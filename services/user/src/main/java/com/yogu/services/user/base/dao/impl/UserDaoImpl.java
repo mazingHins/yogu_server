@@ -21,7 +21,7 @@ import java.util.Map;
 @Named
 public class UserDaoImpl extends MyBatisDao implements UserDao {
 
-	public static final String TABLE_PREFIX = "mz_user.mz_user_";
+	public static final String TABLE_PREFIX = "yg_user.yg_user_";
 	public static final int TABLE_HOW = 8;
 
 	@Override
