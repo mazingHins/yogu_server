@@ -38,7 +38,7 @@ public class DesPropertiesEncoder implements PropertiesEncoder {
 
     public static void main(String[] args) {
     	DesPropertiesEncoder ed = new DesPropertiesEncoder();
-        System.out.println(ed.encode("wx3802b70c1bc8516e"));	// prod
+        System.out.println(ed.encode("VXIHVqvj56ke7P"));	// prod
         System.out.println(ed.encode("c9c7ceae0c5dbdb77fcb4412fec44453"));	// org
         
 //        System.out.println(ed.decode("0l32Osie2EAeXFHXWES6OgtFPzawvK9q"));
