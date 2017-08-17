@@ -80,10 +80,10 @@
   <cluster id="app">
 		<!-- defaults for each server, i.e. JVM -->
 		<server-default>
-			<keepalive-timeout>15s</keepalive-timeout>
-            <socket-timeout>60s</socket-timeout>
-			<keepalive-max>64</keepalive-max>
-            <thread-max>32</thread-max>
+			<keepalive-timeout>10s</keepalive-timeout>
+            <socket-timeout>30s</socket-timeout>
+			<keepalive-max>8</keepalive-max>
+            <thread-max>8</thread-max>
 
 			<!-- <jvm-arg>-Xmx256m</jvm-arg>
 			<jvm-arg>-Xms128m</jvm-arg>
@@ -91,15 +91,15 @@
 			<jvm-arg>-server</jvm-arg>
 			<jvm-arg>-d64</jvm-arg> -->
 
-            <jvm-arg>-Xmx180m</jvm-arg>
-            <jvm-arg>-Xms128m</jvm-arg>
+            <jvm-arg>-Xmx120m</jvm-arg>
+            <jvm-arg>-Xms100m</jvm-arg>
 			<jvm-arg>-server</jvm-arg>
 			<jvm-arg>-d64</jvm-arg>
 			
-			<jvm-arg>-XX:MaxPermSize=128m</jvm-arg>
+			<jvm-arg>-XX:MaxPermSize=100m</jvm-arg>
 			
-			<jvm-arg>-XX:MaxGCPauseMillis=200</jvm-arg>
-			<jvm-arg>-Dnetworkaddress.cache.ttl=600</jvm-arg>
+			<jvm-arg>-XX:MaxGCPauseMillis=150</jvm-arg>
+			<jvm-arg>-Dnetworkaddress.cache.ttl=300</jvm-arg>
 			<jvm-arg>-Dlog4j2.disable.jmx=true</jvm-arg>
 
 			<jvm-arg>-verbose.gc</jvm-arg>

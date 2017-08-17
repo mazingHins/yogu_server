@@ -22,7 +22,7 @@ import com.yogu.services.user.base.entry.UserProfilePO;
 @Named
 public class UserProfileDaoImpl extends MyBatisDao implements UserProfileDao {
 
-	public static final String TABLE_PREFIX = "mz_user.mz_user_profile_";
+	public static final String TABLE_PREFIX = "yg_user.yg_user_profile_";
 	public static final int TABLE_HOW = 8;
 
 	@Override
