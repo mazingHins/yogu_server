@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.user.base.dao.UserInviteDao">
+
+	<!-- 新增 -->
+	<insert id="insert" parameterType="Map" useGeneratedKeys="false" >
+		insert into yg_user.yg_user_invite (uid,invite_code,status,create_time) values (#{entity.uid},#{entity.inviteCode},#{entity.status},#{entity.createTime})
+	</insert>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.user.base.entry.UserInvitePO">
+		SELECT * FROM yg_user.yg_user WHERE uid=#{uid}
+	</select>
+	
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getByInvite" parameterType="Map" resultType="com.yogu.services.user.base.entry.UserInvitePO">
+		SELECT * FROM yg_user.yg_user WHERE invite_code=#{inviteCode}
+	</select>
+	
+	<select id="getByUid" parameterType="Map" resultType="com.yogu.services.user.base.entry.UserInvitePO">
+		SELECT * FROM yg_user.yg_user WHERE uid=#{uid}
+	</select>
+
+</mapper>

@@ -19,14 +19,14 @@ import com.yogu.services.user.base.entry.UserSettingPO;
 @Named
 public class UserSettingDaoImpl extends MyBatisDao implements UserSettingDao{
 	
-	public static final String TABLE_PREFIX = "mz_user.mz_user_setting_";
+	public static final String TABLE_PREFIX = "yg_user.yg_user_setting_";
 
 	@Override
 	public int save(UserSettingPO po) {
 		Map<String, Object> map = new HashMap<>(2);
 		map.put("tableName", getTableName(po.getUid()));
 		map.put("entity", po);
-		return super.insert("com.mazing.services.user.base.dao.UserSettingDao.insert", map);
+		return super.insert("com.yogu.services.user.base.dao.UserSettingDao.insert", map);
 	}
 
 	@Override
@@ -34,7 +34,7 @@ public class UserSettingDaoImpl extends MyBatisDao implements UserSettingDao{
 		Map<String, Object> map = new HashMap<>(2);
 		map.put("tableName", getTableName(po.getUid()));
 		map.put("entity", po);
-		return super.update("com.mazing.services.user.base.dao.UserSettingDao.update", map);
+		return super.update("com.yogu.services.user.base.dao.UserSettingDao.update", map);
 	}
 
 	@Override
@@ -42,7 +42,7 @@ public class UserSettingDaoImpl extends MyBatisDao implements UserSettingDao{
 		Map<String, Object> map = new HashMap<>(4);
 		map.put("tableName", getTableName(uid));
 		map.put("uid", uid);
-		return super.get("com.mazing.services.user.base.dao.UserSettingDao.getById", map);
+		return super.get("com.yogu.services.user.base.dao.UserSettingDao.getById", map);
 	}
 	
 
@@ -53,7 +53,7 @@ public class UserSettingDaoImpl extends MyBatisDao implements UserSettingDao{
 		map.put("isPush", isPush);
 		map.put("uid", uid);
 		
-		return super.update("com.mazing.services.user.base.dao.UserSettingDao.updateIosPush", map);
+		return super.update("com.yogu.services.user.base.dao.UserSettingDao.updateIosPush", map);
 	}
 	
 	

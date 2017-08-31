@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.store.business.dao.StoreDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.store.business.entry.StorePO" useGeneratedKeys="false" >
+		insert into yg_store.yg_store (store_id,store_name,uid,full_address,phone,status,create_time,update_time) values 
+		(#{storeId},#{storeName},#{uid},#{fullAddress},#{phone},#{status},#{createTime},#{updateTime})
+	</insert>
+	
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.store.business.entry.StorePO">
+		SELECT * FROM yg_store.yg_store WHERE store_id=#{storeId}
+	</select>
+
+</mapper>

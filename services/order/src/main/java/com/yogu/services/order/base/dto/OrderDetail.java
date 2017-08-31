@@ -11,17 +11,20 @@ import java.util.Date;
  * 
  */
 public class OrderDetail implements Serializable {
-
-	private static final long serialVersionUID = -3074457343920819159L;
+	
+	private static final long serialVersionUID = 2240975482586702850L;
 
 	/** 订单id */
 	private long orderId;
 
-	/** 菜品id */
-	private long objectId;
+	/** 商品id */
+	private long goodsId;
+	
+	/** 商品key */
+	private long goodsKey;
 
-	/** 商品数量 */
-	private short number;
+	/** 购买数量 */
+	private int number;
 
 	/** 商品单价（精确到分） */
 	private long unitFee;
@@ -32,51 +35,6 @@ public class OrderDetail implements Serializable {
 	/** 创建时间 */
 	private Date createTime;
 	
-	/**
-	 * 规格id 2016/2/23 by felix
-	 */
-	private long specId;
-	
-	/**
-	 * 规格名称 2016/2/23 by felix
-	 */
-	private String specName;
-	
-	/**
-	 * 规格备注, 多个用英文逗号分隔
-	 * 2016/2/23 by felix
-	 */
-	private String supplements;
-
-	/**
-	 * 美食key 2016/2/23 by felix
-	 */
-	private long dishKey;
-
-	public long getSpecId() {
-		return specId;
-	}
-
-	public void setSpecId(long specId) {
-		this.specId = specId;
-	}
-
-	public String getSpecName() {
-		return specName;
-	}
-
-	public void setSpecName(String specName) {
-		this.specName = specName;
-	}
-
-	public String getSupplements() {
-		return supplements;
-	}
-
-	public void setSupplements(String supplements) {
-		this.supplements = supplements;
-	}
-	
 	public void setOrderId(long orderId) {
 		this.orderId = orderId;
 	}
@@ -85,52 +43,52 @@ public class OrderDetail implements Serializable {
 		return orderId;
 	}
 
-	public void setObjectId(long objectId) {
-		this.objectId = objectId;
+	public long getGoodsId() {
+		return goodsId;
 	}
 
-	public long getObjectId() {
-		return objectId;
+	public void setGoodsId(long goodsId) {
+		this.goodsId = goodsId;
 	}
 
-	public void setNumber(short number) {
-		this.number = number;
+	public long getGoodsKey() {
+		return goodsKey;
 	}
 
-	public short getNumber() {
+	public void setGoodsKey(long goodsKey) {
+		this.goodsKey = goodsKey;
+	}
+
+	public int getNumber() {
 		return number;
 	}
 
-	public void setUnitFee(long unitFee) {
-		this.unitFee = unitFee;
+	public void setNumber(int number) {
+		this.number = number;
 	}
 
 	public long getUnitFee() {
 		return unitFee;
 	}
 
-	public void setTotalFee(long totalFee) {
-		this.totalFee = totalFee;
+	public void setUnitFee(long unitFee) {
+		this.unitFee = unitFee;
 	}
 
 	public long getTotalFee() {
 		return totalFee;
 	}
 
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
+	public void setTotalFee(long totalFee) {
+		this.totalFee = totalFee;
 	}
 
 	public Date getCreateTime() {
 		return createTime;
 	}
 
-	public long getDishKey() {
-		return dishKey;
-	}
-
-	public void setDishKey(long dishKey) {
-		this.dishKey = dishKey;
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
 	}
 
 	public String toString() {

@@ -3,7 +3,7 @@ package com.yogu.services.user.base.dao;
 import com.yogu.services.user.base.entry.UserSettingPO;
 
 /**
- * mz_user_setting 表的操作接口
+ * yg_user_setting 表的操作接口
  * 
  * @author JFan 2015-07-13
  */

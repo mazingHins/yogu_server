@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.order.base.dao.OrderDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.order.base.entry.OrderPO" useGeneratedKeys="false" >
+		insert into yg_order.yg_order (order_id,order_no,pay_no,uid,store_id,pay_mode,price_type,total_fee,actual_fee,discount_fee,goods_fee,use_coupon,full_address,contacts,phone,status,remark,user_confirm_time,store_confirm_time,create_time,update_time,finish_time) values (#{orderId},#{orderNo},#{payNo},#{uid},#{storeId},#{deliverId},#{payMode},#{priceType}#{totalFee},#{actualFee},#{discountFee},#{goodsFee},#{useCoupon},#{fullAddress},#{contacts},#{phone},#{status},#{remark},#{userConfirmTime},#{storeConfirmTime},#{createTime},#{updateTime},#{finishTime})
+	</insert>
+
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.yogu.services.order.base.entry.OrderPO">
+		update yg_order.yg_order set order_no=#{orderNo},pay_no=#{payNo},uid=#{uid},store_id=#{storeId},pay_mode=#{payMode},price_type=#{priceType},total_fee=#{totalFee},actual_fee=#{actualFee},discount_fee=#{discountFee},goods_fee=#{goodsFee},use_coupon=#{useCoupon},full_address=#{fullAddress},contacts=#{contacts},phone=#{phone},status=#{status},remark=#{remark},user_confirm_time=#{userConfirmTime},store_confirm_time=#{storeConfirmTime},create_time=#{createTime},update_time=#{updateTime},finish_time=#{finishTime} where order_id=#{orderId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" resultType="com.yogu.services.order.base.entry.OrderPO">
+		SELECT * FROM yg_order.yg_order
+		WHERE order_id=#{orderId}
+	</select>
+	
+	<select id="getByOrderNo" resultType="com.yogu.services.order.base.entry.OrderPO">
+		SELECT * FROM yg_order.yg_order
+		WHERE order_no=#{orderNo}
+	</select>
+	
+	<select id="getByOrderNoUid" resultType="com.yogu.services.order.base.entry.OrderPO">
+		SELECT * FROM yg_order.yg_order
+		WHERE order_no=#{orderNo} and uid=#{uid}
+	</select>
+
+</mapper>

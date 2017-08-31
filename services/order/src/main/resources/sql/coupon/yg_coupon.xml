@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.order.coupon.dao.CouponDao">
+
+	<!-- 新增 -->
+	<insert id="save"
+		parameterType="com.yogu.services.order.coupon.entry.CouponPO"
+		useGeneratedKeys="false">
+		insert into yg_order.yg_coupon
+		(coupon_id,coupon_name,coupon_type,uid,enough_money,face_value,order_no,status,start_time,end_time,add_time,use_time,create_time,update_time)
+		values
+		(#{couponId},#{couponName},#{couponType},#{uid},#{enoughMoney},#{faceValue},#{orderNo},#{status},#{startTime},#{endTime},#{addTime},#{useTime},#{createTime},#{updateTime})
+	</insert>
+
+	<!-- 更新 -->
+	<update id="update"
+		parameterType="com.yogu.services.order.coupon.entry.CouponPO">
+		update yg_order.yg_coupon set
+		coupon_name=#{couponName},coupon_type=#{couponType},uid=#{uid},enough_money=#{enoughMoney},face_value=#{faceValue},order_no=#{orderNo},status=#{status},start_time=#{startTime},end_time=#{endTime},add_time=#{addTime},use_time=#{useTime},create_time=#{createTime},update_time=#{updateTime}
+		where coupon_id=#{couponId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map"
+		resultType="com.yogu.services.order.coupon.entry.CouponPO">
+		SELECT * FROM yg_order.yg_coupon WHERE
+		coupon_id=#{couponId}
+	</select>
+
+	
+	
+</mapper>

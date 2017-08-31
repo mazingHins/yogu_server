@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.store.business.dao.GoodsDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.store.business.entry.GoodsPO" useGeneratedKeys="false" >
+		insert into yg_store.yg_goods (goods_id,goods_key,goods_name,store_id,card_img,retail_price,trade_price,sequence,status,create_time,update_time) values 
+		(#{goodsId},#{goodsKey},#{goodsName},#{storeId},#{cardImg},#{cardImg},#{retailPrice},#{tradePrice},#{sequence},#{status},#{createTime},#{updateTime})
+	</insert>
+	
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_store.yg_goods WHERE goods_id=#{goodsId}
+	</select>
+	
+	<select id="getByKey" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_store.yg_goods WHERE goods_key=#{goodsKey}
+	</select>
+	
+	<select id="listByStoreId" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_store.yg_goods WHERE store_id=#{goodsKey} and status=#{status} order by sequence asc
+	</select>
+	
+
+</mapper>

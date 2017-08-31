@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import com.yogu.commons.utils.Validator;
 import com.yogu.commons.utils.encrypt.DES3;
-import com.yogu.core.enums.pay.PayMode;
+import com.yogu.core.enums.user.UserType;
 import com.yogu.core.remote.config.ConfigGroupConstants;
 import com.yogu.core.remote.config.ConfigRemoteService;
 import com.yogu.core.web.RestResult;
@@ -31,6 +31,8 @@ import com.yogu.language.UserMessages;
 import com.yogu.remote.user.dto.UserProfile;
 import com.yogu.remote.user.dto.UserSetting;
 import com.yogu.services.user.base.constants.UserConstants;
+import com.yogu.services.user.base.dto.UserInvite;
+import com.yogu.services.user.base.service.UserInviteService;
 import com.yogu.services.user.base.service.UserProfileService;
 import com.yogu.services.user.base.service.UserSettingService;
 import com.yogu.services.user.resource.param.UserUpdateParam;
@@ -55,6 +57,9 @@ public class UserResource {
 
 	@Inject
 	private UserSettingService userSettingService;
+	
+	@Inject
+	private UserInviteService userInviteService;
 
 	/**
 	 * 当用户登录后，获取用户信息
@@ -73,26 +78,18 @@ public class UserResource {
 			logger.error("user profile is null|uid=" + uid);
 			return new RestResult<UserProfileVO>(ResultCode.FAILURE, UserMessages.USER_GET_FAILURE());
 		}
-		UserSetting setting = userSettingService.getById(uid);
-
+		
 		// 封装返回信息
 		UserProfileVO result = new UserProfileVO();
 		result.setNickname(user.getNickname());
 		result.setProfilePic(user.getProfilePic());
 		result.setUserType(user.getUserType());
-		result.setMerchantStatus((short) 1);// #TODO 商家审核功能没做，暂时返回默认1
-		result.setPayMode(setting == null ? PayMode.ALIPAY.getValue() : setting.getDefaultPayMode());// #TODO 若没设置UserSetting，默认返回1
 		result.setPassport(user.getPassport());// #TODO 加密解密算法暂时不可用
-		result.setIsPush(setting == null || setting.getIsPush() == UserConstants.ALLOW_PUSH ? UserConstants.ALLOW_PUSH : 0);
-		result.setCityId(setting == null ? SecurityContext.getCityCode() : setting.getDefaultCityCode());
-		//new add by sky 2015-12-08
-		result.setImId(user.getImId());
-		// new add by felix 2015-12-15
-		result.setSex(user.getSex());
-		// new add by saa 2016-12-05
-		result.setDescription(user.getDescription());
-		result.setBirthday(user.getBirthday());
-
+		if (user.getUserType() == UserType.SALE) {
+			UserInvite invite = userInviteService.getById(uid);
+			result.setInviteCode(null == invite ? null : invite.getInviteCode());
+		}
+		
 		return new RestResult<UserProfileVO>(result);
 	}
 
@@ -106,55 +103,6 @@ public class UserResource {
 		userProfileService.updateNickname(uid, nickname);// 内部进行有效性校验
 		logger.info("user#profile#updateNickname | 用户更新昵称 | uid: {}, nickname: {}", uid, nickname);
 		return new RestResult<Object>(null);
-	}
-
-	/**
-	 * 修改用户信息，nickname，cityId，payMode，push至少传递一个
-	 * 
-	 * @param getUserUpdateReq 用户信息接收参数
-	 * 
-	 * @return 是否操作成功
-	 */
-	@POST
-	@Deprecated
-	@Path("v1/user/profile/update.do")
-	public RestResult<Map<String, Object>> update(@Valid @BeanParam UserUpdateParam getUserUpdateReq) {
-		long uid = SecurityContext.getUid();
-		String cityCode = SecurityContext.getCityCode();
-		// 用户昵称
-		String nickname = getUserUpdateReq.getNickname();
-		// 默认城市Code
-		String cityId = getUserUpdateReq.getCityId();
-		// 默认支付方式
-		Short payMode = getUserUpdateReq.getPayMode();
-		// 是否推送
-		Short push = getUserUpdateReq.getPush();
-
-		logger.info("user#update |update user information or setting  | uid: {}, nickname: {}, " + "cityId: {}, payMode: {}, push: {}", uid, nickname, cityId, payMode,
-				push);
-
-		UserProfile userProfile = null;
-		UserSetting setting = null;
-		if (StringUtils.isNotBlank(nickname)) {
-
-			// 是否输入特殊字符
-			if (Validator.containsSpecialCharacter(nickname))
-				throw new ServiceException(StoreErrorCode.REG_PARAMS_ERROR, UserMessages.USER_UPDATE_NICKNAME_EMOJI_ERROR());
-
-			userProfile = new UserProfile();
-			userProfile.setUid(uid);
-			userProfile.setNickname(nickname);
-		}
-
-		if (StringUtils.isNotBlank(cityId) || payMode != null || push != null) {
-			setting = new UserSetting();
-			setting.setUid(uid);
-			setting.setDefaultCityCode(cityId);
-			setting.setDefaultPayMode(payMode);
-			setting.setIsPush(push == null || push == 0 ? 2 : push);
-		}
-		userProfileService.updateUserInformation(userProfile, setting, cityCode);
-		return new RestResult<>(null);
 	}
 
 	/**

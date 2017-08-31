@@ -21,12 +21,10 @@ import com.yogu.commons.cache.redis.RedisLock;
 import com.yogu.commons.utils.LogUtil;
 import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.VOUtil;
-import com.yogu.commons.utils.encrypt.MD5Util;
 import com.yogu.core.base.BaseParams;
 import com.yogu.core.base.Point;
-import com.yogu.core.consumer.BussinessType;
-import com.yogu.core.consumer.messageBean.CouponObtainCheckBO;
 import com.yogu.core.enums.pay.PayMode;
+import com.yogu.core.enums.user.UserType;
 import com.yogu.core.utils.SmsUtil;
 import com.yogu.core.web.LoginInfoService;
 import com.yogu.core.web.ParameterUtil;
@@ -36,16 +34,17 @@ import com.yogu.core.web.context.SecurityContext;
 import com.yogu.core.web.encrypt.PasswordHelper;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.UserMessages;
-import com.yogu.mq.impl.aliyun.CommandMQProducer;
 import com.yogu.remote.config.id.IdGenRemoteService;
 import com.yogu.remote.user.dto.User;
 import com.yogu.remote.user.dto.UserProfile;
 import com.yogu.remote.user.dto.utils.AccountConstants;
 import com.yogu.services.user.base.constants.UserConstants;
 import com.yogu.services.user.base.dao.UserDao;
+import com.yogu.services.user.base.dao.UserInviteDao;
 import com.yogu.services.user.base.dao.UserNicknameDao;
 import com.yogu.services.user.base.dao.UserProfileDao;
 import com.yogu.services.user.base.dao.UserSettingDao;
+import com.yogu.services.user.base.entry.UserInvitePO;
 import com.yogu.services.user.base.entry.UserNicknamePO;
 import com.yogu.services.user.base.entry.UserPO;
 import com.yogu.services.user.base.entry.UserProfilePO;
@@ -83,6 +82,9 @@ public class UserServiceImpl implements UserService {
 
 	@Inject
 	private UserSettingDao userSettingDao;
+	
+	@Inject
+	private UserInviteDao userInviteDao;
 
 	@Inject
 	private LoginInfoService loginInfoService;
@@ -408,7 +410,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	@Transactional(propagation = Propagation.REQUIRED)
-	public long register(User user, String ip) {
+	public long register(User user, String inviteCode, String ip) {
 		String hideMobile = SmsUtil.hideMobile(user.getPassport());
 		String rip = (StringUtils.isNotBlank(ip) ? ip : "");
 
@@ -444,7 +446,7 @@ public class UserServiceImpl implements UserService {
 			logger.error("account#userservice#register | Account is already exists | passport: {} ", hideMobile);
 			throw new ServiceException(UserErrorCode.USER_EXISTED, "帐号已经存在，请登录。");
 		}
-
+		
 		// 2. 获取uid
 		long uid = idGenRemoteService.getNextUserId();
 
@@ -466,10 +468,10 @@ public class UserServiceImpl implements UserService {
 		dao.save(po);
 
 		// 保存 profile
+		Long inviteUid = processInvite(inviteCode);	// 邀请码对应的用户id，可以为空
 		UserProfilePO profilePO = new UserProfilePO();
 		String cityCode = StringUtils.isNotBlank(user.getCityCode()) ? user.getCityCode() : "";
 		String lang = SecurityContext.getAppLanguage().getCode();
-
 		profilePO.setUid(uid);
 		profilePO.setCountryCode(po.getCountryCode());
 		profilePO.setNickname(user.getNickname());
@@ -478,6 +480,8 @@ public class UserServiceImpl implements UserService {
 		profilePO.setPassport(user.getPassport());
 		profilePO.setProfilePic(user.getProfilePic());// 兼容管理后台创建用户要上传头像，add by june 2017-01-13
 		profilePO.setRegisterIp(rip);
+		profilePO.setUserType(null == inviteUid ? UserType.NORMAL : UserType.MIDDLE);
+		profilePO.setInviteUid(null == inviteUid ? 0 : inviteUid);
 		userProfileDao.save(profilePO);
 
 		// 保存nickname
@@ -492,52 +496,35 @@ public class UserServiceImpl implements UserService {
 		nicknamePO.setCountryCode(po.getCountryCode());
 		userNicknameDao.save(nicknamePO);
 
-		// 5. TODO Send Message to MessageQueue
 		// 6 Felix 新注册用户添加setting记录
 		logger.info("account#userservice#register | create user setting info");
-
 		UserSettingPO setting = new UserSettingPO();
 		setting.setUid(uid);
-		setting.setDefaultCityCode(StringUtils.isNotBlank(user.getCityCode()) ? user.getCityCode() : "020");
-		setting.setDefaultLanguageId("");
-		setting.setDefaultPayMode(PayMode.ALIPAY.getValue());
 		setting.setIsPush(UserConstants.ALLOW_PUSH);
 		setting.setCreateTime(new Date());
 		userSettingDao.save(setting);
-
-//		By jfan 2016-08-30 去掉了 UserImidIndex 表的使用，改成UserNickname表中使用IMID
-//		// 7 添加imid - uid的索引
-//		logger.info("account#userservice#register | create user imid index info");
-//		UserImidIndexPO index = new UserImidIndexPO();
-//		index.setImId(imid);
-//		index.setUid(uid);
-//		userImidIndexDao.save(index);
-
-		// 发送MQ , 检查是否有领取优惠券的记录 add by sky 2015-12-30
-		CouponObtainCheckBO bo = new CouponObtainCheckBO();
-		bo.setUid(uid);
-		String passport = user.getPassport();
-
-		bo.setAccount(MD5Util.getMD5String(passport));
-
-		// new add by sky 2016-02-27 新注册用户派发礼包
-		int length = passport.length();
-		String phoneSuffix = passport.substring(length - 4, length);
-		String desMobile = LogUtil.encrypt(passport);
-		bo.setPhoneSuffix(phoneSuffix);
-		bo.setMobile(desMobile);
-
-		// 调用领取优惠券的接口(假手机不发放优惠券，即长度=15的手机号)  add by june 2017-03-31
-		if(user.getPassport().length() != 15){
-			CommandMQProducer.get().sendJSON(BussinessType.COUPON_CHECK_AND_ASSIGN, bo);
-		} else {
-			logger.info("account#userservice#register | 假手机不发放优惠券  | uid: {}, passport: {}", uid, user.getPassport());
-		}
 
 		logger.info("account#userservice#register | success | uid: {}, passport: {}", uid, hideMobile);
 
 		logger.info("Sending mail ... TODO ...");
 		return uid;
+	}
+	
+	
+	private Long processInvite(String inviteCode){
+		
+		if(StringUtils.isBlank(inviteCode)){
+			return null;
+		}
+		
+		UserInvitePO invite = userInviteDao.getByInvite(inviteCode);
+		if(null == invite){
+			logger.info("无效的邀请码 : {}", inviteCode);
+			return null;
+		}
+		
+		return invite.getUid();
+		
 	}
 
 }

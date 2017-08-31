@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.order.pay.dao.PayDiscountRecordDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.order.pay.entry.PayDiscountRecordPO" useGeneratedKeys="false" >
+		insert into yg_order.yg_pay_discount_record (record_id,pay_id,pay_no,discount_type,total_fee,discount_fee,create_time) values (#{recordId},#{payId},#{payNd},#{discountType},#{totalFee},#{discountFee},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据 -->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM yg_order.yg_pay_discount_record WHERE record_id=#{recordId}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.yogu.services.order.pay.entry.PayDiscountRecordPO">
+		update yg_order.yg_pay_discount_record set pay_id=#{payId},pay_no=#{payNo},discount_type=#{discountType},total_fee=#{totalFee},discount_fee=#{discountFee} where record_id=#{recordId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.order.pay.entry.PayDiscountRecordPO">
+		SELECT * FROM yg_order.yg_pay_discount_record WHERE record_id=#{param1}
+	</select>
+
+	<!-- 查询指定payId和优惠类型的记录 -->
+	<select id="listByPayAndType" resultType="com.yogu.services.order.pay.entry.PayDiscountRecordPO">
+		SELECT * FROM yg_order.yg_pay_discount_record
+		WHERE pay_id=#{payId} AND discount_type=#{discountType}
+	</select>
+	
+
+</mapper>

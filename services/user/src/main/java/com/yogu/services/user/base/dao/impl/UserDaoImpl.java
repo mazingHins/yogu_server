@@ -29,7 +29,7 @@ public class UserDaoImpl extends MyBatisDao implements UserDao {
 		Map<String, Object> map = new HashMap<>(2);
 		map.put("tableName", getTableName(po.getCountryCode(), po.getPassport()));
 		map.put("entity", po);
-		return super.insert("com.mazing.services.user.base.dao.UserDao.insert", map);
+		return super.insert("com.yogu.services.user.base.dao.UserDao.insert", map);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class UserDaoImpl extends MyBatisDao implements UserDao {
 		map.put("tableName", getTableName(countryCode, mobile));
 		map.put("countryCode", countryCode);
 		map.put("passport", mobile);
-		return super.get("com.mazing.services.user.base.dao.UserDao.getByPassport", map);
+		return super.get("com.yogu.services.user.base.dao.UserDao.getByPassport", map);
 	}
 
 	/**
@@ -70,7 +70,7 @@ public class UserDaoImpl extends MyBatisDao implements UserDao {
 	public List<UserPO> getAll(String tableName){
 		Map<String, Object> map = new HashMap<>(1);
 		map.put("tableName",tableName);
-		return super.list("com.mazing.services.user.base.dao.UserDao.getAll", map);
+		return super.list("com.yogu.services.user.base.dao.UserDao.getAll", map);
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class UserDaoImpl extends MyBatisDao implements UserDao {
 		map.put("uid", uid);
 		map.put("oldStatus", Short.valueOf(oldStatus));
 		map.put("newStatus", Short.valueOf(newStatus));
-		return super.update("com.mazing.services.user.base.dao.UserDao.updateUserStatus", map);
+		return super.update("com.yogu.services.user.base.dao.UserDao.updateUserStatus", map);
 	}
 
 	/**
@@ -104,7 +104,7 @@ public class UserDaoImpl extends MyBatisDao implements UserDao {
 		map.put("tableName", getTableName(countryCode, mobile));
 		map.put("uid", uid);
 		map.put("password", newPassword);
-		return super.update("com.mazing.services.user.base.dao.UserDao.udpatePasswordByUid", map);
+		return super.update("com.yogu.services.user.base.dao.UserDao.udpatePasswordByUid", map);
 	}
 
 	@Override
@@ -112,7 +112,7 @@ public class UserDaoImpl extends MyBatisDao implements UserDao {
 		Map<String, Object> map = new HashMap<>(2);
 		map.put("tableName", getTableName(countryCode, passport));
 		map.put("uid", uid);
-		return super.get("com.mazing.services.user.base.dao.UserDao.getUserStatusById", map);
+		return super.get("com.yogu.services.user.base.dao.UserDao.getUserStatusById", map);
 	}
 
 }

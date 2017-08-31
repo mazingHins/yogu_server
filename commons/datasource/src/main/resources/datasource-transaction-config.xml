@@ -35,7 +35,7 @@
 	</tx:advice>
 
 	<aop:config>
-		<aop:advisor id="serviceTx" advice-ref="txAdvice" pointcut="execution(* com.mazing.services.**.service.impl.*ServiceImpl.*(..)))" />
+		<aop:advisor id="serviceTx" advice-ref="txAdvice" pointcut="execution(* com.yogu.services.**.service.impl.*ServiceImpl.*(..)))" />
 	</aop:config>
 	<!-- 方式一 END -->
 

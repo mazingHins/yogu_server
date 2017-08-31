@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.order.pay.dao.WechatPayRecordDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.order.pay.entry.WechatPayRecordPO" useGeneratedKeys="false" >
+		insert into yg_order.yg_wechat_pay_record (pay_id,nonce_str,spbill_create_ip,prepay_id,mp_prepay_id,timestamp,create_time) values (#{payId},#{nonceStr},#{spbillCreateIp},#{prepayId},#{mpPrepayId},#{timestamp},#{createTime})
+	</insert>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.yogu.services.order.pay.entry.WechatPayRecordPO">
+		update yg_order.yg_wechat_pay_record set nonce_str=#{nonceStr},spbill_create_ip=#{spbillCreateIp},prepay_id=#{prepayId},mp_prepay_id=#{mpPrepayId},timestamp=#{timestamp} where pay_id=#{payId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.order.pay.entry.WechatPayRecordPO">
+		SELECT * FROM yg_order.yg_wechat_pay_record WHERE pay_id=#{param1}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.yogu.services.order.pay.entry.WechatPayRecordPO">
+		SELECT * FROM yg_order.yg_wechat_pay_record
+	</select>
+
+</mapper>

@@ -20,7 +20,6 @@ import com.yogu.language.UserMessages;
 import com.yogu.remote.config.fs.service.FileStoreService;
 import com.yogu.remote.user.dto.UserProfile;
 import com.yogu.remote.user.dto.UserSetting;
-import com.yogu.services.user.base.constants.UserConstants;
 import com.yogu.services.user.base.dao.UserNicknameDao;
 import com.yogu.services.user.base.dao.UserProfileDao;
 import com.yogu.services.user.base.dao.UserSettingDao;
@@ -109,10 +108,6 @@ public class UserProfileServiceImpl implements UserProfileService {
 				UserSettingPO po = userSettingDao.getById(settingPO.getUid());
 				if (po == null) {
 					settingPO.setCreateTime(new Date());
-					if (StringUtils.isBlank(settingPO.getDefaultCityCode())) {
-						settingPO.setDefaultCityCode(cityCode);
-					}
-					settingPO.setDefaultLanguageId("");
 					userSettingDao.save(settingPO);
 				}
 			}
@@ -135,51 +130,5 @@ public class UserProfileServiceImpl implements UserProfileService {
 		}
 	}
 
-
-	@Override
-	public int updateLanguage(long uid, String langCode) {
-		
-		return this.updateLanguageAndCity(uid, langCode, null);
-	}
-
-	@Override
-	public int updateLanguageAndCity(long uid, String langCode, String cityCode) {
-		logger.info("user#service#updateLanguageAndCity | 更新用户语言标识 |  uid: {}, langCode: {}, cityCode: {}", uid, langCode, cityCode);
-
-		if (StringUtils.isBlank(langCode))
-			langCode = AppLanguage.zh.getCode();
-
-		UserProfile profile = getById(uid);
-		if (profile == null) {
-			logger.error("user#service#updateLanguageAndCity | 需要更新的用户不存在 | uid: {}, langCode: {}, cityCode: {}", uid, langCode, cityCode);
-			return 0;
-		}
-
-		String dbLang = profile.getLang();
-
-		boolean langTemp = true;
-		if (langCode.equals(dbLang)) {
-			langTemp = false;
-			if (logger.isDebugEnabled())
-				logger.debug("user#service#updateLanguageAndCity | 用户语言标识没有变动，无需更新 | uid: {}, langCode: {}, cityCode: {}", uid, langCode, cityCode);
-		}else
-			langTemp = true;
-
-		boolean cityTemp = true;
-		if (cityCode.equals(profile.getCityCode())) {
-			cityTemp = false;
-			if (logger.isDebugEnabled())
-				logger.debug("user#service#updateLanguageAndCity | 用户城市编码没有变动，无需更新 | uid: {}, langCode: {}, cityCode: {}", uid, langCode, cityCode);
-		}else
-			cityTemp = true;
-		
-		//当langCode和cityCode其中一个有变化时，更新DB
-		int row = 0;
-		if(langTemp || cityTemp){
-			row = dao.updateLanguage(uid, langCode, cityCode);
-		}
-		
-		return row;
-	}
 
 }

@@ -72,6 +72,7 @@ public class RegisterResource {
 	 * @param password - 密码
 	 * @param nickname
 	 * @param idcode - 验证码, 使用邮箱的时候不需要验证码
+	 * @param inviteCode - 邀请码
 	 * @return
 	 */
 	@POST
@@ -81,7 +82,7 @@ public class RegisterResource {
 			@FormParam("mobile") @NotEmpty(message = "请输入手机号码", mkey = UserMessages.USER_LOGIN_MOBILE_CAN_NOT_BE_EMPTY) String mobile,
 			@FormParam("password") @NotEmpty(message = "请输入登录密码", mkey = UserMessages.USER_LOGIN_PASSWORD_CAN_NOT_BE_EMPTY) String password,
 			@FormParam("nickname") @NotEmpty(message = "请输入昵称", mkey = UserMessages.USER_UPDATE_NICKNAME_NICKNAME_CAN_NOT_BE_EMPTY) String nickname, 
-			@FormParam("idcode") String idcode,
+			@FormParam("idcode") String idcode, @FormParam("inviteCode") String inviteCode,
 			@Context HttpServletRequest request) {
 		logger.info("user#reg |register start | mobile: {}, idcode: {}, nickname: {}", SmsUtil.hideMobile(mobile), idcode, nickname);
 		BaseParams baseParams = SecurityContext.getBaseParams();
@@ -113,7 +114,7 @@ public class RegisterResource {
 			user.setCountryCode(countryCode);
 			user.setCityCode(SecurityContext.getCityCode());
 			// 注册
-			long uid = userService.register(user, registerIp);
+			long uid = userService.register(user, inviteCode, registerIp);
 			logger.info("account#reg | register success | mobile: {}, nickname: {}", SmsUtil.hideMobile(mobile), nickname);
 			if (logger.isDebugEnabled())
 				logger.debug("user#reg#result | result uid | uid: {}, userInfo: {}", uid, JsonUtils.toJSONString(user));
@@ -131,66 +132,6 @@ public class RegisterResource {
 		return result;
 	}
 	
-	/**
-	 * 无密账号注册
-	 * 
-	 * @param countryCode - 国家号码，比如86表示中国，邮箱注册的时候不需要
-	 * @param mobile - 手机号码或邮箱
-	 * @param idcode - 验证码, 使用邮箱的时候不需要验证码
-	 * @return
-	 */
-	@Deprecated
-	public RestResult<Map<String, Object>> regNoPwd(
-			@FormParam("countryCode") @NotEmpty(message = "countryCode must not be empty", mkey = UserMessages.USER_LOGIN_COUNTRY_CODE_CAN_NOT_BE_EMPTY) String countryCode,
-			@FormParam("mobile") @NotEmpty(message = "请输入手机号码", mkey = UserMessages.USER_LOGIN_MOBILE_CAN_NOT_BE_EMPTY) String mobile,
-			@FormParam("idcode") String idcode, @Context HttpServletRequest request) {
-		logger.info("user#regWithoutPwd | register start | mobile: {}, idcode: {}", SmsUtil.hideMobile(mobile), idcode);
-		BaseParams baseParams = SecurityContext.getBaseParams();
-		// 获取用户的IP
-		String registerIp = ThreadLocalContext.getThreadValue(ThreadLocalContext.REQ_CLIENT_IP, "127.0.0.1");
-
-		mobile = decrypt(mobile);
-		countryCode = SmsUtil.trimCountryCode(countryCode);
-
-//		validateRegNoPwdParams(countryCode, mobile, idcode);
-
-		// 验证码是否正确
-		boolean idCodeOK = true;
-		if (NumberUtils.isDigits(mobile)) {
-			// 手机注册需要检查验证码，邮箱不需要
-			idCodeOK = idCodeService.validateSmsIdCode(mobile, IdCodeService.FUNC_REG_NO_PWD, idcode);
-		} else {
-			countryCode = ""; // 对于邮箱来说，重置为空
-		}
-
-		RestResult<Map<String, Object>> result = null;
-		if (idCodeOK) {
-			User user = new User();
-			user.setPassport(mobile);
-			user.setPassword(UUID.randomUUID().toString().substring(0, 15));
-			user.setNickname(SmsUtil.hideMobile(mobile));
-			user.setCountryCode(countryCode);
-			user.setCityCode(SecurityContext.getCityCode());
-			// 注册
-			long uid = userService.register(user, registerIp);
-			logger.info("account#reg | register success | mobile: {}", SmsUtil.hideMobile(mobile));
-			if (logger.isDebugEnabled())
-				logger.debug("user#reg#result | result uid | uid: {}, userInfo: {}", uid, JsonUtils.toJSONString(user));
-
-			// 登录
-			result = LoginResource.doLogin(userService, loginInfoService, user, baseParams, SecurityContext.getPoint(), DeviceUtil.getRequestDevice(),
-					registerIp, false);
-			if (!(result.isSuccess())) {
-				logger.error("login failed after register|result: {}", JsonUtils.toJSONString(result));
-			}
-		} else {
-			logger.info("account#reg | register error | mobile: {}", SmsUtil.hideMobile(mobile));
-			result = new RestResult<>(UserErrorCode.IDCODE_ERROR, UserMessages.USER_PASSWORD_RESET_IDCODE_INVALID(), Collections.<String, Object> emptyMap());
-		}
-		return result;
-	}
-	
-
 	/**
 	 * 3des解密字符串
 	 * 

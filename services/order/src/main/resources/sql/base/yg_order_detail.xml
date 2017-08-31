@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.order.base.dao.OrderDetailDao">
+
+	<!--
+	新增
+	2016/2/24 新增 spec_id,spec_name,supplements,dish_key 字段
+	 -->
+	<insert id="save" parameterType="com.yogu.services.order.base.entry.OrderDetailPO" useGeneratedKeys="false" >
+		insert into yg_order.yg_order_detail (order_id,goods_id,goods_key,number,unit_fee,total_fee,create_time) values (#{orderId},#{goodsId},#{goodsKey},#{number},#{unitFee},#{totalFee},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据 -->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM yg_order.yg_order_detail WHERE goods_id=#{goodsId} AND order_id=#{orderId}
+	</delete>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.order.base.entry.OrderDetailPO">
+		SELECT * FROM yg_order.yg_order_detail WHERE order_id=#{orderId} AND goods_id=#{goodsId}
+	</select>
+	
+	<!-- 根据订单ID 查询全部记录 -->
+	<select id="listByOrderId" parameterType="java.lang.Long" resultType="com.yogu.services.order.base.entry.OrderDetailPO">
+		SELECT * FROM yg_order.yg_order_detail where order_id=#{orderId}
+	</select>
+	
+	<select id="listByPage" parameterType="Map" resultType="com.yogu.services.order.base.entry.OrderDetailPO">
+		SELECT * FROM yg_order.yg_order_detail LIMIT #{offset},#{pageSize} 
+	</select>
+	
+	<select id="countOrderDishs" parameterType="Map" resultType="java.lang.Integer">
+		SELECT count(*) from yg_order.yg_order_detail where order_id=#{orderId}
+	</select>
+	
+</mapper>

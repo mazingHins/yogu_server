@@ -30,7 +30,7 @@ public class UserProfileDaoImpl extends MyBatisDao implements UserProfileDao {
 		Map<String, Object> map = new HashMap<String, Object>(2);
 		map.put("tableName", getTableName(po.getUid()));
 		map.put("entity", po);
-		return super.insert("com.mazing.services.user.base.dao.UserProfileDao.insert", map);
+		return super.insert("com.yogu.services.user.base.dao.UserProfileDao.insert", map);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class UserProfileDaoImpl extends MyBatisDao implements UserProfileDao {
 		map.put("uid", uid);
 		map.put("nickname", nickName);
 		map.put("updateTime", new Date());
-		return super.update("com.mazing.services.user.base.dao.UserProfileDao.updateNickName", map);
+		return super.update("com.yogu.services.user.base.dao.UserProfileDao.updateNickName", map);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class UserProfileDaoImpl extends MyBatisDao implements UserProfileDao {
 		Map<String, Object> map = new HashMap<>(4);
 		map.put("tableName", getTableName(uid));
 		map.put("uid", uid);
-		return super.get("com.mazing.services.user.base.dao.UserProfileDao.getById", map);
+		return super.get("com.yogu.services.user.base.dao.UserProfileDao.getById", map);
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class UserProfileDaoImpl extends MyBatisDao implements UserProfileDao {
 		map.put("uid", uid);
 		map.put("profilePic", profilePic);
 		map.put("lastUpdateTime", new Date());
-		return super.update("com.mazing.services.user.base.dao.UserProfileDao.updateProfilePic", map);
+		return super.update("com.yogu.services.user.base.dao.UserProfileDao.updateProfilePic", map);
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class UserProfileDaoImpl extends MyBatisDao implements UserProfileDao {
 		map.put("uid", uid);
 		map.put("langCode", langCode);
 		map.put("cityCode", cityCode);
-		return super.update("com.mazing.services.user.base.dao.UserProfileDao.updateLanguage", map);
+		return super.update("com.yogu.services.user.base.dao.UserProfileDao.updateLanguage", map);
 	}
 
 	//	public static void main(String[] args) {

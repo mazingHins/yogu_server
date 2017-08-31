@@ -78,7 +78,7 @@
      - will also have a web cluster.
     -->
   <cluster id="app">
-		<!-- defaults for each server, i.e. JVM -->
+		<!-- defaults for each server,  i.e. JVM -->
 		<server-default>
 			<keepalive-timeout>10s</keepalive-timeout>
             <socket-timeout>30s</socket-timeout>

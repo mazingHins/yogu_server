@@ -24,15 +24,6 @@ public class UserSettingPO implements Serializable {
 	/** 用户id */
 	private long uid;
 
-	/** 默认城市code */
-	private String defaultCityCode;
-
-	/** 默认语言id */
-	private String defaultLanguageId;
-
-	/** 默认支付方式，1-支付宝；2-微信支付 */
-	private short defaultPayMode = 1;
-
 	/** 是否推送通知，0-是，1-否 */
 	private short isPush = 0;
 
@@ -45,30 +36,6 @@ public class UserSettingPO implements Serializable {
 
 	public long getUid() {
 		return uid;
-	}
-
-	public void setDefaultCityCode(String defaultCityCode) {
-		this.defaultCityCode = defaultCityCode;
-	}
-
-	public String getDefaultCityCode() {
-		return defaultCityCode;
-	}
-
-	public void setDefaultLanguageId(String defaultLanguageId) {
-		this.defaultLanguageId = defaultLanguageId;
-	}
-
-	public String getDefaultLanguageId() {
-		return defaultLanguageId;
-	}
-
-	public void setDefaultPayMode(short defaultPayMode) {
-		this.defaultPayMode = defaultPayMode;
-	}
-
-	public short getDefaultPayMode() {
-		return defaultPayMode;
 	}
 
 	public void setIsPush(short isPush) {

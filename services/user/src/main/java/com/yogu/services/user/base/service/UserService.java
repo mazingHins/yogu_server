@@ -25,7 +25,7 @@ public interface UserService {
 	 * @throws java.lang.IllegalArgumentException 参数错误时抛出异常
 	 * @return 返回用户ID
 	 */
-	long register(User user, String ip);
+	long register(User user, String inviteCode, String ip);
 
 	/**
 	 * 判断app登录是否成功

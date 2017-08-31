@@ -6,8 +6,9 @@ package com.yogu.remote.cache;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.mail.Store;
+
 import com.yogu.remote.store.StoreRemoteService;
-import com.yogu.services.store.base.dto.Store;
 
 /**
  * 对Store对象的一次性局部缓存

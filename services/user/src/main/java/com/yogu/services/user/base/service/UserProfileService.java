@@ -32,40 +32,11 @@ public interface UserProfileService {
 	String saveProfilePic(long uid, String originalFilename, byte[] content);
 
 	/**
-	 * 修改用户信息和用户设置
-	 * 
-	 * @param userProfile 用户信息
-	 * @param setting 用户设置
-	 * @param cityCode 城市编码
-	 */
-	void updateUserInformation(UserProfile userProfile, UserSetting setting, String cityCode);
-
-	/**
 	 * 修改用户昵称
 	 * 
 	 * @param uid 用户ID
 	 * @param nickname 新的昵称
 	 */
 	public void updateNickname(long uid, String nickname);
-
-	/**
-	 * 更新用户语言标识
-	 * 
-	 * @param uid 用户id
-	 * @param langCode 语言代码
-	 * @return
-	 * @author sky 2016-03-18
-	 */
-	int updateLanguage(long uid, String langCode);
-
-	/**
-	 * 更新用户语言标识和城市编码
-	 * @param uid
-	 * @param langCode
-	 * @param cityCode     
-	 * @author east
-	 * @date 2016年12月2日
-	 */
-	public int updateLanguageAndCity(long uid, String langCode, String cityCode);
 
 }

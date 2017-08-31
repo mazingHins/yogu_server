@@ -8,7 +8,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 /**
- * mz_order_detail 表的操作接口
+ * yg_order_detail 表的操作接口
  * 
  * @author JFan 2015-07-13
  */
@@ -33,7 +33,7 @@ public interface OrderDetailDao {
 	/**
 	 * 根据主键读取记录
 	 */
-	public OrderDetailPO getById(long objectId, long orderId);
+	public OrderDetailPO getById(@Param("goodsId") long goodsId, @Param("orderId")long orderId);
 
 	/**
 	 * 根据订单ID 查询全部记录
@@ -61,19 +61,4 @@ public interface OrderDetailDao {
 	 */
 	public int countOrderDishs(@Param("orderId") long orderId);
 	
-	/**
-	 * 根据下单id、美食key，分页对应的购买获取记录。结果无序<br>
-	 * 该方法会跟订单表关联，暂时用于下单时，获取用户是否购买过此商品<br>
-	 * 具体原因：2016-12-06 add by hins。 下午14:30，楼上同事打算在米星店指定一个美食，每个用户只能订购一份，并且下班前就要这个功能。所以直接写死在代码上，等活动完毕后，再关闭吧
-	 * 
-	 * @param uid - 用户id
-	 * @param dishKey - 美食key
-	 * @param offset - 起始记录
-	 * @param pageSize - 结束记录
-	 * @author hins
-	 * @date 2016年12月6日 下午3:12:38
-	 * @return 符合的记录，若无，返回empty list
-	 */
-	public List<OrderDetailPO> listByUidDishKey(@Param("uid") long uid, @Param("dishKey") long dishKey, @Param("status") List<Short> status);
-
 }

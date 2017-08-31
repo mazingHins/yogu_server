@@ -1,2 +1,2 @@
-com.mazing.services.store.base.service.impl.DBStoreProviderImpl
-com.mazing.core.remote.store.provider.impl.HttpStoreProviderImpl
+com.yogu.services.store.base.service.impl.DBStoreProviderImpl
+com.yogu.core.remote.store.provider.impl.HttpStoreProviderImpl

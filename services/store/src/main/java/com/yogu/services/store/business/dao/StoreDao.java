@@ -1,0 +1,27 @@
+package com.yogu.services.store.business.dao;
+
+import org.apache.ibatis.annotations.Param;
+
+import com.yogu.commons.datasource.annocation.TheDataDao;
+import com.yogu.services.store.business.entry.StorePO;
+
+/**
+ * yg_store 表的操作接口
+ *
+ */
+@TheDataDao
+public interface StoreDao {
+	
+	/**
+	 * 保存数据
+	 * 
+	 * @param po 对象
+	 */
+	public void save(StorePO po);
+
+	/**
+	 * 根据主键读取记录
+	 */
+	public StorePO getById(@Param("storeId") long storeId);
+
+}

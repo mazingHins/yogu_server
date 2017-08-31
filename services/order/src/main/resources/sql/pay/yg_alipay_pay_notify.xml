@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.order.pay.dao.AlipayPayNotifyDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.pay.pay.entry.AlipayPayNotifyPO" useGeneratedKeys="false" >
+		insert into yg_order.yg_alipay_pay_notify (notify_id,pay_id,trade_no,trade_status,buyer_id,buyer_email,currency_type,total_fee,trade_create_time,trade_pay_time,notify_type,check_id,body,remark,create_time) values (#{notifyId},#{payId},#{tradeNo},#{tradeStatus},#{buyerId},#{buyerEmail},#{currencyType},#{totalFee},#{tradeCreateTime},#{tradePayTime},#{notifyType},#{checkId},#{body},#{remark},#{createTime})
+	</insert>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="com.yogu.services.order.pay.entry.AlipayPayNotifyPO">
+		update yg_order.yg_alipay_pay_notify set pay_id=#{payId},trade_no=#{tradeNo},trade_status=#{tradeStatus},buyer_id=#{buyerId},buyer_email=#{buyerEmail},currency_type=#{currencyType},total_fee=#{totalFee},trade_create_time=#{tradeCreateTime},trade_pay_time=#{tradePayTime},notify_type=#{notifyType},check_id=#{checkId},body=#{body},remark=#{remark} where notify_id=#{notifyId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.order.pay.entry.AlipayPayNotifyPO">
+		SELECT * FROM yg_order.yg_alipay_pay_notify WHERE notify_id=#{param1}
+	</select>
+
+	<!-- 根据支付记录ID读取记录 -->
+	<select id="getByPayId" resultType="com.yogu.services.order.pay.entry.AlipayPayNotifyPO">
+		SELECT * FROM yg_order.yg_alipay_pay_notify WHERE pay_id=#{payId}
+	</select>
+	
+	<!-- 根据支付记录ID，批量获取通知结果 hins 2015/9/16 新增 -->
+	<select id="listByPayIds" resultType="com.yogu.services.order.pay.entry.AlipayPayNotifyPO">
+		SELECT * FROM yg_order.yg_alipay_pay_notify WHERE pay_id in
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">  
+ 			#{item}
+		</foreach>
+	</select>
+	
+	<!-- 根据支付宝交易号读取记录 -->
+	<select id="getByTradeNo" resultType="com.yogu.services.order.pay.entry.AlipayPayNotifyPO">
+		SELECT * FROM yg_order.yg_alipay_pay_notify WHERE trade_no=#{trade_no}
+	</select>
+	
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.order.pay.dao.PayRecordDao">
+
+		<!-- 新增 -->
+	<insert id="save" parameterType="ccom.yogu.services.order.pay.entry.PayRecordPO" useGeneratedKeys="false" >
+		insert into yg_order.yg_pay_record (pay_id,pay_no,order_no,pay_mode,notify_id,buyer_uid,store_id,total_fee,order_fee,coupon_fee,goods_fee,use_coupon,pay_status,create_time,update_time,finish_time) values (#{payId},#{payNo},#{orderNo},#{payMode},#{notifyId},#{buyerUid},#{storeId},#{totalFee},#{orderFee},#{couponFee},#{goodsFee},#{useCoupon},#{notifyUrl},#{payStatus},#{createTime},#{updateTime},#{finishTime})
+	</insert>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="ccom.yogu.services.order.pay.entry.PayRecordPO">
+		update yg_order.yg_pay_record set pay_no=#{payNo},order_no=#{orderNo},pay_mode=#{payMode},notify_id=#{notifyId},buyer_uid=#{buyerUid},store_id=#{storeId},total_fee=#{totalFee},order_fee=#{orderFee},coupon_fee=#{couponFee},goods_fee=#{goodsFee},use_coupon=#{useCoupon},notify_url=#{notifyUrl},pay_status=#{payStatus},update_time=#{updateTime},finish_time=#{finishTime} where pay_id=#{payId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="ccom.yogu.services.order.pay.entry.PayRecordPO">
+		SELECT * FROM yg_order.yg_pay_record WHERE pay_id=#{payId}
+	</select>
+
+	<!-- 根据支付流水号读取记录 -->
+	<select id="getByPayNo" resultType="ccom.yogu.services.order.pay.entry.PayRecordPO">
+		SELECT * FROM yg_order.yg_pay_record WHERE pay_no=#{payNo}
+	</select>
+	
+	<!-- 根据支内部平台订单号读取记录 -->
+	<select id="listByOrderNo" resultType="ccom.yogu.services.order.pay.entry.PayRecordPO">
+		SELECT * FROM yg_order.yg_pay_record WHERE orderNo=#{orderNo} order by create_time desc
+	</select>
+	
+	<!-- 更新支付状态 -->
+	<update id="updatePayStatus" >
+		update yg_order.yg_pay_record set pay_status=#{newStatus},
+		update_time=#{updateTime}
+		<if test="notifyId > 0">
+			,notify_id=#{notifyId} 
+		</if>
+		where pay_id=#{payId} and pay_status=#{oldStatus}
+	</update>
+	
+	<update id="updatePayMode" >
+		update yg_order.yg_pay_record set pay_mode=#{newPayMode},has_discount=#{hasDiscount},total_fee=#{totalFee},pay_status=#{payStatus},delivery_fee=#{deliveryFee},
+		update_time=#{updateTime},order_fee=#{orderFee},goods_fee=#{goodsFee},coupon_fee=#{couponFee}
+		where pay_id=#{payId} and pay_mode=#{oldPayMode}
+	</update>
+	
+	<!-- 修改支付记录的是否使用优惠字段 -->
+	<update id="updateHasDiscount" >
+		update yg_order.yg_pay_record set has_discount=#{hasDiscount},total_fee=#{totalFee},pay_status=#{payStatus}
+		where pay_id=#{payId}
+	</update>
+	
+</mapper>

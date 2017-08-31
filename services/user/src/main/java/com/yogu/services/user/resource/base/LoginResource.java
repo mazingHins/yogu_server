@@ -1,9 +1,7 @@
 package com.yogu.services.user.resource.base;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -21,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yogu.commons.utils.JsonUtils;
-import com.yogu.commons.utils.LogUtil;
 import com.yogu.commons.utils.ThreadLocalContext;
 import com.yogu.commons.utils.Validator;
 import com.yogu.commons.validation.constraints.NotEmpty;
@@ -33,7 +30,6 @@ import com.yogu.core.web.LoginInfoService;
 import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
-import com.yogu.core.web.UserErrorCode;
 import com.yogu.core.web.context.SecurityContext;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.UserMessages;
@@ -93,58 +89,6 @@ public class LoginResource {
 		user.setPassport(mobile);
 		user.setPassword(password);
 		return doLogin(userService, loginInfoService, user, SecurityContext.getBaseParams(), SecurityContext.getPoint(), DeviceUtil.getRequestDevice(), userIp, true);
-	}
-	
-	/**
-	 * 无密登录接口
-	 * 
-	 * @param countryCode 国家地区编号
-	 * @param mobile 手机号
-	 * @param idcode 验证码
-	 * @param request
-	 * @return
-	 */
-	@POST
-	@Path("v1/user/loginWithoutPwd.do")
-	public RestResult<Map<String, Object>> loginNoPwd(
-			@FormParam("countryCode") @NotEmpty(message = "国家代码不能为空", mkey = UserMessages.USER_LOGIN_COUNTRY_CODE_CAN_NOT_BE_EMPTY2) String countryCode,
-			@FormParam("mobile") @NotEmpty(message = "请输入手机号码", mkey = UserMessages.USER_LOGIN_MOBILE_CAN_NOT_BE_EMPTY) String mobile,
-			@FormParam("idcode") @NotEmpty(message = "请输入验证码", mkey = UserMessages.USER_LOGIN_IDCODE_CAN_NOT_BE_EMPTY) String idcode, 
-			@Context HttpServletRequest request) {
-		
-		// 获取用户IP
-		String userIp = ThreadLocalContext.getThreadValue(ThreadLocalContext.REQ_CLIENT_IP, "127.0.0.1");
-
-		mobile = RegisterResource.decrypt(mobile);
-		countryCode = SmsUtil.trimCountryCode(countryCode);
-		logger.info("user#loginWithoutPwd | before login | mobile: {}, encryptedMobile: {}, ip: {}, idcode: {}",
-				LogUtil.hidePassport(mobile), LogUtil.encrypt(mobile), userIp, idcode);
-
-		validateRegNoPwdParams(countryCode, mobile, idcode);
-		
-		User user;
-		if (idCodeService.validateSmsIdCode(mobile, IdCodeService.FUNC_LOGIN_NO_PWD, idcode)) {
-			user = userService.getUser(countryCode, mobile);
-			// 若用户不存在, 则需要先注册
-			if (null == user) {
-				user = new User();
-				user.setPassport(mobile);
-				// 生成随机15位密码
-				user.setPassword(UUID.randomUUID().toString().substring(0, 15));
-				// 以手机的135****1234 这样的形式作为用户名
-				user.setNickname(SmsUtil.hideMobile(mobile));
-				user.setCountryCode(countryCode);
-				user.setCityCode(SecurityContext.getCityCode());
-				// 注册
-				long uid = userService.register(user, userIp);
-				logger.info("user#loginWithoutPwd | register success | mobile: {}, uid: {}", SmsUtil.hideMobile(mobile), uid);
-			}
-		} else {
-			logger.info("user#loginWithoutPwd | login error | mobile: {}", SmsUtil.hideMobile(mobile));
-			return new RestResult<>(UserErrorCode.IDCODE_ERROR, UserMessages.USER_LOGIN_IDCODE_INVALID(), Collections.<String, Object> emptyMap());
-		}
-		
-		return doLogin(userService, loginInfoService, user, SecurityContext.getBaseParams(), SecurityContext.getPoint(), DeviceUtil.getRequestDevice(), userIp, false);
 	}
 	
 	/**
