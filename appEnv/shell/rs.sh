@@ -124,7 +124,7 @@ slbEcsEnable() {
 stopServer() {
     echo 'stop resin......'
     echo "conf=$CONF, server=$SERVER"
-    /usr/local/resin/resin-pro-4.0.52/bin/resin.sh -conf $CONF -log-directory $LOG_PATH -root-directory /usr/local/resin/resin-pro-4.0.52 -server $SERVER shutdown 
+    /usr/local/resinpro/bin/resin.sh -conf $CONF -log-directory $LOG_PATH -root-directory /usr/local/resinpro -server $SERVER shutdown 
 }
 
 
@@ -143,7 +143,7 @@ startServer() {
 
     echo 'start resin......'
     echo "conf=$CONF, server=$SERVER"
-    /usr/local/resin/resin-pro-4.0.52/bin/resin.sh -conf $CONF -log-directory $LOG_PATH -root-directory /usr/local/resin/resin-pro-4.0.52 -server $SERVER start 
+    /usr/local/resinpro/bin/resin.sh -conf $CONF -log-directory $LOG_PATH -root-directory /usr/local/resinpro -server $SERVER start 
 }
 
 
