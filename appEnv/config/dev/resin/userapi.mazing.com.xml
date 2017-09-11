@@ -152,7 +152,7 @@
         <host-name>userapi.yogubc.com</host-name>
         <host-alias>userapi.internal.yogubc.com</host-alias>
 
-        <web-app id="/" document-directory="/data/webapps/userapi.yogubc.com/" archive-path="/data/app/yogu/web/yogu-api-user.war" redeploy-mode="manual">
+        <web-app id="/" document-directory="/data/webapps/userapi.yogu.com/" archive-path="/data/app/yogu/web/yogu-api-user.war" redeploy-mode="manual">
             <form-parameter-max>200</form-parameter-max>
             <character-encoding>UTF-8</character-encoding>
             <session-config>

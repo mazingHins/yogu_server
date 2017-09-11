@@ -136,17 +136,17 @@
         -->
         <host-name>user.mazing.com</host-name>
 
-        <web-app id="/" document-directory="/data/webapps/user.mazing.com/" archive-path="/data/app/mazing/web/mazing-web-user.war" redeploy-mode="manual">
+        <web-app id="/" document-directory="/data/webapps/user.mazing.com/" archive-path="/data/app/yogu/web/yogu-web-user.war" redeploy-mode="manual">
             <form-parameter-max>200</form-parameter-max>
             <character-encoding>UTF-8</character-encoding>
             <session-config>
                 <enable-url-rewriting>false</enable-url-rewriting>
             </session-config>
-            <stdout-log path="/data/log/resin/webuser/mazing-web-user.stdout.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
+            <stdout-log path="/data/log/resin/webuser/yogu-web-user.stdout.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
             	<rollover-size>32mb</rollover-size>
                 <archive-format>mazing-web-user.stdout.log.%m-%d.gz</archive-format>
             </stdout-log>
-            <stderr-log path="/data/log/resin/webuser/mazing-web-user.stderr.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
+            <stderr-log path="/data/log/resin/webuser/yogu-web-user.stderr.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
             	<rollover-size>32mb</rollover-size>
                 <archive-format>mazing-web-user.stderr.log.%m-%d.gz</archive-format>
             </stderr-log>

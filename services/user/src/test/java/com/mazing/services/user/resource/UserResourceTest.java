@@ -20,7 +20,7 @@ public class UserResourceTest extends HttpResourceTest {
 		host = "http://userapi.mazing.com";
 	}
 
-//	@Test
+	@Test
 	public void init() {
 		ApiReq<RestResult<?>> req = build("a/v1/user/profile");
 		req.login();

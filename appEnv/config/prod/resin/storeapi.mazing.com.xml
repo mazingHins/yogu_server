@@ -115,7 +115,7 @@
     <!--
     <server-multi id-prefix="app-" address-list="${app_servers}" port="6800"/>
     -->
-    <server id="mazing-api-store" address="127.0.0.1" port="5303">
+    <server id="yogu-api-store" address="127.0.0.1" port="5303">
 		<watchdog-port>5403</watchdog-port>
         <http address="*" port="5203" />
 	</server>
@@ -136,26 +136,26 @@
     </host-deploy>
 
     <!-- the default host, matching any host name -->
-    <host id="storeapi.mazing.com">
+    <host id="storeapi.yogubc.com">
       <!--
          - webapps can be overridden/extended in the resin.xml
         -->
-        <host-name>storeapi.mazing.com</host-name>
-        <host-alias>storeapi.internal.mazing.com</host-alias>
+        <host-name>storeapi.yogubc.com</host-name>
+        <host-alias>storeapi.internal.yogubc.com</host-alias>
 
-        <web-app id="/" document-directory="/data/webapps/storeapi.mazing.com/" archive-path="/data/app/mazing/web/mazing-api-store.war" redeploy-mode="manual">
+        <web-app id="/" document-directory="/data/webapps/storeapi.yogu.com/" archive-path="/data/app/yogu/web/yogu-api-store.war" redeploy-mode="manual">
             <form-parameter-max>200</form-parameter-max>
             <character-encoding>UTF-8</character-encoding>
             <session-config>
                 <enable-url-rewriting>false</enable-url-rewriting>
             </session-config>
-            <stdout-log path="/data/log/resin/storeapi/mazing-api-store.stdout.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
-                <rollover-size>64mb</rollover-size>
-                <archive-format>mazing-api-store.stdout.log.%m-%d.gz</archive-format>
+            <stdout-log path="/data/log/resin/storeapi/yogu-api-store.stdout.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
+            	<rollover-size>32mb</rollover-size>
+                <archive-format>yogu-api-store.stdout.log.%m-%d.gz</archive-format>
             </stdout-log>
-            <stderr-log path="/data/log/resin/storeapi/mazing-api-store.stderr.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
-                <rollover-size>64mb</rollover-size>
-                <archive-format>mazing-api-store.stderr.log.%m-%d.gz</archive-format>
+            <stderr-log path="/data/log/resin/storeapi/yogu-api-store.stderr.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
+            	<rollover-size>32mb</rollover-size>
+                <archive-format>yogu-api-store.stderr.log.%m-%d.gz</archive-format>
             </stderr-log>
             <!-- 
             <access-log path="/data/log/resin/storeapi/mazing-api-store.access.log" >
