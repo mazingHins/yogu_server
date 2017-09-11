@@ -31,13 +31,13 @@
 	<!-- 用于消息广播 -->
 	<!-- defaultModel -->
 	<bean id="redisMsg" factory-bean="redisFactory" factory-method="initRedis" destroy-method="destroy">
-		<constructor-arg index="0" value="${redis.msg.server}" />
+		<constructor-arg index="0" value="${redis.server}" />
 	</bean>
 
 	<!-- 业务数据cache -->
 	<!-- useSentinelModel -->
 	<bean id="redis" factory-bean="redisFactory" factory-method="initRedisSentinel" destroy-method="destroy">
-		<constructor-arg index="0" value="${redis.sentinel.server}" />
+		<constructor-arg index="0" value="${redis.server}" />
 	</bean>
 
 	<!-- 此id不能变更 -->
