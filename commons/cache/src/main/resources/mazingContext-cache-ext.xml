@@ -15,7 +15,7 @@
 
 	<!-- 选择一种缓存的实现方式 -->
 	<!-- 引入的配置中，必须包含一个id为cacheExtendService的实现 -->
-	<import resource="cache-redis.xml"/>
+	<!-- <import resource="cache-redis.xml"/>-->
 	<!-- <import resource="cache-xmemcached.xml"/> -->
 
 	<!-- Aspect -->
