@@ -20,7 +20,7 @@
 	</update>
 
 	<!-- 根据主键读取记录（主键可能有多个） -->
-	<select id="getById" parameterType="Map" resultType="com.mazing.services.config.base.entry.ConfigPO">
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.user.config.entry.ConfigPO">
 		SELECT * FROM yg_user.yg_config WHERE config_key=#{configKey} AND group_code=#{groupCode}
 	</select>
 
@@ -30,7 +30,7 @@
 	</select>
 	
 	<!-- 根据分组读取记录 -->
-	<select id="getByGroupCode" parameterType="Map" resultType="com.mazing.services.config.base.entry.ConfigPO">
+	<select id="getByGroupCode" parameterType="Map" resultType="com.yogu.services.user.config.entry.ConfigPO">
 		SELECT * FROM mz_config.mz_config WHERE group_code=#{groupCode}
 	</select>
 
