@@ -38,8 +38,8 @@ public class DesPropertiesEncoder implements PropertiesEncoder {
 
     public static void main(String[] args) {
     	DesPropertiesEncoder ed = new DesPropertiesEncoder();
-        System.out.println(ed.decode("eTRBNnv7FvxVVRLSOxEQi2OLoyCMaGzweTRBNnv7FvxVVRLSOxEQiztzCOO6 6794"));	// prod
-        System.out.println(ed.encode("127.0.0.1:6379"));	// org
+        System.out.println(ed.decode("6d15rpNP2nXXUsY1lsICLKhigcZib+5zwBZpGhIhMMKb5n8eqyipqN8ThSiC 0bYouwRgH+fFcvIyvjp4oBhJhBnMDqFF8i2kUrUYEQ3Wt5PhdPZ0rG4+Gclw lNJyMD0m2PpI3W+Y188="));	// prod
+        System.out.println(ed.encode("127.0.0.1:6379 # 127.0.0.1:6379"));	// org
         
 //        System.out.println(ed.decode("0l32Osie2EAeXFHXWES6OgtFPzawvK9q"));
     }
