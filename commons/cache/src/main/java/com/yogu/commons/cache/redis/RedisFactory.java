@@ -151,8 +151,8 @@ public class RedisFactory extends JedisPoolConfig {
 		// ##########################################
 		// 常规模式
 		else {
-			if (useSentinelModel)
-				return initBySentinel(servers, maxActive, initPoolSize);
+//			if (useSentinelModel)
+//				return initBySentinel(servers, maxActive, initPoolSize);
 			return initByDef(servers, maxActive, initPoolSize);
 		}
 	}
