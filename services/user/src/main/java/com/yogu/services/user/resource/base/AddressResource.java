@@ -19,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import com.yogu.commons.utils.VOUtil;
 import com.yogu.commons.utils.Validator;
 import com.yogu.commons.utils.WordCountUtils;
-import com.yogu.core.remote.config.AreaRemoteService;
 import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
@@ -46,9 +45,6 @@ public class AddressResource {
 
 	@Inject
 	private UserAddressService userAddressService;
-
-	@Inject
-	private AreaRemoteService areaRemoteService;
 
 	/**
 	 * 新增/修改收货地址

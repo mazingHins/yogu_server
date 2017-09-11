@@ -24,7 +24,6 @@ import com.yogu.commons.utils.ServiceLoaderUtils;
 import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.cfg.DesPropertiesEncoder;
 import com.yogu.core.broadcast.BroadcastKey;
-import com.yogu.core.enums.BooleanConstants;
 import com.yogu.core.remote.config.provider.ConfigProvider;
 import com.yogu.core.web.context.SecurityContext;
 import com.yogu.mq.ServerMsgNotice;
@@ -142,32 +141,6 @@ public class ConfigRemoteService implements ServerMsgNotice {
 	}
 	
 	/**
-	 * 根据城市code获取该城市下的标签定制池
-	 * @param cityCode - 城市code
-	 * @author hins
-	 * @date 2016年12月16日 下午4:40:39
-	 * @return List<TagCustomizePoolVO>
-	 */
-	public static List<CustomizePoolVO> getCustomizePool(String cityCode, String lang) {
-		//把城市 + 语言做为缓存key
-		String cacheKey = cityCode + "_" + lang;
-		
-		List<CustomizePoolVO> list = customizePoolCache.get(cacheKey);
-		if (list == null) {
-			synchronized (cacheKey) {
-				list = configProvider.listCustomizeByCityCode(cityCode, lang);
-				if (list == null) { // 防止list一直=null，每次进入此方法都加锁
-					list = Collections.emptyList();
-				}
-				
-				customizePoolCache.put(cacheKey, list);
-				reloadCustomizeStoreTag(list);
-			}
-		}
-		return list;
-	}
-	
-	/**
 	 * 重新装载每个用户标签配置下的餐厅标签列表数据
 	 * 
 	 * @param list - 该城市下的用户标签配置下的餐厅标签列表数据
@@ -230,28 +203,6 @@ public class ConfigRemoteService implements ServerMsgNotice {
 			return true;
 		}
 		return false;
-	}
-
-	/**
-	 * 判断UID是否在白名单里
-	 * 
-	 * @param uid 用户的UID
-	 * @return 返回true=白名单
-	 * @deprecated 建议使用inWhiteListByDid()
-	 */
-	public boolean inWhiteList(long uid) {
-		if (whiteUidSet == NULL_SET1)
-			reloadWhiteList();
-		return whiteUidSet.contains(Long.valueOf(uid));
-	}
-
-	/**
-	 * 判断DID是否在白名单里
-	 */
-	public boolean inWhiteListByDid(String did) {
-		if (whiteDidSet == NULL_SET2)
-			reloadWhiteList();
-		return whiteDidSet.contains(did);
 	}
 
 	// ####
@@ -318,70 +269,6 @@ public class ConfigRemoteService implements ServerMsgNotice {
 	}
 
 	/**
-	 * 重新加载白名单列表
-	 * 
-	 * @author ten 2016/1/14
-	 */
-	private static void reloadWhiteList() {
-		long t1 = System.currentTimeMillis();
-		try {
-			List<WhiteList> list = configProvider.listAllWhiteList();
-			Set<Long> tmpUid = new HashSet<>(list.size() * 4 / 3);
-			Set<String> tmpDid = new HashSet<>(list.size() * 4 / 3);
-			for (WhiteList vo : list) {
-				tmpUid.add(vo.getUid());
-				String did = StringUtils.trimToNull(vo.getDid());
-				if (null != did)
-					tmpDid.add(did);
-			}
-			whiteUidSet = tmpUid;
-			whiteDidSet = tmpDid;
-			long time = System.currentTimeMillis() - t1;
-			logger.info("config#remote#reloadWhiteList | 加载白名单结束 | size:{}, time: {}", tmpUid.size(), time);
-		} catch (Exception e) {
-			logger.error("config#remote#reloadWhiteList | 重新加载白名单异常", e);
-		}
-	}
-	
-
-	/**
-	 * 获取门店标签内容
-	 * 
-	 * @return
-	 */
-	@Deprecated
-	public static List<StoreCategoryVO> getStoreTags() {
-		if (SecurityContext.change2English()) {
-			if (null == enStoreTags || NULL_TAG == enStoreTags)
-				enStoreTags = configProvider.listAllCategoryTag();
-
-			return enStoreTags;
-		}
-
-		if (null == storeTags || NULL_TAG == storeTags)
-			storeTags = configProvider.listAllCategoryTag();
-		return storeTags;
-	}
-
-	/**
-	 * 获取筛选标签内容, 根据中文名把筛选标签列表缓存到jvm，在根据用户的cityCode过滤
-	 * @return    
-	 * @author east
-	 * @date 2016年12月26日 下午2:47:54
-	 */
-	public static List<FilterTagCategoryVO> getFilterTags() {
-		if (SecurityContext.change2English()) {
-			if (null == enFilterTags || enFilterTags.isEmpty())
-				enFilterTags = configProvider.listAllFilterTag();
-			return getFilterTagsByCityCode(enFilterTags);
-		}
-
-		if (null == filterTags || filterTags.isEmpty())
-			filterTags = configProvider.listAllFilterTag();
-		return getFilterTagsByCityCode(filterTags);
-	}
-	
-	/**
 	 * 根据用户的cityCode去获取筛选标签分类列表
 	 * @param filterTagList 包含了所有城市的筛选标签分类列表(包含标签列表)
 	 * @return    
@@ -440,41 +327,6 @@ public class ConfigRemoteService implements ServerMsgNotice {
 		storeTags = null;
 	}
 	
-	private static void reloadCustomiz() {
-		customizePoolCache = new HashMap<String, List<CustomizePoolVO>>();
-
-		List<CustomizePoolVO> list = configProvider.listAllEffective();
-		for (CustomizePoolVO pool : list) {
-			
-			//如果定制标签支持中文显示, 则把它放进缓存
-			if(pool.getShowZh() == BooleanConstants.TRUE){
-				String cacheKey = pool.getCityCode() + "_" + AppLanguage.zh.getCode();
-
-				List<CustomizePoolVO> childs = customizePoolCache.get(cacheKey);
-				if (childs == null) {
-					childs = new ArrayList<CustomizePoolVO>();
-					customizePoolCache.put(cacheKey, childs);
-				}
-				childs.add(pool);
-			}
-			
-			//如果定制标签支持英文显示, 则把它放进缓存
-			if(pool.getShowEn() == BooleanConstants.TRUE){
-				String cacheKey = pool.getCityCode() + "_" + AppLanguage.en.getCode();
-
-				List<CustomizePoolVO> childs = customizePoolCache.get(cacheKey);
-				if (childs == null) {
-					childs = new ArrayList<CustomizePoolVO>();
-					customizePoolCache.put(cacheKey, childs);
-				}
-				childs.add(pool);
-			}
-		}
-		// 重新load每个配置下的标签cache
-		reloadCustomizeStoreTag(list);
-
-	}
-
 	private static void reloadFilterTags() {
 		filterTags = null;
 		enFilterTags = null;
@@ -494,12 +346,8 @@ public class ConfigRemoteService implements ServerMsgNotice {
 
 		logger.info("config#remoteService#notice | receive broadcast message , start reload all configs | messageId: {}, message: {}",
 				messageId, message);
-		if (BroadcastKey.WHITELIST_CHANGE_CONTENT.equalsIgnoreCase(message)) {
-			reloadWhiteList();
-		} else if (BroadcastKey.STORE_TAG_CHANGE_CONTENT.equalsIgnoreCase(message)) {
+		if (BroadcastKey.STORE_TAG_CHANGE_CONTENT.equalsIgnoreCase(message)) {
 			reloadStoreTags();
-		} else if(BroadcastKey.TAG_CUSTOMIZE_POOL_CHANGE.equalsIgnoreCase(message)){
-			reloadCustomiz();
 		} else if(BroadcastKey.FILTER_TAG_CHANGE.equalsIgnoreCase(message)){
 			reloadFilterTags();
 		} else {
