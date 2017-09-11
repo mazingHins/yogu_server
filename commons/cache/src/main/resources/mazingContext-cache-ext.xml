@@ -19,10 +19,10 @@
 	<!-- <import resource="cache-xmemcached.xml"/> -->
 
 	<!-- Aspect -->
-	<!-- 在装载这个配置文件之前，需要初始化一个 name为cacheExtendService的实现类 -->
+	<!-- 在装载这个配置文件之前，需要初始化一个 name为cacheExtendService的实现类
 	<bean id="annoCacheExtendAspecter" class="com.yogu.commons.cache.aspect.AnnoCacheExtendAspecter">
 		<property name="preventPenetration" value="${cache.anno.prevent:false}" />
 		<property name="extendService" ref="cacheExtendService" />
-	</bean>
+	</bean> -->
 
 </beans>
