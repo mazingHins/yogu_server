@@ -2,6 +2,7 @@ package com.yogu.services.user.base.dao;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.yogu.commons.datasource.annocation.TheDataDao;
 import com.yogu.services.user.base.entry.UserInvitePO;
 
 /**
@@ -9,6 +10,7 @@ import com.yogu.services.user.base.entry.UserInvitePO;
  * 
  * @author JFan 2015-07-13
  */
+@TheDataDao
 public interface UserInviteDao {
 
 	/**
