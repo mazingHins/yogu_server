@@ -1,1 +1,1 @@
-com.mazing.services.config.base.service.impl.DBConfigProviderImpl
+com.yogu.services.user.config.service.impl.DBConfigProviderImpl
