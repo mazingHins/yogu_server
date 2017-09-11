@@ -42,7 +42,7 @@
 
 
 	<import resource="classpath*:mazingContext-datasource.xml" />
-	<import resource="classpath*:mazingContext-cache-ext.xml" />
+	<!-- <import resource="classpath*:mazingContext-cache-ext.xml" /> -->
 	<import resource="classpath*:mazingContext-server.xml" />
 	<!-- <import resource="classpath*:mazingContext-validation.xml" /> -->
 

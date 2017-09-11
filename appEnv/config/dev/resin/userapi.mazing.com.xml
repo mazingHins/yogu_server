@@ -83,7 +83,7 @@
 			<keepalive-timeout>10s</keepalive-timeout>
             <socket-timeout>30s</socket-timeout>
 			<keepalive-max>8</keepalive-max>
-            <thread-max>8</thread-max>
+            <thread-max>32</thread-max>
 
 			<!-- <jvm-arg>-Xmx256m</jvm-arg>
 			<jvm-arg>-Xms128m</jvm-arg>
