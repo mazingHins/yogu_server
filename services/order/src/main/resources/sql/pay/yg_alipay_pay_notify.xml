@@ -4,7 +4,7 @@
 <mapper namespace="com.yogu.services.order.pay.dao.AlipayPayNotifyDao">
 
 	<!-- 新增 -->
-	<insert id="save" parameterType="com.yogu.services.pay.pay.entry.AlipayPayNotifyPO" useGeneratedKeys="false" >
+	<insert id="save" parameterType="com.yogu.services.order.pay.entry.AlipayPayNotifyPO" useGeneratedKeys="false" >
 		insert into yg_order.yg_alipay_pay_notify (notify_id,pay_id,trade_no,trade_status,buyer_id,buyer_email,currency_type,total_fee,trade_create_time,trade_pay_time,notify_type,check_id,body,remark,create_time) values (#{notifyId},#{payId},#{tradeNo},#{tradeStatus},#{buyerId},#{buyerEmail},#{currencyType},#{totalFee},#{tradeCreateTime},#{tradePayTime},#{notifyType},#{checkId},#{body},#{remark},#{createTime})
 	</insert>
 	
