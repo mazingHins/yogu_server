@@ -14,17 +14,17 @@
 	</update>
 
 	<!-- 根据主键读取记录（主键可能有多个） -->
-	<select id="getById" parameterType="Map" resultType="ccom.yogu.services.order.pay.entry.PayRecordPO">
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.order.pay.entry.PayRecordPO">
 		SELECT * FROM yg_order.yg_pay_record WHERE pay_id=#{payId}
 	</select>
 
 	<!-- 根据支付流水号读取记录 -->
-	<select id="getByPayNo" resultType="ccom.yogu.services.order.pay.entry.PayRecordPO">
+	<select id="getByPayNo" resultType="com.yogu.services.order.pay.entry.PayRecordPO">
 		SELECT * FROM yg_order.yg_pay_record WHERE pay_no=#{payNo}
 	</select>
 	
 	<!-- 根据支内部平台订单号读取记录 -->
-	<select id="listByOrderNo" resultType="ccom.yogu.services.order.pay.entry.PayRecordPO">
+	<select id="listByOrderNo" resultType="com.yogu.services.order.pay.entry.PayRecordPO">
 		SELECT * FROM yg_order.yg_pay_record WHERE orderNo=#{orderNo} order by create_time desc
 	</select>
 	
