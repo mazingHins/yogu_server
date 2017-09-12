@@ -4,7 +4,6 @@
 package com.yogu.services.store;
 
 import com.yogu.commons.cache.aspect.AnnoCacheExtendAspecter;
-import com.yogu.core.remote.store.provider.StoreProvider;
 
 /**
  * 整个商家模块的KEY定义 <br>
@@ -252,11 +251,6 @@ public final class MerchantCacheKey {
 	/** 门店是否被封的缓存 */
 	public static String isStoreBannedKey(long storeId) {
 		return AnnoCacheExtendAspecter.toKey(IS_STORE_BANNED_PREFIX, storeId);
-	}
-
-	/** 记录用户是否是这个门店下的员工的缓存（注意：存储的是boolean）；组装key需要两个参数：storeId、uid */
-	public static String isUserStoreStaffKey(long storeId, long uid) {
-		return AnnoCacheExtendAspecter.toKey(StoreProvider.STORE_USER_STAFF_PREFIX, storeId, uid);
 	}
 
 	/** 门店所有的美食分组缓存 */

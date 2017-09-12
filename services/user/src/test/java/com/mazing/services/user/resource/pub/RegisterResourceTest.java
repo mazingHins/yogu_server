@@ -15,7 +15,7 @@ import com.yogu.core.web.RestResult;
 public class RegisterResourceTest extends HttpResourceTest {
 
 	public RegisterResourceTest() {
-		host = "http://userapi.yogubc.com:81";
+		host = "http://userapi.yogubc.com";
 		//host = "http://localhost:8090";
 	}
 
