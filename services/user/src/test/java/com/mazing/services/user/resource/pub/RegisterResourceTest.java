@@ -6,16 +6,16 @@ import org.junit.Test;
 
 import com.yogu.commons.utils.JsonUtils;
 import com.yogu.core.test.ApiReq;
-import com.yogu.core.test.BaseResourceTest;
+import com.yogu.core.test.HttpResourceTest;
 import com.yogu.core.web.RestResult;
 
 /**
  * RegisterResource 测试
  */
-public class RegisterResourceTest extends BaseResourceTest {
+public class RegisterResourceTest extends HttpResourceTest {
 
 	public RegisterResourceTest() {
-		host = "https://userapi.mazing.com";
+		host = "http://userapi.yogubc.com:81";
 		//host = "http://localhost:8090";
 	}
 
@@ -25,8 +25,8 @@ public class RegisterResourceTest extends BaseResourceTest {
 
 		// int index = 2;
 		req.putPost("countryCode", "86");
-		req.putPost("mobile", encrypt("18613089903"));
-		req.putPost("password", encrypt("18613089903"));
+		req.putPost("mobile", encrypt("13926426236"));
+		req.putPost("password", encrypt("abcd1234"));
 		req.putPost("nickname", "kimmy");
 		req.putPost("idcode", "301669");
 		// req.putPost("lng", "0.0");// base 参数中已包含，也可调用req.putPoint(x, y);
