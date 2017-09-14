@@ -1,11 +1,15 @@
 package com.yogu.services.store.resource.vo;
 
+import java.io.Serializable;
+
 /**
  * 商品标签VO
  *
  */
-public class GoodsTagVO {
+public class GoodsTagVO implements Serializable {
 	
+	private static final long serialVersionUID = -4759890062217182103L;
+
 	/** 标签ID */
 	private long tagId;
 

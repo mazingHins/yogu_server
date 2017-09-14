@@ -1,5 +1,7 @@
 package com.yogu.services.store.business.service;
 
+import java.util.List;
+
 import com.yogu.services.store.business.dto.Goods;
 
 /**
@@ -24,6 +26,15 @@ public interface GoodsService {
 	 */
 	Goods getByKey(long goodsKey);
 	
-	
+	/**
+	 * 分页获取商品信息，根据创建时间倒序（从小到大）
+	 * 
+	 * @param pageNo - 页码，首页传1
+	 * @param pageSize - 每页大小
+	 * @author qiujun 
+	 * @date 2017年9月13日 下午9:42:49 
+	 * @return 商品列表，若无，返回empty list
+	 */
+	List<Goods> listByPage(int pageNo, int pageSize);
 
 }

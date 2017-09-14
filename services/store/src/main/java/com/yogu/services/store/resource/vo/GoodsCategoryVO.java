@@ -1,5 +1,6 @@
 package com.yogu.services.store.resource.vo;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -7,8 +8,10 @@ import java.util.List;
  * 商品分类VO
  *
  */
-public class GoodsCategoryVO {
+public class GoodsCategoryVO implements Serializable {
 	
+	private static final long serialVersionUID = -8598969701047963241L;
+
 	/** 分类ID */
 	private long categoryId;
 

@@ -1,5 +1,8 @@
 package com.yogu.services.store.business.service.impl;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -31,6 +34,11 @@ public class GoodsServiceImpl implements GoodsService {
 			return null;
 		}
 		return VOUtil.from(po, Goods.class);
+	}
+
+	@Override
+	public List<Goods> listByPage(int pageNo, int pageSize) {
+		return Collections.emptyList();
 	}
 
 }
