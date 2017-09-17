@@ -42,8 +42,8 @@ public class DesPropertiesEncoder implements PropertiesEncoder {
         System.out.println(ed.encode("127.0.0.1:6379"));	// org
         System.out.println(ed.decode("6d15rpNP2nXXUsY1lsICLB+c0/4T/6V66qcwOYBgCwV8YZorfCWUBoko8ZlY XBYZ"));	// org
         System.out.println(ed.decode("kg7znayXH8TXUsY1lsICLKrgQatQp+i9"));	// org
-        System.out.println(ed.decode("eTRBNnv7FvxVVRLSOxEQi2OLoyCMaGzweTRBNnv7FvxVVRLSOxEQiztzCOO6 6794"));	// org
-        System.out.println(ed.decode("eTRBNnv7FvxVVRLSOxEQi1D5Uu9lWL9ZeTRBNnv7FvxVVRLSOxEQi4tiEQWm YM+B"));	// org
+        System.out.println(ed.decode("8/rLlfjdI5c="));	// org
+        System.out.println(ed.decode("W8+AGDwiE+yKpsjbNgbC2A=="));	// org
         
 //        System.out.println(ed.decode("0l32Osie2EAeXFHXWES6OgtFPzawvK9q"));
     }
