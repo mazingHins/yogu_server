@@ -170,7 +170,7 @@ public class ApiAuthenticatorImpl implements Authenticator {
 			return;
 		}
 		// 增加IP输出，用于查证来源 2015/11/11 ten
-		logger.debug("api#interceptor | check token | path: {}, ip: {}", path, ip);
+		logger.info("api#interceptor | check token | path: {}, ip: {}", path, ip);
 
 		if (null == type) {
 			logger.warn("api#interceptor | Unknown Request: '{}'.", path);
@@ -205,9 +205,9 @@ public class ApiAuthenticatorImpl implements Authenticator {
 					pm.remove(exclude);
 			params.putAll(pm);
 			params.remove("sign");
-
-			if (!(check(request, params, sign, type)))
-				throw new AuthenticationException(ResultCode.PARAMETER_ERROR, "sign Incorrect.");
+			return;
+//			if (!(check(request, params, sign, type)))
+//				throw new AuthenticationException(ResultCode.PARAMETER_ERROR, "sign Incorrect.");
 		}else{
 			String lngStr = request.getParameter("lng");
 			String latStr = request.getParameter("lat");
