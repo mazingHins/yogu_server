@@ -1,0 +1,2 @@
+com.yogu.core.server.auth.ApiAuthenticatorImpl
+com.yogu.core.web.auth.TestAuthenticatorImpl

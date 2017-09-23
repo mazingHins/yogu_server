@@ -6,16 +6,16 @@ import org.junit.Test;
 
 import com.yogu.commons.utils.JsonUtils;
 import com.yogu.core.test.ApiReq;
-import com.yogu.core.test.HttpResourceTest;
+import com.yogu.core.test.BaseResourceTest;
 import com.yogu.core.web.RestResult;
 
 /**
  * RegisterResource 测试
  */
-public class RegisterResourceTest extends HttpResourceTest {
+public class RegisterResourceTest extends BaseResourceTest {
 
 	public RegisterResourceTest() {
-		host = "http://userapi.yogubc.com";
+		host = "http://119.23.15.225:8080/yogu-api-user";
 		//host = "http://localhost:8090";
 	}
 
