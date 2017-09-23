@@ -56,7 +56,7 @@ public class UserDaoImpl extends MyBatisDao implements UserDao {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(getTableName("86", "13422222833"));
+		System.out.println(getTableName("86", "13926426236"));
 	}
 	
 	/**

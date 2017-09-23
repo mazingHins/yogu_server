@@ -139,8 +139,8 @@ public class RegisterResource {
 	 * @return
 	 */
 	static String decrypt(String str) {
-		String appSecret = ConfigRemoteService.getConfig(ConfigGroupConstants.APP_KEY, SecurityContext.getBaseParams().getAppKey());
 		try {
+			String appSecret = ConfigRemoteService.getConfig(ConfigGroupConstants.APP_KEY, SecurityContext.getBaseParams().getAppKey());
 			if (str != null)
 				return DES3.decrypt(str, appSecret);
 			return null;

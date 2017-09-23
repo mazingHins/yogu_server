@@ -5,6 +5,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.yogu.commons.utils.JsonUtils;
+import com.yogu.commons.utils.encrypt.DES3;
 import com.yogu.core.test.ApiReq;
 import com.yogu.core.test.HttpResourceTest;
 import com.yogu.core.web.RestResult;
@@ -18,6 +19,10 @@ public class RegisterResourceTest extends HttpResourceTest {
 		host = "http://119.23.15.225:8080/yogu-api-user";
 		//host = "http://localhost:8090";
 	}
+	
+//	public static void main(String[] args) throws Exception {
+//		System.out.println(DES3.encrypt("13926426236", ApiReq.defAppSecret));
+//	}
 
 	@Test
 	public void reg() throws Exception {
@@ -28,7 +33,7 @@ public class RegisterResourceTest extends HttpResourceTest {
 		req.putPost("mobile", encrypt("13926426236"));
 		req.putPost("password", encrypt("abcd1234"));
 		req.putPost("nickname", "kimmy");
-		req.putPost("idcode", "301669");
+		req.putPost("idcode", "123456");
 		// req.putPost("lng", "0.0");// base 参数中已包含，也可调用req.putPoint(x, y);
 		// req.putPost("lat", "0.0");
 
