@@ -345,38 +345,39 @@ public class ApiAuthenticatorImpl implements Authenticator {
 	 * 根据参数，对比封签值
 	 */
 	private boolean check(HttpServletRequest request, Map<String, String[]> params, String sign, ApiReqinfoType type) {
-		// 校验appKey
-		String appKey = SignUtils.getParam(params, "akey", "");
-		// 获取appSecret
-		String secret = ConfigRemoteService.getConfig(ConfigGroupConstants.APP_KEY, appKey);
-		if (null == secret)
-			throw new AuthenticationException(ResultCode.PARAMETER_ERROR, "'akey' is invalid.");
-
-		// 校验userToken
-		String userToken = SignUtils.getParam(params, "ut", null);
-		if (null != userToken) {
-			String userSecret = getUserSecret(userToken);
-			if (null == userSecret) {
-				String query = request.getQueryString();
-				logger.error("api#interceptor | ut 参数非法 | ut: {}, uri: {}, queryString: {}", userToken, request.getRequestURI(), query);
-				throw new AuthenticationException(ResultCode.TOKEN_ERROR, AuthMessages.AUTH_APIAUTH_CHECK_USERTOKEN_EMPTY(), false);
-			}
-			if (type.isCheckUT())
-				secret = StringUtils.join(secret, userSecret);
-		}
-
-		// 计算签名摘要
-		String source = SignUtils.signSource(params);
-		logger.debug("api#interceptor | sign source: {}", source);
-		logger.debug("api#interceptor | sign secret: {}", secret);
-		String ssign = SignUtils.signHmacSha1(source, secret);
-		logger.debug("api#interceptor | sign encrypt: {}", ssign);
-
-		// if (skipSign) {
-		// logger.info("api#interceptor | skip sign");
-		// return true;
-		// }
-		return sign.equals(ssign);
+		return true;
+//		// 校验appKey
+//		String appKey = SignUtils.getParam(params, "akey", "");
+//		// 获取appSecret
+//		String secret = ConfigRemoteService.getConfig(ConfigGroupConstants.APP_KEY, appKey);
+//		if (null == secret)
+//			throw new AuthenticationException(ResultCode.PARAMETER_ERROR, "'akey' is invalid.");
+//
+//		// 校验userToken
+//		String userToken = SignUtils.getParam(params, "ut", null);
+//		if (null != userToken) {
+//			String userSecret = getUserSecret(userToken);
+//			if (null == userSecret) {
+//				String query = request.getQueryString();
+//				logger.error("api#interceptor | ut 参数非法 | ut: {}, uri: {}, queryString: {}", userToken, request.getRequestURI(), query);
+//				throw new AuthenticationException(ResultCode.TOKEN_ERROR, AuthMessages.AUTH_APIAUTH_CHECK_USERTOKEN_EMPTY(), false);
+//			}
+//			if (type.isCheckUT())
+//				secret = StringUtils.join(secret, userSecret);
+//		}
+//
+//		// 计算签名摘要
+//		String source = SignUtils.signSource(params);
+//		logger.debug("api#interceptor | sign source: {}", source);
+//		logger.debug("api#interceptor | sign secret: {}", secret);
+//		String ssign = SignUtils.signHmacSha1(source, secret);
+//		logger.debug("api#interceptor | sign encrypt: {}", ssign);
+//
+//		// if (skipSign) {
+//		// logger.info("api#interceptor | skip sign");
+//		// return true;
+//		// }
+//		return sign.equals(ssign);
 	}
 
 	/**
