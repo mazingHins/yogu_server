@@ -22,5 +22,25 @@
 		SELECT * FROM yg_store.yg_goods WHERE store_id=#{goodsKey} and status=#{status} order by sequence asc
 	</select>
 	
+	<select id="listByPage" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_store.yg_goods WHERE
+		<if test="lastTime != null">
+			<![CDATA[
+			create_time<{lastTime} and 
+			]]>
+		</if>
+		status=#{status} order by create_time desc limit #{pageSize}
+	</select>
+	
+	<select id="listByName" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_store.yg_goods WHERE goods_name like #{goodsName} and 
+		<if test="lastTime != null">
+			<![CDATA[
+			create_time<{lastTime} and 
+			]]>
+		</if>
+		status=#{status} order by create_time desc limit #{pageSize}
+	</select>
+	
 
 </mapper>

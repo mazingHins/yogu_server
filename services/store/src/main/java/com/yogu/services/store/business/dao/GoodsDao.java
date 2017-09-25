@@ -39,5 +39,26 @@ public interface GoodsDao {
 	 * @return 符合的记录列表，若无，返回empty list
 	 */
 	public List<GoodsPO> listByStoreId(@Param("storeId") long storeId, @Param("status") short status);
+	
+	/**
+	 * 分页获取商品信息，结果按照创建时间倒序排序
+	 * 
+	 * @param lastTime -上一条商品创建时间（为空标示不查）
+	 * @param pageSize - 每页大小
+	 * @param status - 商品状态
+	 * @return 符合的记录列表，若无，返回empty list
+	 */
+	public List<GoodsPO> listByPage(@Param("lastTime") Long lastTime, @Param("pageSize") int pageSize, @Param("status") short status);
+	
+	/**
+	 * 通过商品名称模糊查询获取商品信息息，结果按照创建时间倒序排序
+	 * 
+	 * @param goodsName - 商品名称
+	 * @param lastTime -上一条商品创建时间（为空标示不查）
+	 * @param pageSize - 每页大小
+	 * @param status - 商品状态
+	 * @return 符合的记录列表，若无，返回empty list
+	 */
+	public List<GoodsPO> listByName(@Param("goodsName") String goodsName, @Param("lastTime") Long lastTime, @Param("pageSize") int pageSize, @Param("status") short status);
 
 }

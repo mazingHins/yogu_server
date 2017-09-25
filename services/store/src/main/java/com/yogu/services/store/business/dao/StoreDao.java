@@ -23,5 +23,12 @@ public interface StoreDao {
 	 * 根据主键读取记录
 	 */
 	public StorePO getById(@Param("storeId") long storeId);
-
+	
+	
+	/**
+	 * 根据店主读取记录<br>
+	 * 如果有多个，获取首个
+	 */
+	public StorePO getByUid(@Param("uid") long uid);
+	
 }

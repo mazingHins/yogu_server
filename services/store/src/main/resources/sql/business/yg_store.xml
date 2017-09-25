@@ -13,5 +13,9 @@
 	<select id="getById" parameterType="Map" resultType="com.yogu.services.store.business.entry.StorePO">
 		SELECT * FROM yg_store.yg_store WHERE store_id=#{storeId}
 	</select>
+	
+	<select id="getByUid" parameterType="Map" resultType="com.yogu.services.store.business.entry.StorePO">
+		SELECT * FROM yg_store.yg_store WHERE uid=#{uid} limit 1
+	</select>
 
 </mapper>

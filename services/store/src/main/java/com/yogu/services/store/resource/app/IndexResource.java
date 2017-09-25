@@ -12,16 +12,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
-import com.yogu.commons.utils.CollectionUtils;
 import com.yogu.commons.utils.PageUtils;
 import com.yogu.commons.utils.VOUtil;
 import com.yogu.core.web.RestResult;
+import com.yogu.core.web.context.SecurityContext;
 import com.yogu.services.store.base.dto.GoodsCategory;
 import com.yogu.services.store.base.service.GoodsCategoryService;
 import com.yogu.services.store.business.dto.Goods;
 import com.yogu.services.store.business.service.GoodsService;
 import com.yogu.services.store.resource.vo.GoodsCategoryVO;
-import com.yogu.services.store.resource.vo.GoodsVO;
 import com.yogu.services.store.resource.vo.IndexAdvertisingVO;
 import com.yogu.services.store.resource.vo.IndexRecommendVO;
 import com.yogu.services.store.resource.vo.IndexVO;
@@ -63,6 +62,12 @@ public class IndexResource {
 		return new RestResult<IndexVO>(result);
 	}
 	
+	@GET
+	@Path("v1/index/recommend")
+	public RestResult<List<IndexRecommendVO>> goodsList(@QueryParam("pageSize") int pageSize, @QueryParam("lastTime") long lastTime) {
+		return new RestResult<List<IndexRecommendVO>>(loadRecomend(lastTime, pageSize));
+	}
+	
 	/**
 	 * 分页装载今日推荐内容
 	 * 
@@ -72,9 +77,10 @@ public class IndexResource {
 	 * @date 2017年9月13日 下午9:49:34 
 	 * @return 进入推荐内容列表，若无，返回empty list
 	 */
-	private List<IndexRecommendVO> loadRecomend(int pageNo, int pageSize){
+	private List<IndexRecommendVO> loadRecomend(long lastTime, int pageSize){
+		Long uid = SecurityContext.getUserId();
 		pageSize = PageUtils.limitSize(pageSize, MIN_SIZE, MAX_SIZE);
-		List<Goods> goodsList = goodsService.listByPage(1, pageSize);
+		List<Goods> goodsList = goodsService.listByPage(uid, 0, pageSize);
 		List<IndexRecommendVO> recommendList = new ArrayList<>(goodsList.size());
 		for (Goods goods : goodsList) {
 			IndexRecommendVO vo = VOUtil.from(goods, IndexRecommendVO.class);

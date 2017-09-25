@@ -15,5 +15,13 @@ public interface StoreService {
 	 * @return 店铺信息，如果无，返回null
 	 */
 	Store getById(long storeId);
+	
+	/**
+	 * 通过店主id获取店铺信息
+	 * 
+	 * @param uid - 店主id
+	 * @return 店铺信息，如果无，返回null
+	 */
+	Store getByUid(long uid);
 
 }

@@ -33,4 +33,18 @@ public class StoreServiceImpl implements StoreService {
 		return VOUtil.from(store, Store.class);
 	}
 
+	@Override
+	public Store getByUid(long uid) {
+		if(uid<1){
+			return null;
+		}
+		
+		StorePO store = storeDao.getByUid(uid);
+		if(null == store){
+			return null;
+		}
+		
+		return VOUtil.from(store, Store.class);
+	}
+
 }
