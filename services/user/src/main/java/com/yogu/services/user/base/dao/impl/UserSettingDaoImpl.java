@@ -64,7 +64,7 @@ public class UserSettingDaoImpl extends MyBatisDao implements UserSettingDao{
      */
     public static String getTableName(long uid) {
 		// 分表128个
-		int n = (int) (Math.abs(uid) % 16);
+		int n = (int) (Math.abs(uid) % 8);
 		return TABLE_PREFIX + n;
 	}
 
