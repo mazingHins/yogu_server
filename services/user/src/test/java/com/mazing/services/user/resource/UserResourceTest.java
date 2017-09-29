@@ -16,14 +16,14 @@ import com.yogu.core.web.ResultCode;
 public class UserResourceTest extends HttpResourceTest {
 
 	public UserResourceTest() {
-		userHost = "http://userapi.mazing.com";
-		host = "http://userapi.mazing.com";
+		userHost = "http://userapi.yogubc.com/";
+		host = "http://userapi.yogubc.com/";
 	}
 
 	@Test
 	public void init() {
 		ApiReq<RestResult<?>> req = build("a/v1/user/profile");
-		req.login();
+		req.login("86", "13926426236", "abcd1234");
 
 		RestResult<?> result = req.doGet();
 		Map<?, ?> map = assertMap(result);
