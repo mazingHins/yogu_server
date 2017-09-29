@@ -5,7 +5,7 @@
 
 	<!-- 新增 -->
 	<insert id="insert" parameterType="Map" useGeneratedKeys="false" >
-		insert into ${tableName} (uid,default_city_code,default_language_id,default_pay_mode,is_push,create_time) values (#{entity.uid},#{entity.defaultCityCode},#{entity.defaultLanguageId},#{entity.defaultPayMode},#{entity.isPush},#{entity.createTime})
+		insert into ${tableName} (uid,is_push,create_time) values (#{entity.uid},#{entity.isPush},#{entity.createTime})
 	</insert>
 
 	<!-- 根据主键读取记录（主键可能有多个） -->
@@ -17,15 +17,6 @@
 	<update id="update" parameterType="Map">
 		update ${tableName}
 		<set>
-			<if test="entity.defaultCityCode != null">
-				default_city_code = #{entity.defaultCityCode,jdbcType=VARCHAR},
-			</if>
-			<if test="entity.defaultLanguageId != null">
-				default_language_id = #{entity.defaultLanguageId,jdbcType=VARCHAR},
-			</if>
-			<if test="entity.defaultPayMode != null and entity.defaultPayMode>0">
-				default_pay_mode = #{entity.defaultPayMode,jdbcType=TINYINT},
-			</if>
 			<if test="entity.isPush != null and entity.isPush >0">
 				is_push = #{entity.isPush,jdbcType=TINYINT},
 			</if>
