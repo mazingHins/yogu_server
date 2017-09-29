@@ -42,7 +42,7 @@
 		<jaxrs.version>2.0.1</jaxrs.version>
 		<taglibs.version>1.1.2</taglibs.version>
 		<servlet.version>3.0.1</servlet.version>
-		<javax.el.version>2.2.4</javax.el.version>
+		<javax.el.version>3.0.1-b04</javax.el.version>
 		<javax.json.version>1.0</javax.json.version>
 		<javax.anno.api.version>1.2</javax.anno.api.version>
 		<validation.api.version>2.0.0.Final</validation.api.version>
