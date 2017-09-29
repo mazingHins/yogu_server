@@ -16,7 +16,8 @@ import com.yogu.core.web.RestResult;
 public class LoginResourceTest extends HttpResourceTest {
 
 	public LoginResourceTest() {
-		host = "http://userapi.mazing.com";
+//		host = "http://119.23.15.225:8080/yogu-api-user";
+		host = "http://userapi.yogubc.com/";
 		//host = "http://localhost:8090";
 	}
 
@@ -29,7 +30,7 @@ public class LoginResourceTest extends HttpResourceTest {
 		req.putPost("countryCode", "86");
 		//req.putPost("mobile", encrypt("18600000001"));
 		//req.putPost("password", encrypt("zhj5529636"));
-		req.putPost("mobile", encrypt("15802018012"));
+		req.putPost("mobile", encrypt("13926426236"));
 		req.putPost("password", encrypt("abcd1234"));
 
 		RestResult<?> result = req.doPost();
