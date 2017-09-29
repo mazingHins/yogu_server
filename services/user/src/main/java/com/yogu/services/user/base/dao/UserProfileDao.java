@@ -41,15 +41,6 @@ public interface UserProfileDao {
 	 */
 	int updateProfilePic(long uid, String profilePic);
 
-	/**
-	 * 更新用户语言标识
-	 * 
-	 * @param uid 用户uid
-	 * @param langCode 语言代码
-	 * @param cityCode 城市编码
-	 * @return
-	 * @author sky 2016-03-18
-	 */
-	public int updateLanguage(long uid, String langCode, String cityCode);
+	
 
 }

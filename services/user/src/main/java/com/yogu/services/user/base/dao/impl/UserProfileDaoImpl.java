@@ -77,16 +77,6 @@ public class UserProfileDaoImpl extends MyBatisDao implements UserProfileDao {
 	}
 
 
-	@Override
-	public int updateLanguage(long uid, String langCode, String cityCode) {
-		Map<String, Object> map = new HashMap<String, Object>(4);
-		map.put("tableName", getTableName(uid));
-		map.put("uid", uid);
-		map.put("langCode", langCode);
-		map.put("cityCode", cityCode);
-		return super.update("com.yogu.services.user.base.dao.UserProfileDao.updateLanguage", map);
-	}
-
 	//	public static void main(String[] args) {
 	//
 	//		String tableName = UserDaoImpl.getTableName("86", "18620076093");

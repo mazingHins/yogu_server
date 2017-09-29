@@ -17,6 +17,7 @@ public class RegisterResourceTest extends HttpResourceTest {
 
 	public RegisterResourceTest() {
 		host = "http://119.23.15.225:8080/yogu-api-user";
+//		host = "http://userapi.yogubc.com/";
 		//host = "http://localhost:8090";
 	}
 	
