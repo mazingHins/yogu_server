@@ -102,31 +102,31 @@ public class LoginResource {
 	@POST
 	@Path("v1/user/smsCode.do")
 	@FrequencyLimitation(key = FrequencyLimitation.FrequencyKey.DID, unit = FrequencyLimitation.FrequencyUnit.MINUTE, value = 1)
-	public RestResult<Object> getSmsCode(@FormParam("receiver") String receiver,
+	public RestResult<Object> getSmsCode(@FormParam("mobile") String mobile,
 			@FormParam("countryCode") String countryCode, @FormParam("func") String func) {
 
 		// String ip = getClientIp();
 		String ip = ThreadLocalContext.getThreadValue(ThreadLocalContext.REQ_CLIENT_IP);
 
 		logger.info("config#sms#code | send sms start | receiver: {}, countryCode: {}, func: {}, ip: {}",
-				SmsUtil.hideMobile(receiver), countryCode, func, ip);
+				SmsUtil.hideMobile(mobile), countryCode, func, ip);
 		RestResult<Object> result = null;
 
-		if (StringUtils.isBlank(receiver))
+		if (StringUtils.isBlank(mobile))
 			return new RestResult<>(ResultCode.PARAMETER_ERROR, "请输入手机号码");
 
-		if (!Validator.isMobileNo(receiver))
+		if (!Validator.isMobileNo(mobile))
 			return new RestResult<>(ResultCode.PARAMETER_ERROR, "手机号码不正确,请重新输入");
 
 		if (!idCodeService.isValidFunc(func)) {
 			// // error
 			logger.error("error func|func=" + func + "|ip=" + ip);
 			result = new RestResult<>(ResultCode.PARAMETER_ERROR, "func错误");
-		} else if (receiver.length() == 11 && NumberUtils.isDigits(receiver) && receiver.startsWith("1")) {
+		} else if (mobile.length() == 11 && NumberUtils.isDigits(mobile) && mobile.startsWith("1")) {
 
 			logger.info("config#sms#code | 检查用户是否需要发验证码. | func: {}, compare: {}", func, func.equals(IdCodeService.FUNC_REG));
 			if (!func.equals(IdCodeService.FUNC_REG) && !func.equals(IdCodeService.FUNC_LOGIN_NO_PWD)) {
-				User user = userService.getUser(countryCode, receiver);
+				User user = userService.getUser(countryCode, mobile);
 				if (null == user) {
 					logger.warn("config#sms#code | 用户不存在, 无法发送验证码");
 					return new RestResult<>(ResultCode.PARAMETER_ERROR, "用户不存在, 无法发送验证码");
