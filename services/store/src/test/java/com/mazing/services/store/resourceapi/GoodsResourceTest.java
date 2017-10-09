@@ -6,7 +6,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.yogu.core.test.ApiReq;
-import com.yogu.core.test.BaseResourceTest;
+import com.yogu.core.test.HttpResourceTest;
 import com.yogu.core.web.RestResult;
 
 /**
@@ -14,25 +14,26 @@ import com.yogu.core.web.RestResult;
  * 
  * @author JFan 2015年7月20日 下午2:32:25
  */
-public class DishApiResourceTest extends BaseResourceTest {
+public class GoodsResourceTest extends HttpResourceTest {
 
-	public DishApiResourceTest() {
-		host = "http://storeapi.mazing.com";
+	public GoodsResourceTest() {
+		host = "http://storeapi.yogubc.com";
 	}
 
 	/**
 	 * 查看菜品信息
 	 */
 	@Test
-	public void favNum() {
-		int id = 722;
+	public void listByTag() {
 
-		ApiReq<RestResult<?>> req = build("api/dish/get");
-		req.putGet("dishId", "" + id);
+		ApiReq<RestResult<?>> req = build("p/v1/goods/listByTag");
+		req.putGet("tagId", "1");
+		req.putGet("sort", "1");
+		req.putGet("pageIndex", "1");
+		req.putGet("pageSize", "10");
 		RestResult<?> result = req.doGet();
 
 		Map<?, ?> map = assertMap(result);
-		assertEquals(id, map.get("dishId"));
 	}
 
 	/**
