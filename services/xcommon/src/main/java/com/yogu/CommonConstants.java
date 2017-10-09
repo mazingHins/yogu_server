@@ -42,9 +42,9 @@ public class CommonConstants {
 	public static final String LETTER_NUMBER_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 	static {
-		USER_DOMAIN = findEnvOrDefault("USER_DOMAIN", "http://119.23.15.225:8080/yogu-api-user");
-		STORE_DOMAIN = findEnvOrDefault("STORE_DOMAIN", "http://storeapi.internal.mazing.com");
-		ORDER_DOMAIN = findEnvOrDefault("ORDER_DOMAIN", "http://orderapi.internal.mazing.com");
+		USER_DOMAIN = findEnvOrDefault("USER_DOMAIN", "http://userapi.yogubc.com");
+		STORE_DOMAIN = findEnvOrDefault("STORE_DOMAIN", "http://storeapi.yogubc.com");
+		ORDER_DOMAIN = findEnvOrDefault("ORDER_DOMAIN", "http://orderapi.yogubc.com");
 
 		// 只有prod使用CDN，其他的使用本地
 		if (GlobalSetting.PROJENV_PROD.equals(GlobalSetting.getProjenv()))
