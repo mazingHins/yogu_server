@@ -2,7 +2,7 @@ package com.yogu.services.store.business.service;
 
 import java.util.List;
 
-import com.yogu.services.store.business.dto.Goods;
+import com.yogu.services.store.Goods;
 
 /**
  * 商品信息相关接口
@@ -51,5 +51,50 @@ public interface GoodsService {
 	 */
 	List<Goods> listByName(String goodsName, Long uid, long lastTime, int pageSize);
 	
-
+	/**
+	 * 查找指定标签下的商品列表，结果按照价格顺序排序<br>
+	 * 方法会区分用户对应的上级批发商装载不同的价格，如果不传用户id，默认为零售价
+	 * 
+	 * @author qiujun
+	 * @date 2017年10月9日 下午12:12:17 
+	 * 
+	 * @param tagId - 标签id
+	 * @param uid - 用户id（可以为空）
+	 * @param pageNo - 页码
+	 * @param pageSize - 每页大小
+	 * @return 商品列表，若无，返回empty list
+	 */
+	List<Goods> listByTagIdOrderByPriceDesc(long tagId, Long uid, int pageNo, int pageSize);
+	
+	/**
+	 * 查找指定标签下的商品列表，结果按照价格顺序排序<br>
+	 * 方法会区分用户对应的上级批发商装载不同的价格，如果不传用户id，默认为零售价
+	 * 
+	 * @author qiujun
+	 * @date 2017年10月9日 下午12:12:17 
+	 * 
+	 * @param tagId - 标签id
+	 * @param uid - 用户id（可以为空）
+	 * @param pageNo - 页码
+	 * @param pageSize - 每页大小
+	 * @return 商品列表，若无，返回empty list
+	 */
+	List<Goods> listByTagIdOrderByPriceAsc(long tagId, Long uid, int pageNo, int pageSize);
+	
+	/**
+	 * 查找指定标签下的商品列表，结果无序<br>
+	 * 方法会区分用户对应的上级批发商装载不同的价格，如果不传用户id，默认为零售价
+	 * 
+	 * @author qiujun
+	 * @date 2017年10月9日 下午12:12:17 
+	 * 
+	 * @param tagId - 标签id
+	 * @param uid - 用户id（可以为空）
+	 * @param pageNo - 页码
+	 * @param pageSize - 每页大小
+	 * @return 商品列表，若无，返回empty list
+	 */
+	List<Goods> listByTagId(long tagId, Long uid, int pageNo, int pageSize);
+	
+	
 }

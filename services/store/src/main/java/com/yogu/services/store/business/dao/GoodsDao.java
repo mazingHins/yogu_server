@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import com.yogu.commons.datasource.annocation.TheDataDao;
+import com.yogu.services.store.base.entry.GoodsTagMpPO;
 import com.yogu.services.store.business.entry.GoodsPO;
 
 /**
@@ -60,5 +61,20 @@ public interface GoodsDao {
 	 * @return 符合的记录列表，若无，返回empty list
 	 */
 	public List<GoodsPO> listByName(@Param("goodsName") String goodsName, @Param("lastTime") Long lastTime, @Param("pageSize") int pageSize, @Param("status") short status);
+	
+	/**
+	 * 关联标签表，查询指定标签下的商品信息
+	 * @author qiujun
+	 * @date 2017年10月9日 上午11:35:23 
+	 * 
+	 * @param tagId - 标签id
+	 * @param pageSize - 每页大小
+	 * @param offset - 分页下标
+	 * @param orderBy - 排序方式 ,1-无序；2-按照价格倒序；3-按照价格升序
+	 * @param status - 商品状态
+	 * @return 符合的记录列表，若无，返回empty list
+	 */
+	public List<GoodsPO> listByTagId(@Param("tagId") long tagId, @Param("pageSize") int pageSize, @Param("offset") int offset,  @Param("orderBy") int orderBy, @Param("status") short status);
+
 
 }

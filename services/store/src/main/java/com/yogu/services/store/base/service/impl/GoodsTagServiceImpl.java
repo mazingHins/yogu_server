@@ -35,4 +35,12 @@ public class GoodsTagServiceImpl implements GoodsTagService {
 		return VOUtil.fromList(list, GoodsTag.class);
 	}
 
+	@Override
+	public GoodsTag getById(long tagId) {
+		GoodsTagPO po = goodsTagDao.getById(tagId);
+		if (null != po)
+			return VOUtil.from(po, GoodsTag.class);
+		return null;
+	}
+
 }

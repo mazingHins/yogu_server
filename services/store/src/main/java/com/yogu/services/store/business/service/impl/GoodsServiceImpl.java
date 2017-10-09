@@ -12,8 +12,8 @@ import com.yogu.commons.utils.VOUtil;
 import com.yogu.core.enums.BooleanConstants;
 import com.yogu.remote.user.dto.UserProfile;
 import com.yogu.remote.user.provider.UserRemoteService;
+import com.yogu.services.store.Goods;
 import com.yogu.services.store.business.dao.GoodsDao;
-import com.yogu.services.store.business.dto.Goods;
 import com.yogu.services.store.business.dto.Store;
 import com.yogu.services.store.business.entry.GoodsPO;
 import com.yogu.services.store.business.service.GoodsService;
@@ -98,6 +98,55 @@ public class GoodsServiceImpl implements GoodsService {
 			list = goodsDao.listByName(goodsName, lastTime < 1 ? null : lastTime, pageSize, BooleanConstants.TRUE);
 		}
 		
+		for (GoodsPO goods : list) {
+			if (goods.getStoreId() == storeId) {
+				goods.setRetailPrice(goods.getTradePrice());
+			}
+		}
+
+		return VOUtil.fromList(list, Goods.class);
+	}
+
+	@Override
+	public List<Goods> listByTagIdOrderByPriceDesc(long tagId, Long uid, int pageNo, int pageSize) {
+		long storeId = getUserAgentStoreId(uid); // 查询用户所属的商家id，为0标示不属于任何商家
+		pageSize = PageUtils.limitSize(pageSize, 1, 100);
+		int offset = PageUtils.offset(pageNo, pageSize);
+		List<GoodsPO> list = goodsDao.listByTagId(tagId, pageSize, offset, 2, BooleanConstants.TRUE);
+		
+		for (GoodsPO goods : list) {
+			if (goods.getStoreId() == storeId) {
+				goods.setRetailPrice(goods.getTradePrice());
+			}
+		}
+
+		return VOUtil.fromList(list, Goods.class);
+	}
+	
+	@Override
+	public List<Goods> listByTagIdOrderByPriceAsc(long tagId, Long uid, int pageNo, int pageSize) {
+		long storeId = getUserAgentStoreId(uid); // 查询用户所属的商家id，为0标示不属于任何商家
+		pageSize = PageUtils.limitSize(pageSize, 1, 100);
+		int offset = PageUtils.offset(pageNo, pageSize);
+		List<GoodsPO> list = goodsDao.listByTagId(tagId, pageSize, offset, 3, BooleanConstants.TRUE);
+		
+		for (GoodsPO goods : list) {
+			if (goods.getStoreId() == storeId) {
+				goods.setRetailPrice(goods.getTradePrice());
+			}
+		}
+
+		return VOUtil.fromList(list, Goods.class);
+	}
+
+	@Override
+	public List<Goods> listByTagId(long tagId, Long uid, int pageNo,
+			int pageSize) {
+		long storeId = getUserAgentStoreId(uid); // 查询用户所属的商家id，为0标示不属于任何商家
+		pageSize = PageUtils.limitSize(pageSize, 1, 100);
+		int offset = PageUtils.offset(pageNo, pageSize);
+		List<GoodsPO> list = goodsDao.listByTagId(tagId, pageSize, offset, 0, BooleanConstants.TRUE);
+
 		for (GoodsPO goods : list) {
 			if (goods.getStoreId() == storeId) {
 				goods.setRetailPrice(goods.getTradePrice());

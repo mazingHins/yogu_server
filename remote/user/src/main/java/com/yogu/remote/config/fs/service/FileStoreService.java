@@ -76,7 +76,7 @@ public class FileStoreService {
 		long costTime = System.currentTimeMillis() - time1;
 		long dbCostTime = time2 - time1;
 		logger.info("FileStoreService#saveIndexImage | 保存{}图片耗时 | total: {}, db: {}, cloud: {}", type, costTime, dbCostTime, costTime - dbCostTime);
-		return filename;
+		return getHttpUrl(filename);
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class FileStoreService {
         long costTime = System.currentTimeMillis() - time1;
         long dbCostTime = time2 - time1;
         logger.info("FileStoreService#saveShopImage | 保存商店图片耗时 | total: {}, db: {}, cloud: {}", costTime, dbCostTime, costTime-dbCostTime);
-        return filename;
+        return getHttpUrl(filename);
     }
 
     /**
@@ -179,7 +179,7 @@ public class FileStoreService {
         long costTime = System.currentTimeMillis() - time1;
         long dbCostTime = time2 - time1;
         logger.info("FileStoreService#saveProfileImage | 保存个人图片耗时 | total: {}, db: {}, cloud: {}", costTime, dbCostTime, costTime-dbCostTime);
-        return filename;
+        return getHttpUrl(filename);
     }
     
     /**
@@ -213,7 +213,7 @@ public class FileStoreService {
         long costTime = System.currentTimeMillis() - time1;
         long dbCostTime = time2 - time1;
         logger.info("FileStoreService#saveDishImage | 保存美食图片耗时 | total: {}, db: {}, cloud: {}", costTime, dbCostTime, costTime-dbCostTime);
-        return filename;
+        return getHttpUrl(filename);
     }
     
     /**
@@ -246,7 +246,7 @@ public class FileStoreService {
         long costTime = System.currentTimeMillis() - time1;
         long dbCostTime = time2 - time1;
         logger.info("FileStoreService#saveStoreImage | 保存门店相关图片耗时 | total: {}, db: {}, cloud: {}", costTime, dbCostTime, costTime-dbCostTime);
-        return filename;
+        return getHttpUrl(filename);
     }
     
     
@@ -280,7 +280,7 @@ public class FileStoreService {
         long costTime = System.currentTimeMillis() - time1;
         long dbCostTime = time2 - time1;
         logger.info("FileStoreService#saveFeedbackImage | 保存反馈图片耗时 | total: {}, db: {}, cloud: {}", costTime, dbCostTime, costTime-dbCostTime);
-        return filename;
+        return getHttpUrl(filename);
     }
     
     /**

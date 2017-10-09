@@ -1,4 +1,4 @@
-package com.yogu.services.store.business.dto;
+package com.yogu.services.store;
 
 import java.io.Serializable;
 import java.util.Date;
