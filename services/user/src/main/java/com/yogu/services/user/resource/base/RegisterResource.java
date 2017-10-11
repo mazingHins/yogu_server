@@ -82,9 +82,9 @@ public class RegisterResource {
 			@FormParam("mobile") @NotEmpty(message = "请输入手机号码", mkey = UserMessages.USER_LOGIN_MOBILE_CAN_NOT_BE_EMPTY) String mobile,
 			@FormParam("password") @NotEmpty(message = "请输入登录密码", mkey = UserMessages.USER_LOGIN_PASSWORD_CAN_NOT_BE_EMPTY) String password,
 			@FormParam("nickname") @NotEmpty(message = "请输入昵称", mkey = UserMessages.USER_UPDATE_NICKNAME_NICKNAME_CAN_NOT_BE_EMPTY) String nickname, 
-			@FormParam("idcode") String idcode, @FormParam("inviteCode") String inviteCode,
+			@FormParam("smsCode") String smsCode, @FormParam("inviteCode") String inviteCode,
 			@Context HttpServletRequest request) {
-		logger.info("user#reg |register start | mobile: {}, idcode: {}, nickname: {}", SmsUtil.hideMobile(mobile), idcode, nickname);
+		logger.info("user#reg |register start | mobile: {}, idcode: {}, nickname: {}", SmsUtil.hideMobile(mobile), smsCode, nickname);
 		BaseParams baseParams = SecurityContext.getBaseParams();
 		// 获取用户的IP
 		String registerIp = ThreadLocalContext.getThreadValue(ThreadLocalContext.REQ_CLIENT_IP, "127.0.0.1");
@@ -93,13 +93,13 @@ public class RegisterResource {
 		password = decrypt(password);
 		countryCode = SmsUtil.trimCountryCode(countryCode);
 
-		validateRegParameters(countryCode, mobile, password, nickname, idcode);
+		validateRegParameters(countryCode, mobile, password, nickname, smsCode);
 
 		// 验证码是否正确
 		boolean idCodeOK = true;
 		if (NumberUtils.isDigits(mobile)) {
 			// 手机注册需要检查验证码，邮箱不需要
-			idCodeOK = "123456".equals(idcode);
+			idCodeOK = "123456".equals(smsCode);
 //			idCodeOK = idCodeService.validateSmsIdCode(mobile, IdCodeService.FUNC_REG, idcode);
 		} else {
 			countryCode = ""; // 对于邮箱来说，重置为空
