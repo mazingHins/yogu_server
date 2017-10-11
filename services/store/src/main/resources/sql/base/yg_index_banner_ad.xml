@@ -5,13 +5,13 @@
 
 	<!-- 新增 -->
 	<insert id="save" parameterType="com.yogu.services.store.base.entry.IndexBannerAdPO" useGeneratedKeys="false" >
-		insert into yg_store.yg_index_banner_ad (adid,pic,ad_type,content,status,create_time) values 
-		(#{adid},#{pic},#{adType},#{content},#{status},#{createTime})
+		insert into yg_store.yg_index_banner_ad (ad_id,pic,ad_type,content,status,create_time) values 
+		(#{adId},#{pic},#{adType},#{content},#{status},#{createTime})
 	</insert>
 	
 	<!-- 根据主键读取记录（主键可能有多个） -->
 	<select id="getById" parameterType="Map" resultType="com.yogu.services.store.base.entry.IndexBannerAdPO">
-		SELECT * FROM yg_store.yg_index_banner_ad WHERE adid=#{adid}
+		SELECT * FROM yg_store.yg_index_banner_ad WHERE ad_id=#{adId}
 	</select>
 
 	<!-- 查询全部记录 -->

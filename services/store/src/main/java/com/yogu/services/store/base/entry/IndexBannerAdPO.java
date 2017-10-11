@@ -11,7 +11,7 @@ public class IndexBannerAdPO implements Serializable {
 	private static final long serialVersionUID = 4873047941381832215L;
 
 	/** 标签ID */
-	private long adid;
+	private long adId;
 
 	/** 展示图片地址 */
 	private String pic;
@@ -28,12 +28,12 @@ public class IndexBannerAdPO implements Serializable {
 	/** 创建时间 */
 	private Date createTime;
 
-	public long getAdid() {
-		return adid;
+	public long getAdId() {
+		return adId;
 	}
 
-	public void setAdid(long adid) {
-		this.adid = adid;
+	public void setAdId(long adId) {
+		this.adId = adId;
 	}
 
 	public String getPic() {
