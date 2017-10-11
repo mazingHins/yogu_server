@@ -31,10 +31,10 @@ public class RegisterResourceTest extends HttpResourceTest {
 
 		// int index = 2;
 		req.putPost("countryCode", "86");
-		req.putPost("mobile", encrypt("13926426230"));
+		req.putPost("mobile", encrypt("13926426231"));
 		req.putPost("password", encrypt("abcd1234"));
 		req.putPost("nickname", "kimmy");
-		req.putPost("idcode", "123456");
+		req.putPost("smsCode", "123456");
 		// req.putPost("lng", "0.0");// base 参数中已包含，也可调用req.putPoint(x, y);
 		// req.putPost("lat", "0.0");
 

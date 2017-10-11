@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.store.base.dao.IndexBannerAdDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.store.base.entry.IndexBannerAdPO" useGeneratedKeys="false" >
+		insert into yg_store.yg_index_banner_ad (adid,pic,ad_type,content,status,create_time) values 
+		(#{adid},#{pic},#{adType},#{content},#{status},#{createTime})
+	</insert>
+	
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.store.base.entry.IndexBannerAdPO">
+		SELECT * FROM yg_store.yg_index_banner_ad WHERE adid=#{adid}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listByStatus" resultType="com.yogu.services.store.base.entry.IndexBannerAdPO">
+		SELECT * FROM yg_store.yg_index_banner_ad where status=#{status} order by create_time desc limit #{offset},#{pageSize}
+	</select>
+
+</mapper>

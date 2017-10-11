@@ -12,13 +12,17 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.PageUtils;
+import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.VOUtil;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.context.SecurityContext;
 import com.yogu.services.store.Goods;
 import com.yogu.services.store.base.dto.GoodsCategory;
+import com.yogu.services.store.base.dto.IndexBannerAd;
 import com.yogu.services.store.base.service.GoodsCategoryService;
+import com.yogu.services.store.base.service.IndexBannerAdService;
 import com.yogu.services.store.business.service.GoodsService;
 import com.yogu.services.store.resource.vo.GoodsCategoryVO;
 import com.yogu.services.store.resource.vo.IndexAdvertisingVO;
@@ -41,6 +45,9 @@ public class IndexResource {
 	@Inject
 	private GoodsService goodsService;
 	
+	@Inject
+	private IndexBannerAdService indexBannerAdService;
+	
 	private static final int MAX_SIZE = 20, DEFAULT_SIZE = 10, MIN_SIZE = 5;
 	
 	/**
@@ -57,7 +64,7 @@ public class IndexResource {
 		
 		List<GoodsCategory> categoryList = goodsCategoryService.listAll();
 		result.setCategoryList(VOUtil.fromList(categoryList, GoodsCategoryVO.class));
-		result.setAdList(Collections.<IndexAdvertisingVO> emptyList());
+		result.setAdList(loadAdvertising());
 		result.setRecommendList(loadRecomend(1, DEFAULT_SIZE));
 		return new RestResult<IndexVO>(result);
 	}
@@ -66,6 +73,36 @@ public class IndexResource {
 	@Path("v1/index/recommend")
 	public RestResult<List<IndexRecommendVO>> goodsList(@QueryParam("pageSize") int pageSize, @QueryParam("lastTime") long lastTime) {
 		return new RestResult<List<IndexRecommendVO>>(loadRecomend(lastTime, pageSize));
+	}
+	
+	
+	private List<IndexAdvertisingVO> loadAdvertising(){
+		List<IndexBannerAd> list = indexBannerAdService.listEffectivve(5);
+		if(list.isEmpty()){
+			return Collections.emptyList();
+		}
+		
+		List<IndexAdvertisingVO> result = new ArrayList<IndexAdvertisingVO>(list.size());
+		for(IndexBannerAd ad : list){
+			IndexAdvertisingVO vo = VOUtil.from(ad, IndexAdvertisingVO.class);
+			if(ad.getAdType() == 1){
+				IndexAdvertisingVO json = JsonUtils.parseObject(ad.getContent(), IndexAdvertisingVO.class);
+				if(json!=null && json.getGoodsKey()>0){
+					vo.setGoodsKey(json.getGoodsKey());
+					result.add(vo);
+				}
+			}else if(ad.getAdType() == 2){
+				IndexAdvertisingVO json = JsonUtils.parseObject(ad.getContent(), IndexAdvertisingVO.class);
+				if(json!=null && StringUtils.isNoneBlank(json.getLinkUrl())){
+					vo.setLinkUrl(json.getLinkUrl());
+					result.add(vo);
+				}
+			}
+		}
+		
+		return result;
+		
+		
 	}
 	
 	/**

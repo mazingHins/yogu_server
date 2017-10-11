@@ -30,7 +30,7 @@ public class LoginResourceTest extends HttpResourceTest {
 		req.putPost("countryCode", "86");
 		//req.putPost("mobile", encrypt("18600000001"));
 		//req.putPost("password", encrypt("zhj5529636"));
-		req.putPost("mobile", encrypt("13926426236"));
+		req.putPost("mobile", encrypt("13926426231"));
 		req.putPost("password", encrypt("abcd1234"));
 
 		RestResult<?> result = req.doPost();
