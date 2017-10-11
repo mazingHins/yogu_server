@@ -19,7 +19,7 @@
 	</update>
 
 	<!-- 根据主键读取记录（主键可能有多个） -->
-	<select id="getById" parameterType="Map" resultType="com.mazing.services.user.business.entry.UserAddressPO">
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.user.business.entry.UserAddressPO">
 		SELECT * FROM yg_user.yg_user_address WHERE address_id=#{addressId}
 	</select>
 
