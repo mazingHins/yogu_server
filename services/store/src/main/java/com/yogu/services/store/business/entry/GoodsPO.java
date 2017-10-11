@@ -3,6 +3,8 @@ package com.yogu.services.store.business.entry;
 import java.io.Serializable;
 import java.util.Date;
 
+import com.yogu.commons.utils.JsonUtils;
+
 /**
  * 商品信息
  *
@@ -10,7 +12,7 @@ import java.util.Date;
 public class GoodsPO implements Serializable {
 	
 	private static final long serialVersionUID = -6716304276634251745L;
-
+	
 	/** 商品id */
 	private long goodsId;
 	
@@ -32,7 +34,7 @@ public class GoodsPO implements Serializable {
 	/** 零售价 */
 	private long retailPrice;
 	
-	/** 批发价价 */
+	/** 批发价 */
 	private long tradePrice;
 	
 	/** 排序，从小到大 */

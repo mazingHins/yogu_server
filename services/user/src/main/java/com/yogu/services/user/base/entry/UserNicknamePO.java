@@ -16,9 +16,6 @@ public class UserNicknamePO implements Serializable {
 	/** 用户ID */
 	private long uid;
 
-	/** 用户的im id */
-	private long imId;
-
 	/** 国家区号，比如中国+86 */
 	private String countryCode;
 
@@ -46,14 +43,6 @@ public class UserNicknamePO implements Serializable {
 
 	public void setUid(long uid) {
 		this.uid = uid;
-	}
-
-	public long getImId() {
-		return imId;
-	}
-
-	public void setImId(long imId) {
-		this.imId = imId;
 	}
 
 	public String getCountryCode() {

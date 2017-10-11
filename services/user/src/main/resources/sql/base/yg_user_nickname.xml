@@ -5,7 +5,7 @@
 
 	<!-- 新增 -->
 	<insert id="save" parameterType="com.yogu.services.user.base.entry.UserNicknamePO" useGeneratedKeys="false" >
-		insert into yg_user.yg_user_nickname (uid,im_id,country_code,passport,nickname,register_ip,register_city_code,register_lang,create_time) values (#{uid},#{imId},#{countryCode},#{passport},#{nickname},#{registerIp},#{registerCityCode},#{registerLang},#{createTime})
+		insert into yg_user.yg_user_nickname (uid,country_code,passport,nickname,register_ip,register_city_code,register_lang,create_time) values (#{uid},#{countryCode},#{passport},#{nickname},#{registerIp},#{registerCityCode},#{registerLang},#{createTime})
 	</insert>
 
 	<!-- 更新 -->

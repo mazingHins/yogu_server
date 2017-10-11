@@ -16,8 +16,8 @@ import com.yogu.core.web.RestResult;
 public class RegisterResourceTest extends HttpResourceTest {
 
 	public RegisterResourceTest() {
-		host = "http://119.23.15.225:8080/yogu-api-user";
-//		host = "http://userapi.yogubc.com/";
+//		host = "http://119.23.15.225:8080/yogu-api-user";
+		host = "http://userapi.yogubc.com/";
 		//host = "http://localhost:8090";
 	}
 	
@@ -31,7 +31,7 @@ public class RegisterResourceTest extends HttpResourceTest {
 
 		// int index = 2;
 		req.putPost("countryCode", "86");
-		req.putPost("mobile", encrypt("13926426236"));
+		req.putPost("mobile", encrypt("13926426230"));
 		req.putPost("password", encrypt("abcd1234"));
 		req.putPost("nickname", "kimmy");
 		req.putPost("idcode", "123456");
