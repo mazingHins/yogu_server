@@ -60,7 +60,8 @@ public class LoginResourceTest extends HttpResourceTest {
 	public void testSmsCode() throws Exception {
 		ApiReq<RestResult<?>> req = build("p/v1/user/smsCode.do");
 		req.putPost("countryCode", "86");
-		req.putPost("receiver", encrypt("13012345095"));
+		req.putPost("mobile", "13926462636");
+		req.putPost("func", "reg");
 
 		RestResult<?> result = req.doPost();
 		Map<?, ?> map = assertMap(result);

@@ -30,7 +30,7 @@ public class HttpResourceTest {
 
 	/** 如果需要修改，请在 Test类 “构造函数” 中覆盖此值 */
 	protected String host = "http://xxx.mazing.com";
-	protected String userHost = "http://userapi.mazing.com";// 比如你要测试的是 storeapi域，但是登录访问的是 userapi。你懂的
+	protected String userHost = "http://userapi.yogubc.com";// 比如你要测试的是 storeapi域，但是登录访问的是 userapi。你懂的
 
 	protected ApiReq<RestResult<?>> build(String url) {
 		return build(url, ApiReq.defAppKey, ApiReq.defAppSecret);

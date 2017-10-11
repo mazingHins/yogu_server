@@ -16,24 +16,18 @@ import com.yogu.core.web.RestResult;
 public class AddressResoureTest extends HttpResourceTest {
 
 	public AddressResoureTest() {
-		host = "http://userapi.mazing.com";
+		host = "http://userapi.yogubc.com";
 	}
 	
 	@Test
 	public void save() {
 		ApiReq<RestResult<?>> req = build("a/v1/user/address/save.do");
-		req.login("86", "13012345601", "abcd1234");
+		req.login("86", "13926426236", "abcd1234");
 
-		req.putPost("addressId", "20101");
-		req.putPost("districtCode", "440106");
-		req.putPost("addLat", "23.125699");
-		req.putPost("addLng", "113.338743");
-		req.putPost("name", "广州市天河区珠江新城黄埔大道西海乐路12号L7合景睿峰2201，请注意我在1楼。");
-		req.putPost("detail", "");
+		//req.putPost("addressId", "20101");
 		req.putPost("contacts", "陈医生4");
-		req.putPost("remark", "公司餐地址4");
-		req.putPost("status", "2");
-		req.putPost("fullAddress", "天河区珠江新城黄埔大道西海乐路12号");
+		req.putPost("status", "1");
+		req.putPost("fullAddress", "广州市天河区珠江新城黄埔大道西海乐路12号");
 		req.putPost("phone", "15920575057");
 		RestResult<?> result = req.doPost();
 		assertNotNull(result.getObject());

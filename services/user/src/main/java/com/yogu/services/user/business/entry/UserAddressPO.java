@@ -37,41 +37,14 @@ public class UserAddressPO implements Serializable {
 	/** 用户id */
 	private long uid;
 
-	/** 国家地区编码，如中国+86 */
-	private String countryCode;
-
-	/** 省、州code */
-	private String provinceCode;
-
-	/** 城市code */
-	private String cityCode;
-
-	/** 地区code */
-	private String districtCode;
-
-	/** 纬度 */
-	private double lat;
-
-	/** 经度 */
-	private double lng;
-
-	/** 送餐地址 */
-	private String name;
-	
 	/** 送餐地址全称（直接保存app的传值） */
 	private String fullAddress = "";
-
-	/** 地址详情（某栋或门牌号） */
-	private String detail;
 
 	/** 收货人名称 */
 	private String contacts;
 
 	/** 联系电话 */
 	private String phone;
-
-	/** 备注 */
-	private String remark;
 
 	/** 状态：1-默认地址；2-非默认 */
 	private short status = 2;
@@ -94,62 +67,6 @@ public class UserAddressPO implements Serializable {
 	public long getUid() {
 		return uid;
 	}
-
-	public void setCountryCode(String countryCode) {
-		this.countryCode = countryCode;
-	}
-
-	public String getCountryCode() {
-		return countryCode;
-	}
-
-	public void setProvinceCode(String provinceCode) {
-		this.provinceCode = provinceCode;
-	}
-
-	public String getProvinceCode() {
-		return provinceCode;
-	}
-
-	public void setCityCode(String cityCode) {
-		this.cityCode = cityCode;
-	}
-
-	public String getCityCode() {
-		return cityCode;
-	}
-
-	public void setDistrictCode(String districtCode) {
-		this.districtCode = districtCode;
-	}
-
-	public String getDistrictCode() {
-		return districtCode;
-	}
-
-	public void setLat(double lat) {
-		this.lat = lat;
-	}
-
-	public double getLat() {
-		return lat;
-	}
-
-	public void setLng(double lng) {
-		this.lng = lng;
-	}
-
-	public double getLng() {
-		return lng;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getName() {
-		return name;
-	}
 	
 	public String getFullAddress() {
 		return fullAddress;
@@ -159,36 +76,20 @@ public class UserAddressPO implements Serializable {
 		this.fullAddress = fullAddress;
 	}
 
-	public void setDetail(String detail) {
-		this.detail = detail;
-	}
-
-	public String getDetail() {
-		return detail;
+	public String getContacts() {
+		return contacts;
 	}
 
 	public void setContacts(String contacts) {
 		this.contacts = contacts;
 	}
 
-	public String getContacts() {
-		return contacts;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
-
 	public String getPhone() {
 		return phone;
 	}
 
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
-
-	public String getRemark() {
-		return remark;
+	public void setPhone(String phone) {
+		this.phone = phone;
 	}
 
 	public void setStatus(short status) {

@@ -146,6 +146,7 @@ public class LoginResource {
 		logger.info("config#sms#code | result: {}", JsonUtils.toJSONString(result));
 		return result;
 	}
+	
 
 	/**
 	 * 执行登录的过程
