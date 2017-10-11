@@ -14,7 +14,7 @@
 	</delete>
 
 	<!-- 更新 -->
-	<update id="update" parameterType="com.mazing.services.user.business.entry.UserAddressPO">
+	<update id="update" parameterType="com.yogu.services.user.business.entry.UserAddressPO">
 		update yg_user.yg_user_address set uid=#{uid},full_address=#{fullAddress},contacts=#{contacts},phone=#{phone},contacts=#{contacts},phone=#{phone},status=#{status} where address_id=#{addressId}
 	</update>
 
