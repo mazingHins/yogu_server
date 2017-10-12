@@ -156,4 +156,10 @@ public class GoodsServiceImpl implements GoodsService {
 		return VOUtil.fromList(list, Goods.class);
 	}
 
+	@Override
+	public List<Goods> listBykeys(Long uid, List<Long> goodsKeys) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

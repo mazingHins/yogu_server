@@ -1,6 +1,5 @@
 package com.yogu.services.order.coupon.dao;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -40,5 +39,10 @@ public interface CouponDao {
 	 * 根据主键读取记录
 	 */
 	public CouponPO getById(@Param("couponId") long couponId);
+	
+	public List<CouponPO> listUserCouponsByPage(@Param("uid") long uid,@Param("offset") int offset, @Param("pageSize") int pageSize);
+	
+	public List<CouponPO> listUserCouponsByStatus(@Param("uid") long uid, @Param("status") short status);
+	
 
 }

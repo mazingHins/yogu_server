@@ -31,6 +31,8 @@ public class Coupon implements Serializable {
 	/** 优惠券面值（类型为代金券则直接存值如20；类型有折扣券则存入 0.75 X100 =75 的值） */
 	private long faceValue;
 	
+	private long couponFee;
+	
 	/** 使用的订单号 */
 	private long orderNo = 0;
 	
@@ -85,6 +87,14 @@ public class Coupon implements Serializable {
 
 	public void setUid(long uid) {
 		this.uid = uid;
+	}
+	
+	public long getCouponFee() {
+		return couponFee;
+	}
+
+	public void setCouponFee(long couponFee) {
+		this.couponFee = couponFee;
 	}
 
 	public long getEnoughMoney() {

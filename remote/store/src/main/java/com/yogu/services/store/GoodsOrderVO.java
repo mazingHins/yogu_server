@@ -1,17 +1,11 @@
-package com.yogu.services.store.resource.vo;
+package com.yogu.services.store;
 
 import java.io.Serializable;
 
-/**
- * 商品VO <br>
- * 
- * @author qiujun   
- * @date 2017年8月29日 下午8:31:09
- */
-public class GoodsVO implements Serializable {
+public class GoodsOrderVO implements Serializable {
 
-	private static final long serialVersionUID = -4431140826801938379L;
-
+	private static final long serialVersionUID = 4241621035991115522L;
+	
 	/** 商品id */
 	private long goodsId;
 	
@@ -27,11 +21,11 @@ public class GoodsVO implements Serializable {
 	/** 商品详情（商品卡片）中的图片 */
 	private String cardImg;
 	
-	/** 商品介绍，json字符串 */
-	private String content;
-	
 	/** 价格，单位分 */
 	private long price;
+	
+	/** 菜品购买总价 */
+	private long totalFee;
 	
 	/** 排序，从小到大 */
 	private int sequence;
@@ -76,12 +70,12 @@ public class GoodsVO implements Serializable {
 		this.cardImg = cardImg;
 	}
 
-	public String getContent() {
-		return content;
+	public long getTotalFee() {
+		return totalFee;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public void setTotalFee(long totalFee) {
+		this.totalFee = totalFee;
 	}
 
 	public long getPrice() {
@@ -100,4 +94,5 @@ public class GoodsVO implements Serializable {
 		this.sequence = sequence;
 	}
 	
+
 }

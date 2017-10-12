@@ -1,5 +1,6 @@
 package com.yogu.services.order.coupon.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yogu.commons.cache.redis.Redis;
+import com.yogu.commons.utils.PageUtils;
 import com.yogu.commons.utils.VOUtil;
 import com.yogu.core.enums.CouponStatus;
 import com.yogu.remote.config.id.IdGenRemoteService;
@@ -92,6 +94,32 @@ public class CouponServiceImpl implements CouponService {
 		if (null == dto)
 			return null;
 		return VOUtil.from(dto, CouponPO.class);
+	}
+
+	@Override
+	public List<Coupon> listUserCouponsByPage(long uid, int pageIndex, int pageSize) {
+		
+		pageSize = PageUtils.limitSize(pageSize, 1, 100);
+		int offset = PageUtils.offset(pageIndex, pageSize);
+		List<CouponPO> list = dao.listUserCouponsByPage(uid, offset, pageSize);
+		return VOUtil.fromList(list, Coupon.class);
+	}
+
+	@Override
+	public List<Coupon> listEffective(long uid, long totalFee) {
+		List<CouponPO> list = dao.listUserCouponsByStatus(uid, CouponStatus.UNUSE.getValue());
+		
+		List<Coupon> result = new ArrayList<Coupon>(list.size());
+		for(CouponPO po : list){
+			if (po.getEnoughMoney() > totalFee) {
+				continue;
+			}
+			Coupon coupon = VOUtil.from(po, Coupon.class);
+			coupon.setCouponFee(po.getFaceValue());
+			result.add(coupon);
+		}
+		
+		return result;
 	}
 
 }

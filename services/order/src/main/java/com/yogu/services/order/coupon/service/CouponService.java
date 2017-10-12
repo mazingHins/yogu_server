@@ -32,6 +32,25 @@ public interface CouponService {
 	 * 根据主键读取记录
 	 */
 	public Coupon getById(long couponId);
+	
+	/**
+	 * 分页获取用户的优惠券列表，结果按照过期时间倒序排序
+	 * 
+	 * @param uid - 用户id
+	 * @param pageIndex - 页码
+	 * @param pageSize - 每页大小
+	 * @return 符合的记录列表，若无，返回empty list
+	 */
+	public List<Coupon> listUserCouponsByPage(long uid, int pageIndex, int pageSize);
+	
+	/***
+	 * 获取用户可用的优惠卷列表
+	 * 
+	 * @param uid
+	 * @param totalFee
+	 * @return
+	 */
+	public List<Coupon> listEffective(long uid, long totalFee);
 
 
 }

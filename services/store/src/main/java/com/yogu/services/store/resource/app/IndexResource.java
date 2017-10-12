@@ -20,8 +20,10 @@ import com.yogu.core.web.RestResult;
 import com.yogu.core.web.context.SecurityContext;
 import com.yogu.services.store.Goods;
 import com.yogu.services.store.base.dto.GoodsCategory;
+import com.yogu.services.store.base.dto.GoodsRecommend;
 import com.yogu.services.store.base.dto.IndexBannerAd;
 import com.yogu.services.store.base.service.GoodsCategoryService;
+import com.yogu.services.store.base.service.GoodsRecommendService;
 import com.yogu.services.store.base.service.IndexBannerAdService;
 import com.yogu.services.store.business.service.GoodsService;
 import com.yogu.services.store.resource.vo.GoodsCategoryVO;
@@ -47,6 +49,9 @@ public class IndexResource {
 	
 	@Inject
 	private IndexBannerAdService indexBannerAdService;
+	
+	@Inject
+	private GoodsRecommendService goodsRecommendService;
 	
 	private static final int MAX_SIZE = 20, DEFAULT_SIZE = 10, MIN_SIZE = 5;
 	
@@ -117,7 +122,16 @@ public class IndexResource {
 	private List<IndexRecommendVO> loadRecomend(long lastTime, int pageSize){
 		Long uid = SecurityContext.getUserId();
 		pageSize = PageUtils.limitSize(pageSize, MIN_SIZE, MAX_SIZE);
-		List<Goods> goodsList = goodsService.listByPage(uid, 0, pageSize);
+		
+		// 先获取推送列表
+		List<GoodsRecommend> list = goodsRecommendService.listEffectivve(lastTime, pageSize);
+		List<Long> goodsKeys  = new ArrayList<Long>(list.size());
+		for(GoodsRecommend rm : list){
+			goodsKeys.add(rm.getGoodsKey());
+		}
+		
+		// 通过推荐列表批量查询商品信息
+		List<Goods> goodsList = goodsService.listBykeys(uid, goodsKeys);
 		List<IndexRecommendVO> recommendList = new ArrayList<>(goodsList.size());
 		for (Goods goods : goodsList) {
 			IndexRecommendVO vo = VOUtil.from(goods, IndexRecommendVO.class);

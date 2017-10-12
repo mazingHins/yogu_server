@@ -96,5 +96,17 @@ public interface GoodsService {
 	 */
 	List<Goods> listByTagId(long tagId, Long uid, int pageNo, int pageSize);
 	
+	/**
+	 * 获取商品信息，结果无序<br>
+	 * 方法会区分用户对应的上级批发商装载不同的价格，如果不传用户id，默认为零售价
+	 * 
+	 * @param uid - 用户id（可以为空）
+	 * @param goodsKeys - 商品key商品key
+	 * @author qiujun 
+	 * @date 2017年9月13日 下午9:42:49 
+	 * @return 商品列表，若无，返回empty list
+	 */
+	List<Goods> listBykeys(Long uid, List<Long> goodsKeys);
+	
 	
 }

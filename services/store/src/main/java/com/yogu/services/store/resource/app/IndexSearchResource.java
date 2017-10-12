@@ -16,8 +16,8 @@ import com.yogu.commons.utils.VOUtil;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.context.SecurityContext;
 import com.yogu.services.store.Goods;
+import com.yogu.services.store.GoodsVO;
 import com.yogu.services.store.business.service.GoodsService;
-import com.yogu.services.store.resource.vo.GoodsVO;
 
 
 /**

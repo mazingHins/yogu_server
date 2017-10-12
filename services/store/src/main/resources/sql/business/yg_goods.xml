@@ -50,5 +50,12 @@
 		limit #{offset},#{pageSize}
 	</select>
 	
+	
+	<select id="listByKey" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_store.yg_goods WHERE goods_key in
+		<foreach collection="goodsKeys" close=")" index="index" open="("  separator="," item="item">
+			#{item}
+		</foreach>
+	</select>
 
 </mapper>

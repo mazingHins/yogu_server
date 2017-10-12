@@ -1,4 +1,4 @@
-package com.yogu.services.order.base.service.param;
+package com.yogu.services.store.resource.params;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.store.base.dao.GoodsRecommendDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.store.base.entry.GoodsRecommendPO" useGeneratedKeys="false" >
+		insert into yg_store.yg_goods_recommend (recommend_id,goods_key,sequence,status,create_time) values 
+		(#{recommendId},#{goodsKey},#{sequence},#{status},#{createTime})
+	</insert>
+	
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.store.base.entry.GoodsRecommendPO">
+		SELECT * FROM yg_store.yg_goods_recommend WHERE recommend_id=#{adId}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listByStatus" resultType="com.yogu.services.store.base.entry.GoodsRecommendPO">
+		SELECT * FROM yg_store.yg_goods_recommend where status=#{status} 
+		<if test="lastTime > 0">
+		<![CDATA[
+			and create_time<#{lastTime}
+		]]>
+		</if>
+		 order by create_time desc limit #{pageSize}
+	</select>
+
+</mapper>

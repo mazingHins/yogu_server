@@ -27,7 +27,13 @@
 		SELECT * FROM yg_order.yg_coupon WHERE
 		coupon_id=#{couponId}
 	</select>
-
 	
+	<select id="listUserCouponsByPage" parameterType="Map" resultType="com.yogu.services.order.coupon.entry.CouponPO">
+		SELECT * FROM yg_order.yg_coupon WHERE uid=#{uid} order by end_time desc limit #{offset},#{pageSize}
+	</select>
+
+	<select id="listUserCouponsByStatus" parameterType="Map" resultType="com.yogu.services.order.coupon.entry.CouponPO">
+		SELECT * FROM yg_order.yg_coupon WHERE uid=#{uid} and status=#{status} order by end_time desc
+	</select>
 	
 </mapper>

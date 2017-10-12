@@ -16,10 +16,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.yogu.CommonConstants;
 import com.yogu.commons.utils.HttpClientUtils;
 import com.yogu.commons.utils.JsonUtils;
-import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
+import com.yogu.services.store.StoreSettleOrderVO;
 
 /**
  * 对门店操作的远程服务类 <br>
@@ -117,6 +117,40 @@ public class StoreRemoteService {
 			logger.error("remote#store#getStoreBySids | 批量查询餐厅信息出现异常 | storeIds: {}, message: {}", storeIds, e.getMessage(), e);
 		}
 		return Collections.emptyList();
+	}
+	
+	/**
+	 * 调用store域的预下单接口，获取餐厅信息，美食信息，库存信息，配送费信息
+	 * 
+	 * @param deliveryTime - 预计送达时间
+	 * @param purchaseDetail - 购买信息
+	 * @param distance - 收货地址到商家的直径距离
+	 * @param lat - 收货地址经度
+	 * @param lng - 收货地址纬度
+	 * @author hins
+	 * @date 2016年10月1日 下午2:35:36
+	 * @return void
+	 */
+	@Deprecated
+	public StoreSettleOrderVO settleOrder(long uid, String purchaseDetail) {
+		
+		try {
+
+			Map<String, String> params = new HashMap<>(8);
+			params.put("uid", String.valueOf(uid));
+			params.put("purchaseDetail", purchaseDetail);
+
+			String json = HttpClientUtils.doPost(host + "/api/v1/store/order/settle.do", params);
+			logger.info("remote#store#settleOrder | response |  uid: {}, purchaseDetail: {}, distance: {}, lat: {}, lng: {}", uid, purchaseDetail);
+			RestResult<StoreSettleOrderVO> result = JsonUtils.parseObject(json, new TypeReference<RestResult<StoreSettleOrderVO>>() {});
+			if (result.getCode() != ResultCode.SUCCESS){
+				logger.error("remote#store#settleOrder | 不允许正常结算 |  uid: {}, purchaseDetail: {}, distance: {}, lat: {}, lng: {}", uid, purchaseDetail);
+				throw new ServiceException(result.getCode(), result.getMessage());
+			}
+			return result.getObject();
+		} catch (Exception e) {
+			throw e;
+		}
 	}
 	
 }
