@@ -99,7 +99,7 @@ public class GoodsApiResource {
 			goodsKeys.add(detail.getGoodsKey());
 		}
 		List<Goods> goodsList = goodsService.listBykeys(uid, goodsKeys);
-		Map<Long, Goods> goodsMap = new HashMap<Long, Goods>( goodsList.size() * 4 / 3 + 2);
+		Map<Long, Goods> goodsMap = new HashMap<Long, Goods>(goodsList.size() * 4 / 3 + 2);
 		for(Goods goods : goodsList){
 			goodsMap.put(goods.getGoodsKey(), goods);
 		}

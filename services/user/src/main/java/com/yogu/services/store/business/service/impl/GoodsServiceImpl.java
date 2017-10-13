@@ -158,8 +158,17 @@ public class GoodsServiceImpl implements GoodsService {
 
 	@Override
 	public List<Goods> listBykeys(Long uid, List<Long> goodsKeys) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		long storeId = getUserAgentStoreId(uid); // 查询用户所属的商家id，为0标示不属于任何商家
+		List<GoodsPO> list = goodsDao.listByKey(goodsKeys);;
+
+		for (GoodsPO goods : list) {
+			if (goods.getStoreId() == storeId) {
+				goods.setRetailPrice(goods.getTradePrice());
+			}
+		}
+
+		return VOUtil.fromList(list, Goods.class);
 	}
 
 }
