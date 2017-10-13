@@ -1,4 +1,4 @@
-package com.yogu.services.order.resource.vo;
+package com.yogu.services.order.resource.vo.coupon;
 /**
  * 优惠券适用对象VO
  * 

@@ -3,7 +3,7 @@ package com.yogu.services.order.base.service;
 import java.util.List;
 
 import com.yogu.services.order.base.service.param.PurchaseDetail;
-import com.yogu.services.order.resource.vo.OrderSettleVO;
+import com.yogu.services.order.resource.vo.order.OrderSettleVO;
 
 
 public interface SettleService {

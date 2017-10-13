@@ -19,8 +19,8 @@ import com.yogu.remote.user.provider.UserRemoteService;
 import com.yogu.services.order.base.service.SettleService;
 import com.yogu.services.order.base.service.param.PurchaseDetail;
 import com.yogu.services.order.coupon.service.OrderCouponService;
-import com.yogu.services.order.resource.vo.OrderSettleVO;
-import com.yogu.services.order.resource.vo.OrderSettleVO.SettleVO;
+import com.yogu.services.order.resource.vo.order.OrderSettleVO;
+import com.yogu.services.order.resource.vo.order.OrderSettleVO.SettleVO;
 import com.yogu.services.order.utils.OrderUtils;
 import com.yogu.services.store.StoreSettleOrderVO;
 

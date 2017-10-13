@@ -1,4 +1,4 @@
-package com.yogu.services.order.resource.vo;
+package com.yogu.services.order.resource.vo.order;
 
 import java.io.Serializable;
 import java.util.List;

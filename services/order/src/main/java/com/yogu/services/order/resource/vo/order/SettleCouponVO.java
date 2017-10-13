@@ -1,6 +1,8 @@
-package com.yogu.services.order.resource.vo;
+package com.yogu.services.order.resource.vo.order;
 
 import java.util.List;
+
+import com.yogu.services.order.resource.vo.coupon.CouponDescVO;
 
 public class SettleCouponVO {
 	

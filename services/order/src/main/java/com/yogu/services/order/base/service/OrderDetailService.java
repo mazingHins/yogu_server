@@ -1,8 +1,11 @@
 package com.yogu.services.order.base.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.yogu.services.order.base.dto.OrderDetail;
+import com.yogu.services.order.base.service.param.PurchaseDetail;
+import com.yogu.services.store.GoodsOrderVO;
 
 /**
  * 订单明细表 <br>
@@ -41,5 +44,16 @@ public interface OrderDetailService {
 	 * @return 明细列表，若无，返回empty
 	 */
 	public List<OrderDetail> listByOrderId(long orderId);
+	
+	/**
+	 * 创建订单时候，初始化订单详情列表
+	 * @param list - 购买列表
+	 * @param goodsMap - 美食信息，key：美食key，value：美食对象
+	 * @param orderId - 订单id
+	 * @author hins
+	 * @date 2016年10月2日 下午1:45:54
+	 * @return List<OrderDetail>
+	 */
+	public List<OrderDetail> initOrderDetailByCreateOrder(List<PurchaseDetail> list, Map<Long, GoodsOrderVO> goodsMap, long orderId);
 
 }

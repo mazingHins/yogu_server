@@ -1,4 +1,4 @@
-package com.yogu.services.order.resource.vo;
+package com.yogu.services.order.resource.vo.coupon;
 
 import java.io.Serializable;
 import java.util.List;

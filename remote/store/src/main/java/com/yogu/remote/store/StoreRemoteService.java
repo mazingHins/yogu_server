@@ -19,6 +19,7 @@ import com.yogu.commons.utils.JsonUtils;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
+import com.yogu.services.store.StoreCreateOrderVO;
 import com.yogu.services.store.StoreSettleOrderVO;
 
 /**
@@ -141,10 +142,47 @@ public class StoreRemoteService {
 			params.put("purchaseDetail", purchaseDetail);
 
 			String json = HttpClientUtils.doPost(host + "/api/v1/store/order/settle.do", params);
-			logger.info("remote#store#settleOrder | response |  uid: {}, purchaseDetail: {}, distance: {}, lat: {}, lng: {}", uid, purchaseDetail);
+			logger.info("remote#store#settleOrder | response |  uid: {}, purchaseDetail: {}", uid, purchaseDetail);
 			RestResult<StoreSettleOrderVO> result = JsonUtils.parseObject(json, new TypeReference<RestResult<StoreSettleOrderVO>>() {});
 			if (result.getCode() != ResultCode.SUCCESS){
-				logger.error("remote#store#settleOrder | 不允许正常结算 |  uid: {}, purchaseDetail: {}, distance: {}, lat: {}, lng: {}", uid, purchaseDetail);
+				logger.error("remote#store#settleOrder | 不允许正常结算 |  uid: {}, purchaseDetail: {}", uid, purchaseDetail);
+				throw new ServiceException(result.getCode(), result.getMessage());
+			}
+			return result.getObject();
+		} catch (Exception e) {
+			throw e;
+		}
+	}
+	
+	/**
+	 * 调用store域的下单接口，获取餐厅、美食、配送费（包括顺丰送）、锁住库存<br>
+	 * 只有service>0，才扣除库存。如果出现异常直接抛出
+	 * 
+	 * @param deliveryTime - 预计送达时间
+	 * @param purchaseDetail - 购买信息
+	 * @param distance - 收货地址到商家的直径距离
+	 * @param lat - 收货地址经度
+	 * @param lng - 收货地址纬度
+	 * @author hins
+	 * @date 2016年10月2日 下午12:47:38
+	 * @return StoreCreateOrderVO
+	 */
+	@Deprecated
+	public StoreCreateOrderVO createOrder(long uid, String purchaseDetail) {
+		
+		try {
+
+			Map<String, String> params = new HashMap<>(8);
+			params.put("uid", String.valueOf(uid));
+			params.put("purchaseDetail", purchaseDetail);
+
+
+			String json = HttpClientUtils.doPost(host + "/api/v1/store/order/create.do", params);
+			logger.debug("remote#store#createOrder | response |  uid: {}, purchaseDetail: {}}", uid, purchaseDetail);
+			RestResult<StoreCreateOrderVO> result = JsonUtils.parseObject(json, new TypeReference<RestResult<StoreCreateOrderVO>>() {
+			});
+			if (result.getCode() != ResultCode.SUCCESS){
+				logger.error("remote#store#createOrder | 不允许正常下单 |  uid: {}, purchaseDetail: {}", uid, purchaseDetail);
 				throw new ServiceException(result.getCode(), result.getMessage());
 			}
 			return result.getObject();

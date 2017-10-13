@@ -14,6 +14,8 @@ import com.yogu.commons.utils.HttpClientUtils;
 import com.yogu.commons.utils.JsonUtils;
 import com.yogu.core.web.RestResult;
 import com.yogu.remote.user.dto.UserAddress;
+import com.yogu.remote.user.dto.UserAndAddress;
+import com.yogu.remote.user.dto.UserProfile;
 import com.yogu.remote.user.dto.UserProfile;
 
 
@@ -110,6 +112,28 @@ public class UserRemoteService {
 			logger.error("user#remote#listMyAddress | Error | uid: {}, message: {}", uid, e.getMessage(), e);
 		}
 		return new ArrayList<UserAddress>();
+	}
+	
+	/**
+	 * 根据用户id、地址id，获取用户和地址信息<br>
+	 * 返回的结果可能地址、用户其中一个为null
+	 * @param uid - 用户id
+	 * @param addressId - 地址id
+	 * @author hins
+	 * @date 2016年10月2日 下午12:40:53
+	 * @return UserAndAddress
+	 */
+	public UserAndAddress getUserAndAddress(long uid, long addressId) {
+		try {
+			String json = HttpClientUtils.doGet(host + "/api/v1/user/address/uid/" + uid + "/addressId/" + addressId);
+
+			RestResult<UserAndAddress> result = JsonUtils.parseObject(json, new TypeReference<RestResult<UserAndAddress>>() {
+			});
+			return result.getObject();
+		} catch (Exception e) {
+			logger.error("user#remote#getUserAndAddress | Error | uid: {}, message: {}", uid, e.getMessage(), e);
+		}
+		return null;
 	}
 	
 	

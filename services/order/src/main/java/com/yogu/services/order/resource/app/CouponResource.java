@@ -17,7 +17,7 @@ import com.yogu.commons.utils.PageUtils;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.context.SecurityContext;
 import com.yogu.services.order.coupon.service.OrderCouponService;
-import com.yogu.services.order.resource.vo.UserCouponVO;
+import com.yogu.services.order.resource.vo.coupon.UserCouponVO;
 
 /**
  * 我的-优惠券相关接口

@@ -23,10 +23,10 @@ import com.yogu.remote.user.provider.UserRemoteService;
 import com.yogu.services.order.coupon.dto.Coupon;
 import com.yogu.services.order.coupon.service.CouponService;
 import com.yogu.services.order.coupon.service.OrderCouponService;
-import com.yogu.services.order.resource.vo.CouponDescVO;
-import com.yogu.services.order.resource.vo.CouponItemDescVO;
-import com.yogu.services.order.resource.vo.SettleCouponVO;
-import com.yogu.services.order.resource.vo.UserCouponVO;
+import com.yogu.services.order.resource.vo.coupon.CouponDescVO;
+import com.yogu.services.order.resource.vo.coupon.CouponItemDescVO;
+import com.yogu.services.order.resource.vo.coupon.UserCouponVO;
+import com.yogu.services.order.resource.vo.order.SettleCouponVO;
 import com.yogu.services.order.utils.CouponUtils;
 
 /**

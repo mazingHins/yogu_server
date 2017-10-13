@@ -2,8 +2,8 @@ package com.yogu.services.order.coupon.service;
 
 import java.util.List;
 
-import com.yogu.services.order.resource.vo.SettleCouponVO;
-import com.yogu.services.order.resource.vo.UserCouponVO;
+import com.yogu.services.order.resource.vo.coupon.UserCouponVO;
+import com.yogu.services.order.resource.vo.order.SettleCouponVO;
 
 /**
  * 订单优惠券相关业务方法

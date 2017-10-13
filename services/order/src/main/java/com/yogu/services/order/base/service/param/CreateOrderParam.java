@@ -28,49 +28,15 @@ public class CreateOrderParam implements Serializable {
 	private short payMode;
 	
 	/**
-	 * 支付货币类型：1-人民币
-	 */
-	private short currencyType;
-	
-	/**
 	 * 寄送地址
 	 */
 	private long addressId;
-	
-	/**
-	 * 寄送时间
-	 */
-	private long deliveryTime;
-	
-//	/**
-//	 * 购买信息
-//	 * 2016/2/23 注释掉 by ten
-//	 */
-//	private List<BuyParam> buy;
 	
 	/**
 	 * 订单备注
 	 */
 	private String remark;
 	
-	/**
-	 * 用户距离商家的直线距离(单位米)
-	 */
-	private int distance;
-	
-	/**
-	 * 用餐人数
-	 */
-	private short mealNumber;
-	
-	/**
-	 * 订单界面选择商家信息（如口味）
-	 */
-	private String featureContent;
-	
-	/** 配送方式 1:商家配送 2:自提 3:快递 **/
-	private short pickType;
-
 	/**
 	 * 购买物品的详情，包括规格
 	 * 2016/2/23 by ten
@@ -106,28 +72,12 @@ public class CreateOrderParam implements Serializable {
 		this.payMode = payMode;
 	}
 
-	public short getCurrencyType() {
-		return currencyType;
-	}
-
-	public void setCurrencyType(short currencyType) {
-		this.currencyType = currencyType;
-	}
-
 	public long getAddressId() {
 		return addressId;
 	}
 
 	public void setAddressId(long addressId) {
 		this.addressId = addressId;
-	}
-
-	public long getDeliveryTime() {
-		return deliveryTime;
-	}
-
-	public void setDeliveryTime(long deliveryTime) {
-		this.deliveryTime = deliveryTime;
 	}
 
 	public String getRemark() {
@@ -137,39 +87,7 @@ public class CreateOrderParam implements Serializable {
 	public void setRemark(String remark) {
 		this.remark = remark;
 	}
-
-	public int getDistance() {
-		return distance;
-	}
-
-	public void setDistance(int distance) {
-		this.distance = distance;
-	}
-
-	public short getMealNumber() {
-		return mealNumber;
-	}
-
-	public void setMealNumber(short mealNumber) {
-		this.mealNumber = mealNumber;
-	}
-
-	public String getFeatureContent() {
-		return featureContent;
-	}
-
-	public void setFeatureContent(String featureContent) {
-		this.featureContent = featureContent;
-	}
-
-	public short getPickType() {
-		return pickType;
-	}
-
-	public void setPickType(short pickType) {
-		this.pickType = pickType;
-	}
-
+	
 	public List<PurchaseDetail> getPurchaseDetails() {
 		return purchaseDetails;
 	}

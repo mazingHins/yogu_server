@@ -20,7 +20,9 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.yogu.commons.utils.CollectionUtils;
 import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.StringUtils;
-import com.yogu.core.base.Point;
+import com.yogu.commons.utils.ThreadLocalContext;
+import com.yogu.commons.utils.Validator;
+import com.yogu.core.enums.pay.PayMode;
 import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
@@ -29,8 +31,10 @@ import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.OrderMessages;
 import com.yogu.services.order.base.service.SettleService;
 import com.yogu.services.order.base.service.param.PurchaseDetail;
+import com.yogu.services.order.resource.param.CreateParam;
 import com.yogu.services.order.resource.param.NewSettleParam;
-import com.yogu.services.order.resource.vo.OrderSettleVO;
+import com.yogu.services.order.resource.vo.OrderPayVO;
+import com.yogu.services.order.resource.vo.order.OrderSettleVO;
 
 @Named
 @Path("a")
@@ -100,6 +104,57 @@ public class OrderResource {
 				throw new ServiceException(ResultCode.PARAMETER_ERROR, OrderMessages.ORDER_ORDER_VALIDATEPURCHASEDETAILS_NUM_ERROR());
 			}
 		}
+	}
+	
+	/**
+	 * 生成订单，若不出现异常： 1. 若选择了支付方式，则调用pay域，生成支付请求，获得调用SDK所需的信息，封装并返回 2. 若没选择支付方式，则只封装订单编号和总费用基本信息. 若库存不足，或存在菜品下线，则返回具体的错误信息列表
+	 *
+	 * @author Hins
+	 * @date 2015年8月24日 上午12:15:15
+	 *
+	 * @param reqParams - 生成订单接收参数类
+	 * @return 若选择了支付方式，则返回调用支付SDK所需的信息，若无，则返回订单编号和总费用基本信息
+	 * @modified by ten 2016/2/23 增加规格的处理
+	 */
+	@POST
+	@Path("v1/order/create.do")
+	public RestResult<OrderPayVO> create(@Valid @BeanParam CreateParam reqParams) {
+		long uid = SecurityContext.getUid();
+		String userIp = ThreadLocalContext.getThreadValue(ThreadLocalContext.REQ_CLIENT_IP);
+		logger.info("order#create | 下单接口 | uid: {}, ip: {}, reqParams: {}", uid, userIp, JsonUtils.toJSONString(reqParams));
+
+		// 1. 验证参数
+		validateCreateOrder(reqParams);
+		
+		
+		// 2. 重新装载service方法的请求参数
+		List<PurchaseDetail> params = convertToPurchaseDetail(reqParams.getPurchaseDetail());
+		
+		
+		
+		return null;
+	}
+	
+	/**
+	 * 检查下单方法参数是否正确
+	 * 
+	 * @param params - 购买物品的详情
+	 */
+	private static void validateCreateOrder(CreateParam params) {
+
+		if (StringUtils.isBlank(params.getPurchaseDetail())) {
+			throw new ServiceException(ResultCode.PARAMETER_ERROR, OrderMessages.ORDER_ORDER_SPILTBUY_DISH_EMPTY());
+		}
+		
+		if (params.getPayMode() > 0) {
+			PayMode mode = PayMode.valueOf(params.getPayMode());
+			ParameterUtil.assertNotNull(mode, OrderMessages.ORDER_ORDER_VALIDATECREATEORDER_MODE_ILLEGAL());
+		}
+		String remark = params.getRemark();
+		if (StringUtils.isNotBlank(params.getRemark()))
+			ParameterUtil.assertMaxLength(params.getRemark(), 100, OrderMessages.ORDER_ORDER_VALIDATECREATEORDER_REMARK_LENGTH_OVERLIMIT());
+		if (Validator.containsEmoji(remark))
+			throw new ServiceException(ResultCode.PARAMETER_ERROR, OrderMessages.ORDER_ORDER_VALIDATECREATEORDER_REMARK_EMOJI());
 	}
 
 

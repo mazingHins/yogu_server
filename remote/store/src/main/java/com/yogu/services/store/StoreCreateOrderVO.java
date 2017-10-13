@@ -2,6 +2,7 @@ package com.yogu.services.store;
 
 import java.util.Map;
 
+
 /**
  * 创建订单流程中，store域相关操作<br>
  * 如验证美食，库存，配送范围，配送费，扣库存
@@ -31,6 +32,10 @@ public class StoreCreateOrderVO {
 	 * 是否含有错误信息，影响最终下单。如美食下架
 	 */
 	private short hasError;
+	
+	/**
+	 * 购买餐厅
+	 */
 
 	public Map<Long, GoodsOrderVO> getGoodsMap() {
 		return goodsMap;
@@ -63,5 +68,6 @@ public class StoreCreateOrderVO {
 	public void setHasError(short hasError) {
 		this.hasError = hasError;
 	}
+
 	
 }
