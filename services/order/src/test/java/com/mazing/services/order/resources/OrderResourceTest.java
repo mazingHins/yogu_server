@@ -24,7 +24,7 @@ public class OrderResourceTest extends HttpResourceTest {
 	public void settle() {
 		ApiReq<RestResult<?>> req = build("a/v1/order/settle2.do");
 		req.login("86", "13926426236", "abcd1234");
-		req.putPost("purchaseDetail", "[{\"goodsKey\": 1000,\"purchaseNum\": 2}]");
+		req.putPost("purchaseDetail", "[{\"goodsKey\": 1001,\"purchaseNum\": 2}]");
 		RestResult<?> result = req.doPost();
 
 		Assert.assertNotNull(result);

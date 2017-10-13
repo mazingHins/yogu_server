@@ -99,6 +99,8 @@ public class GoodsApiResource {
 			goodsKeys.add(detail.getGoodsKey());
 		}
 		List<Goods> goodsList = goodsService.listBykeys(uid, goodsKeys);
+		logger.info("api#LoaclOrderApiResource#settleOrder | 预下单接口，有关store域的操作start | purchaseDetail: {}, size: {}", JsonUtils.toJSONString(purchaseDetail), goodsList.size());
+
 		Map<Long, Goods> goodsMap = new HashMap<Long, Goods>(goodsList.size() * 4 / 3 + 2);
 		for(Goods goods : goodsList){
 			goodsMap.put(goods.getGoodsKey(), goods);
@@ -113,6 +115,7 @@ public class GoodsApiResource {
 				continue;
 			}
 			GoodsOrderVO vo = VOUtil.from(goods, GoodsOrderVO.class);
+			vo.setPrice(goods.getRetailPrice());
 			
 			long tmp = ComputeUtils.multCeiling(vo.getPrice(), detail.getPurchaseNum());// 单个商品总价
 			vo.setTotalFee(tmp);
