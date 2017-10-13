@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.store.business.dao.GoodsDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.store.business.entry.GoodsPO" useGeneratedKeys="false" >
+		insert into yg_store.yg_goods (goods_id,goods_key,goods_name,store_id,card_img,retail_price,trade_price,sequence,status,create_time,update_time) values 
+		(#{goodsId},#{goodsKey},#{goodsName},#{storeId},#{cardImg},#{cardImg},#{retailPrice},#{tradePrice},#{sequence},#{status},#{createTime},#{updateTime})
+	</insert>
+	
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_store.yg_goods WHERE goods_id=#{goodsId}
+	</select>
+	
+	<select id="getByKey" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_store.yg_goods WHERE goods_key=#{goodsKey}
+	</select>
+	
+	<select id="listByStoreId" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_store.yg_goods WHERE store_id=#{goodsKey} and status=#{status} order by sequence asc
+	</select>
+	
+	<select id="listByPage" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_store.yg_goods WHERE
+		<if test="lastTime != null">
+			<![CDATA[
+			create_time<{lastTime} and 
+			]]>
+		</if>
+		status=#{status} order by create_time desc limit #{pageSize}
+	</select>
+	
+	<select id="listByName" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_store.yg_goods WHERE goods_name like #{goodsName} and 
+		<if test="lastTime != null">
+			<![CDATA[
+			create_time<{lastTime} and 
+			]]>
+		</if>
+		status=#{status} order by create_time desc limit #{pageSize}
+	</select>
+	
+	<select id="listByTagId" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_store.yg_goods as a,yg_store.yg_goods_tag_mp as b WHERE a.goodsId=b.goodsId and  b.tag_id=#{tagId}
+		and status=#{status} 
+		<if test="orderBy == 2"> order by a.retail_price desc</if>
+		<if test="orderBy == 3"> order by a.retail_price asc</if>
+		limit #{offset},#{pageSize}
+	</select>
+	
+	
+	<select id="listByKey" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_store.yg_goods WHERE goods_key in
+		<foreach collection="goodsKeys" close=")" index="index" open="("  separator="," item="item">
+			#{item}
+		</foreach>
+	</select>
+
+</mapper>

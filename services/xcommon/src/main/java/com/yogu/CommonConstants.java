@@ -43,7 +43,7 @@ public class CommonConstants {
 
 	static {
 		USER_DOMAIN = findEnvOrDefault("USER_DOMAIN", "http://userapi.yogubc.com");
-		STORE_DOMAIN = findEnvOrDefault("STORE_DOMAIN", "http://storeapi.yogubc.com");
+		STORE_DOMAIN = findEnvOrDefault("STORE_DOMAIN", "http://userapi.yogubc.com");
 		ORDER_DOMAIN = findEnvOrDefault("ORDER_DOMAIN", "http://orderapi.yogubc.com");
 
 		// 只有prod使用CDN，其他的使用本地
