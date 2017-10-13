@@ -85,13 +85,13 @@
 			<keepalive-max>64</keepalive-max>
             <thread-max>32</thread-max>
 
-            <jvm-arg>-Xmx180m</jvm-arg>
-            <jvm-arg>-Xms128m</jvm-arg>
+            <jvm-arg>-Xmx80m</jvm-arg>
+            <jvm-arg>-Xms64m</jvm-arg>
 
 			<jvm-arg>-server</jvm-arg>
 			<jvm-arg>-d64</jvm-arg>
 			
-			<jvm-arg>-XX:MaxPermSize=128m</jvm-arg>
+			<jvm-arg>-XX:MaxPermSize=64m</jvm-arg>
 			
 			<jvm-arg>-XX:MaxGCPauseMillis=200</jvm-arg>
 			<jvm-arg>-Dnetworkaddress.cache.ttl=600</jvm-arg>

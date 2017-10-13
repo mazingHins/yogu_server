@@ -91,12 +91,12 @@
 			<jvm-arg>-server</jvm-arg>
 			<jvm-arg>-d64</jvm-arg> -->
 
-            <jvm-arg>-Xmx120m</jvm-arg>
-            <jvm-arg>-Xms100m</jvm-arg>
+            <jvm-arg>-Xmx80m</jvm-arg>
+            <jvm-arg>-Xms64m</jvm-arg>
 			<jvm-arg>-server</jvm-arg>
 			<jvm-arg>-d64</jvm-arg>
 			
-			<jvm-arg>-XX:MaxPermSize=100m</jvm-arg>
+			<jvm-arg>-XX:MaxPermSize=64m</jvm-arg>
 			
 			<jvm-arg>-XX:MaxGCPauseMillis=150</jvm-arg>
 			<jvm-arg>-Dnetworkaddress.cache.ttl=300</jvm-arg>

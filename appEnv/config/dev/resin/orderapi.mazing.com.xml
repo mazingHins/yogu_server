@@ -90,12 +90,13 @@
 
 			<jvm-arg>-server</jvm-arg>
 			<jvm-arg>-d64</jvm-arg> -->
-            <jvm-arg>-Xmx180m</jvm-arg>
-            <jvm-arg>-Xms128m</jvm-arg>
+			
+            <jvm-arg>-Xmx80m</jvm-arg>
+            <jvm-arg>-Xms64m</jvm-arg>
 			<jvm-arg>-server</jvm-arg>
 			<jvm-arg>-d64</jvm-arg>
 			
-			<jvm-arg>-XX:MaxPermSize=128m</jvm-arg>
+			<jvm-arg>-XX:MaxPermSize=64m</jvm-arg>
 			
 			<jvm-arg>-XX:MaxGCPauseMillis=200</jvm-arg>
 			<jvm-arg>-Dnetworkaddress.cache.ttl=600</jvm-arg>
@@ -165,13 +166,6 @@
             	<rollover-size>32mb</rollover-size>
                 <archive-format>yogu-api-order.stderr.log.%m-%d.gz</archive-format>
             </stderr-log>
-            <!-- 
-            <access-log path="/data/log/resin/orderapi/mazing-api-order.access.log" >
-            	<rollover-size>64mb</rollover-size>
-                <rollover-period>1D</rollover-period>
-                <archive-format>mazing-api-order.access.log.%m-%d.gz</archive-format>
-            </access-log>
-             -->
       </web-app>
 
     </host>
