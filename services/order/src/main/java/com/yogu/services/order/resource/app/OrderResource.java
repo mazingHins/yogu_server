@@ -3,11 +3,14 @@ package com.yogu.services.order.resource.app;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 
 import org.slf4j.Logger;
@@ -29,6 +32,10 @@ import com.yogu.services.order.base.service.param.PurchaseDetail;
 import com.yogu.services.order.resource.param.NewSettleParam;
 import com.yogu.services.order.resource.vo.OrderSettleVO;
 
+@Named
+@Path("a")
+@Singleton
+@Produces("application/json;charset=UTF-8")
 public class OrderResource {
 	
 	private static final Logger logger = LoggerFactory.getLogger(OrderResource.class);
