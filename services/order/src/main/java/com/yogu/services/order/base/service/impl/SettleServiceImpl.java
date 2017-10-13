@@ -81,8 +81,9 @@ public class SettleServiceImpl implements SettleService {
 	 * @return void
 	 */
 	private OrderSettleVO initBaseSettle(StoreSettleOrderVO storeSettle) {
+		SettleVO settle = new SettleVO();
 		OrderSettleVO result = new OrderSettleVO();
-		SettleVO settle = result.getSettle();
+		result.setSettle(settle);
 		// 装载费用，可选用餐人数
 		settle.setTotalDiscountFee(0);
 		settle.setGoodsFee(storeSettle.getGoodsFee());
