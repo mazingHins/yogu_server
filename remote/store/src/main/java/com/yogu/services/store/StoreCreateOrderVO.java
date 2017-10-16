@@ -28,15 +28,6 @@ public class StoreCreateOrderVO {
 	 */
 	private String body;
 	
-	/**
-	 * 是否含有错误信息，影响最终下单。如美食下架
-	 */
-	private short hasError;
-	
-	/**
-	 * 购买餐厅
-	 */
-
 	public Map<Long, GoodsOrderVO> getGoodsMap() {
 		return goodsMap;
 	}
@@ -59,14 +50,6 @@ public class StoreCreateOrderVO {
 
 	public void setBody(String body) {
 		this.body = body;
-	}
-
-	public short getHasError() {
-		return hasError;
-	}
-
-	public void setHasError(short hasError) {
-		this.hasError = hasError;
 	}
 
 	
