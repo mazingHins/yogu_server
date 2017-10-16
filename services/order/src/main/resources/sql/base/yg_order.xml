@@ -5,7 +5,7 @@
 
 	<!-- 新增 -->
 	<insert id="save" parameterType="com.yogu.services.order.base.entry.OrderPO" useGeneratedKeys="false" >
-		insert into yg_order.yg_order (order_id,order_no,pay_no,uid,store_id,pay_mode,price_type,total_fee,actual_fee,discount_fee,goods_fee,use_coupon,full_address,contacts,phone,status,remark,user_confirm_time,store_confirm_time,create_time,update_time,finish_time) values (#{orderId},#{orderNo},#{payNo},#{uid},#{storeId},#{payMode},#{priceType}#{totalFee},#{actualFee},#{discountFee},#{goodsFee},#{useCoupon},#{fullAddress},#{contacts},#{phone},#{status},#{remark},#{userConfirmTime},#{storeConfirmTime},#{createTime},#{updateTime},#{finishTime})
+		insert into yg_order.yg_order (order_id,order_no,pay_no,uid,store_id,pay_mode,price_type,total_fee,actual_fee,discount_fee,goods_fee,use_coupon,full_address,contacts,phone,status,remark,user_confirm_time,store_confirm_time,create_time,update_time,finish_time) values (#{orderId},#{orderNo},#{payNo},#{uid},#{storeId},#{payMode},#{priceType},#{totalFee},#{actualFee},#{discountFee},#{goodsFee},#{useCoupon},#{fullAddress},#{contacts},#{phone},#{status},#{remark},#{userConfirmTime},#{storeConfirmTime},#{createTime},#{updateTime},#{finishTime})
 	</insert>
 
 
