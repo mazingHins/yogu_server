@@ -86,8 +86,9 @@ public class OrderPayServiceImpl implements OrderPayService {
 		// 5. 尝试使用优惠卷
 		long orderId = idGenRemoteService.getNextOrderId(); // 订单id，防止接下来操作出现异常，释放优惠券
 		OrderCouponRecord couponRecord = useCoupon(VOUtil.from(order, OrderPO.class), params.getCouponId());
-		order.setDiscountFee(couponRecord.getCouponFee());
-		order.setActualFee(order.getTotalFee() - couponRecord.getCouponFee());
+		long couponFee = couponRecord == null ? 0 : couponRecord.getCouponFee();
+		order.setDiscountFee(couponFee);
+		order.setActualFee(order.getTotalFee() - couponFee);
 		order.setUseCoupon(couponRecord == null ? BooleanConstants.FALSE : BooleanConstants.TRUE);
 		
 		// 6. 保存数据
