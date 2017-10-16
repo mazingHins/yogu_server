@@ -12,7 +12,7 @@ import com.yogu.core.web.RestResult;
 public class IndexResourceTest extends HttpResourceTest {
 
 	public IndexResourceTest() {
-		host = "http://storeapi.yogubc.com";
+		host = "http://userapi.yogubc.com";
 	}
 
 	/**

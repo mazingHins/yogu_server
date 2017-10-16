@@ -2,19 +2,14 @@ package com.yogu.services.order.utils;
 
 import java.util.Date;
 
-import javax.mail.Store;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yogu.commons.utils.StringUtils;
-import com.yogu.core.enums.BooleanConstants;
 import com.yogu.core.enums.order.OrderConstants;
 import com.yogu.core.enums.order.OrderStatus;
-import com.yogu.core.enums.pay.PayType;
-import com.yogu.core.utils.OrderChannelUtils;
+import com.yogu.core.enums.pay.PayMode;
 import com.yogu.core.web.ResultCode;
-import com.yogu.core.web.context.SecurityContext;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.OrderMessages;
 import com.yogu.remote.user.dto.UserAddress;
@@ -97,6 +92,23 @@ public class OrderUtils {
 		order.setActualFee(order.getTotalFee());
 		
 		validateFeeOverLimit(order.getTotalFee());
+	}
+	
+	/**
+	 * 获取订单可选支付方式<br>
+	 * 在以下支付方式中选择1-支付宝；2-微信；3-现金
+	 * 
+	 * @author Hins
+	 * @date 2015年12月23日 下午6:41:02
+	 * 
+	 * @param useCoupon - 订单是否使用优惠券（如果使用了优惠券，则不支持现金支付，取值范围{@link com.mazing.core.enums.BooleanConstants}）
+	 * @param payType - 支付类型（米星付不支持出现现金支付）
+	 * @param isThirdExpress - 是否第三方配送
+	 * @return 可选支付方式，多个用逗号分隔
+	 */
+	public static String getOptionsPayMode(short useCoupon){
+		return PayMode.ALIPAY.getValue() + "," + OrderConstants.PAY_MODE_CACH;
+		
 	}
 	
 	

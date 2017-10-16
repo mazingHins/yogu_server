@@ -21,7 +21,9 @@ import com.yogu.commons.utils.CollectionUtils;
 import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.ThreadLocalContext;
+import com.yogu.commons.utils.VOUtil;
 import com.yogu.commons.utils.Validator;
+import com.yogu.core.enums.order.OrderConstants;
 import com.yogu.core.enums.pay.PayMode;
 import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.RestResult;
@@ -32,11 +34,13 @@ import com.yogu.language.OrderMessages;
 import com.yogu.services.order.base.dto.Order;
 import com.yogu.services.order.base.service.OrderPayService;
 import com.yogu.services.order.base.service.SettleService;
+import com.yogu.services.order.base.service.param.CreateOrderParam;
 import com.yogu.services.order.base.service.param.PurchaseDetail;
 import com.yogu.services.order.resource.param.CreateParam;
 import com.yogu.services.order.resource.param.NewSettleParam;
 import com.yogu.services.order.resource.vo.OrderPayVO;
 import com.yogu.services.order.resource.vo.order.OrderSettleVO;
+import com.yogu.services.order.utils.OrderUtils;
 
 @Named
 @Path("a")
@@ -64,7 +68,7 @@ public class OrderResource {
 	 * @return 预支付信息
 	 */
 	@POST
-	@Path("v1/order/settle2.do")
+	@Path("v1/order/settle.do")
 	public RestResult<OrderSettleVO> settle(@Valid @BeanParam NewSettleParam reqParams, @Context HttpServletRequest request) {
 		long uid = SecurityContext.getUid();
 		logger.info("order#settle | 订单预支付信息接口  | uid: {}, reqParams: {}", uid, JsonUtils.toJSONString(reqParams));
@@ -133,12 +137,26 @@ public class OrderResource {
 		
 		
 		// 2. 重新装载service方法的请求参数
-		List<PurchaseDetail> params = convertToPurchaseDetail(reqParams.getPurchaseDetail());
+		List<PurchaseDetail> purchaseDetails = convertToPurchaseDetail(reqParams.getPurchaseDetail());
 		
 		// 3. 创建订单
-//		Order order = orderPayService.createOrder(params, uid);
+		CreateOrderParam params = VOUtil.from(reqParams, CreateOrderParam.class);
+		params.setPurchaseDetails(purchaseDetails); // 使用规格 2016/2/23
+		Order order = orderPayService.createOrder(params, uid);
 		
-		return null;
+		// 4. 装载返回结果
+		OrderPayVO result = new OrderPayVO();
+		result.setOrderNo(order.getOrderNo());
+		result.setTotalFee(Long.valueOf(order.getTotalFee()).intValue());
+		result.setCreateTime(order.getCreateTime());
+		result.setResult(OrderConstants.RESULT_CODE_SUCCESS);
+
+		// 5. 装载可选支付方式 1-支付宝；2-微信；3-现金
+		String optionsPayMode = OrderUtils.getOptionsPayMode(order.getUseCoupon());
+		result.setOptionalPayMode(optionsPayMode);
+		result.setDefaultPayMode(PayMode.ALIPAY.getValue());
+		
+		return new RestResult<OrderPayVO>(result);
 	}
 	
 	/**

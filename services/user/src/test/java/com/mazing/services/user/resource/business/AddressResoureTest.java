@@ -32,20 +32,6 @@ public class AddressResoureTest extends HttpResourceTest {
 		RestResult<?> result = req.doPost();
 		assertNotNull(result.getObject());
 		
-//		req = build("a/v1/user/address/save.do");
-//		req.login();
-//
-//		req.putPost("addressId", "0");
-//		req.putPost("districtCode", "440106");
-//		req.putPost("addLat", "23.125699");
-//		req.putPost("addLng", "113.338743");
-//		req.putPost("name", "合景睿峰大厦停车场");
-//		req.putPost("detail", "L7合景睿峰大厦");
-//		req.putPost("contacts", "陈医生2");
-//		req.putPost("status", "2");
-//		req.putPost("phone", "15920575057");
-//		result = req.doPost();
-//		assertNotNull(result.getObject());
 	}
 
 	@Test
@@ -64,6 +50,17 @@ public class AddressResoureTest extends HttpResourceTest {
 		req.login("86", "13926426236", "abcd1234");
 		
 		req.putPost("addressId", "2002");
+		
+		RestResult<?> result = req.doPost();
+		assertNotNull(result.getObject());
+	}
+	
+	@Test
+	public void setDefault(){
+		ApiReq<RestResult<?>> req = build("a/v1/user/address/setDefault.do");
+		req.login("86", "13926426236", "abcd1234");
+		
+		req.putPost("addressId", "2004");
 		
 		RestResult<?> result = req.doPost();
 		assertNotNull(result.getObject());
