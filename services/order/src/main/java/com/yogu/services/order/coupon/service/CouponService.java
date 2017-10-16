@@ -51,6 +51,21 @@ public interface CouponService {
 	 * @return
 	 */
 	public List<Coupon> listEffective(long uid, long totalFee);
+	
+	/**
+	 * 订单使用优惠券---如果可用, 将优惠券状态置为‘使用中’
+	 * 
+	 * 
+	 * @param couponId 使用的优惠券id
+	 * @param uid 使用者uid
+	 * @param orderNo 订单号
+	 * @param totalFee 订单总额
+	 * @param goodsFee 商品总价
+	 * @return 如果使用成功, 返回success=1,msg="使用成功", 同时返回 finalValue(long),couponName(String),couponType(short),faceValue(long)的值 <br>
+	 *         使用不成功： 1：success=0,msg="不能使用的原因" 2：返回异常信息,该种情况属于 对账参数错误,需要服务器内部处理
+	 * @author sky 2015-12-25 hins 2016-7-26 将返回对象map转成UseCouponResultVO
+	 */
+	public Coupon useCoupon(long couponId, long uid, long orderNo, long totalFee, long goodsFee);
 
 
 }

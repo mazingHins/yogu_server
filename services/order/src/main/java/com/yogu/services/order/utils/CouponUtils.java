@@ -572,7 +572,7 @@ public class CouponUtils {
 	 * @return 最终优惠金额值
 	 * @author east 2016-11-15 从CouponServiceImpl迁移到这里来
 	 */
-	public static long getFinalValue(long faceValue, long totalFee, short couponType, long mostOffer) {
+	public static long getFinalValue(long faceValue, long totalFee, short couponType) {
 		long finalValue = 0;
 
 		if (CouponTypeConstants.CASH_COUPON == couponType) {// 现金券
@@ -588,9 +588,6 @@ public class CouponUtils {
 			// 2016-01-06 modify by hins 内容：优惠金额向下取整
 			// 最终优惠价格 (discount 折扣值（如：75表示 7.5折）在存入数据库中时,faceValue= 折扣值 x100 )
 			finalValue = ComputeUtils.initCouponFee(totalFee, (int) faceValue);
-
-			if (finalValue > mostOffer)// 折扣券, 若折扣后的金额 > 最高优惠金额, 在最终优惠金额=最高优惠金额 add by sky 2016-07-15
-				finalValue = mostOffer;
 
 		} else if (CouponTypeConstants.FULLCUT_COUPON == couponType) {// 满减券
 

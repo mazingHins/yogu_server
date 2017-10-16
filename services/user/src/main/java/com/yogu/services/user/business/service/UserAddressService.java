@@ -43,5 +43,7 @@ public interface UserAddressService {
 	 * @author sky 2015-12-08
 	 */
 	public int delete(long uid, long addressId);
-
+	
+	public int setDefault(long uid, long addressId);
+	
 }

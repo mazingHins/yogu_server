@@ -1,5 +1,6 @@
 package com.yogu.services.order.coupon.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -43,6 +44,20 @@ public interface CouponDao {
 	public List<CouponPO> listUserCouponsByPage(@Param("uid") long uid,@Param("offset") int offset, @Param("pageSize") int pageSize);
 	
 	public List<CouponPO> listUserCouponsByStatus(@Param("uid") long uid, @Param("status") short status);
+	
+	/**
+	 * 更新优惠券的使用状态以及使用的订单信息、使用时间
+	 * 
+	 * @param couponId 优惠券id
+	 * @param newStatus 新的状态
+	 * @param oldStatus 旧的状态
+	 * @param orderNo 被使用的订单号
+	 * @param useTime 使用时间
+	 * @return
+	 * @author sky 2015/12/25
+	 */
+	public int updateCouponStatusAndOrderNoAndUseTime(@Param("couponId") long couponId, @Param("newStatus") short newStatus,
+			@Param("oldStatus") short oldStatus, @Param("orderNo") long orderNo, @Param("useTime") Date useTime);
 	
 
 }

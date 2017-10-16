@@ -17,7 +17,7 @@ import com.yogu.core.web.RestResult;
 public class GoodsResourceTest extends HttpResourceTest {
 
 	public GoodsResourceTest() {
-		host = "http://storeapi.yogubc.com";
+		host = "http://userapi.yogubc.com";
 	}
 
 	/**

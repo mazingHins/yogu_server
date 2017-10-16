@@ -36,4 +36,12 @@
 		SELECT * FROM yg_order.yg_coupon WHERE uid=#{uid} and status=#{status} order by end_time desc
 	</select>
 	
+	<!-- 更新 优惠券的被使用了的一些信息 -->
+	<update id="updateCouponStatusAndOrderNoAndUseTime"
+		parameterType="Map">
+		update mz_activity.mz_coupon set order_no=#{orderNo},
+		status=#{newStatus}, use_time=#{useTime} where coupon_id=#{couponId}
+		and status=#{oldStatus}
+	</update>
+	
 </mapper>

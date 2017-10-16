@@ -124,4 +124,17 @@ public class AddressResource {
 				: "failed"));
 		return new RestResult<Integer>(result);
 	}
+	
+	
+	@POST
+	@Path("v1/user/address/setDefault.do")
+	public RestResult<Integer> setDefault(@FormParam("addressId") long addressId) {
+		long uid = SecurityContext.getUid();
+		logger.info("user#address#setDefault | 设置默认地址 | uid: {}, addressId: {}", uid, addressId);
+		int result = userAddressService.setDefault(uid, addressId);
+
+		logger.info("user#address#setDefault | 设置默认地址结束 | uid: {}, addressId: {}, result: {}", uid, addressId, (result == 1 ? "success"
+				: "failed"));
+		return new RestResult<Integer>(result);
+	}
 }

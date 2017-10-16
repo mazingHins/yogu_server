@@ -29,6 +29,8 @@ import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.context.SecurityContext;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.OrderMessages;
+import com.yogu.services.order.base.dto.Order;
+import com.yogu.services.order.base.service.OrderPayService;
 import com.yogu.services.order.base.service.SettleService;
 import com.yogu.services.order.base.service.param.PurchaseDetail;
 import com.yogu.services.order.resource.param.CreateParam;
@@ -46,6 +48,9 @@ public class OrderResource {
 	
 	@Inject
 	private SettleService settleService;
+	
+	@Inject
+	private OrderPayService orderPayService;
 	
 	/**
 	 * 生成订单预支付信息，返回美食明细，配送费信息，优惠信息，<br>
@@ -130,7 +135,8 @@ public class OrderResource {
 		// 2. 重新装载service方法的请求参数
 		List<PurchaseDetail> params = convertToPurchaseDetail(reqParams.getPurchaseDetail());
 		
-		
+		// 3. 创建订单
+//		Order order = orderPayService.createOrder(params, uid);
 		
 		return null;
 	}

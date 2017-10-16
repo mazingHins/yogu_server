@@ -66,5 +66,8 @@ public interface UserAddressDao {
 	 * @return
 	 */
 	public int updateStatus(@Param("uid") long uid, @Param("statusEQ") short statusEQ, @Param("status") short status);
+	
+	public int updateStatusById(@Param("addressId") long addressId, @Param("statusEQ") short statusEQ, @Param("status") short status);
+	
 
 }

@@ -5,17 +5,17 @@
 
 	<!-- 新增 -->
 	<insert id="save" parameterType="com.yogu.services.store.business.entry.StorePO" useGeneratedKeys="false" >
-		insert into yg_store.yg_store (store_id,store_name,uid,full_address,phone,status,create_time,update_time) values 
+		insert into yg_user.yg_store (store_id,store_name,uid,full_address,phone,status,create_time,update_time) values 
 		(#{storeId},#{storeName},#{uid},#{fullAddress},#{phone},#{status},#{createTime},#{updateTime})
 	</insert>
 	
 	<!-- 根据主键读取记录（主键可能有多个） -->
 	<select id="getById" parameterType="Map" resultType="com.yogu.services.store.business.entry.StorePO">
-		SELECT * FROM yg_store.yg_store WHERE store_id=#{storeId}
+		SELECT * FROM yg_user.yg_store WHERE store_id=#{storeId}
 	</select>
 	
 	<select id="getByUid" parameterType="Map" resultType="com.yogu.services.store.business.entry.StorePO">
-		SELECT * FROM yg_store.yg_store WHERE uid=#{uid} limit 1
+		SELECT * FROM yg_user.yg_store WHERE uid=#{uid} limit 1
 	</select>
 
 </mapper>

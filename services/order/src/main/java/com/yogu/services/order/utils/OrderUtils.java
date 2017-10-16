@@ -95,7 +95,8 @@ public class OrderUtils {
 		order.setDiscountFee(0);
 		order.setTotalFee(order.getGoodsFee());
 		order.setActualFee(order.getTotalFee());
-//		order.setResult(OrderConstants.RESULT_CODE_SUCCESS);
+		
+		validateFeeOverLimit(order.getTotalFee());
 	}
 	
 	

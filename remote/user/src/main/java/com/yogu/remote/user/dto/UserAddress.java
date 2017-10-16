@@ -27,6 +27,20 @@ public class UserAddress implements Serializable {
 
 	/** 创建时间 */
 	private Date createTime;
+	
+	public enum Status {
+		DEFAULT((short) 1), NOT_DEFAULT((short) 2);
+
+		private short value;
+
+		private Status(short value) {
+			this.value = value;
+		}
+
+		public short getValue() {
+			return value;
+		}
+	}
 
 	public long getAddressId() {
 		return addressId;

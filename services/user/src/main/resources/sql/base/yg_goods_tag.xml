@@ -5,18 +5,18 @@
 
 	<!-- 新增 -->
 	<insert id="save" parameterType="com.yogu.services.store.base.entry.GoodsTagPO" useGeneratedKeys="false" >
-		insert into yg_store.yg_goods_tag (tag_id,category_id,tag_name,icon_url,sequence,create_time) values 
+		insert into yg_user.yg_goods_tag (tag_id,category_id,tag_name,icon_url,sequence,create_time) values 
 		(#{tagId},#{categoryId},#{tagName},#{iconUrl},#{sequence},#{createTime})
 	</insert>
 	
 	<!-- 根据主键读取记录（主键可能有多个） -->
 	<select id="getById" parameterType="Map" resultType="com.yogu.services.store.base.entry.GoodsTagPO">
-		SELECT * FROM yg_store.yg_goods_tag WHERE tag_id=#{tagId}
+		SELECT * FROM yg_user.yg_goods_tag WHERE tag_id=#{tagId}
 	</select>
 
 	<!-- 查询全部记录 -->
 	<select id="listByCategoryId" resultType="com.yogu.services.store.base.entry.GoodsTagPO">
-		SELECT * FROM yg_store.yg_goods_tag where category_id=#{categoryId} order by sequence asc
+		SELECT * FROM yg_user.yg_goods_tag where category_id=#{categoryId} order by sequence asc
 	</select>
 
 </mapper>

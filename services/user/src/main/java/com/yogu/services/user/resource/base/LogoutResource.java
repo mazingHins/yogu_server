@@ -63,7 +63,6 @@ public class LogoutResource {
 			SysType sys = SysType.getSysType(sysName);
 			if(sys == null)
 				sys = SysType.IOS;
-			short sysType = sys.getValue();
 			
 			// 清除用户token信息
 			logger.info("user#logout | 调用接口清除用户token信息 | uid: {}", uid);

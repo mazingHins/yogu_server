@@ -5,18 +5,18 @@
 
 	<!-- 新增 -->
 	<insert id="save" parameterType="com.yogu.services.store.base.entry.GoodsRecommendPO" useGeneratedKeys="false" >
-		insert into yg_store.yg_goods_recommend (recommend_id,goods_key,sequence,status,create_time) values 
+		insert into yg_user.yg_goods_recommend (recommend_id,goods_key,sequence,status,create_time) values 
 		(#{recommendId},#{goodsKey},#{sequence},#{status},#{createTime})
 	</insert>
 	
 	<!-- 根据主键读取记录（主键可能有多个） -->
 	<select id="getById" parameterType="Map" resultType="com.yogu.services.store.base.entry.GoodsRecommendPO">
-		SELECT * FROM yg_store.yg_goods_recommend WHERE recommend_id=#{adId}
+		SELECT * FROM yg_user.yg_goods_recommend WHERE recommend_id=#{adId}
 	</select>
 
 	<!-- 查询全部记录 -->
 	<select id="listByStatus" resultType="com.yogu.services.store.base.entry.GoodsRecommendPO">
-		SELECT * FROM yg_store.yg_goods_recommend where status=#{status} 
+		SELECT * FROM yg_user.yg_goods_recommend where status=#{status} 
 		<if test="lastTime > 0">
 		<![CDATA[
 			and create_time<#{lastTime}

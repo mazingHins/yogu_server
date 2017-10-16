@@ -75,6 +75,11 @@ public class UserAddressServiceImpl implements UserAddressService {
 			long addressId = idGenRemoteService.getNextUserPublicId();
 			dto.setAddressId(addressId);
 			dto.setCreateTime(new Date());
+			
+			int total = dao.countStatus(dto.getUid(), UserAddress.Status.DEFAULT.getValue());
+			if (total == 0) {
+				dto.setStatus(UserAddress.Status.DEFAULT.getValue());
+			}
 			dao.save(dto2po(dto));
 		} else {
 			UserAddressPO po = dao.getById(dto.getAddressId());
@@ -150,5 +155,21 @@ public class UserAddressServiceImpl implements UserAddressService {
 				(result == 1 ? "success" : "failed"), address);
 
 		return result;
+	}
+
+	@Override
+	public int setDefault(long uid, long addressId) {
+		UserAddress address = getById(addressId);
+
+		if (address == null || uid != address.getUid())
+			throw new ServiceException(OrderErrorCode.USER_ADDRESS_NOT_EXIST, UserMessages.USER_SERVICE_SAVE_ADDRESS_ADDRESS_NOT_EXIST());
+		
+		int total = dao.countStatus(uid, UserAddress.Status.DEFAULT.getValue());
+		if (total > 0) {// 存在有默认收货地址记录，将默认收货地址记录改成非默认
+			dao.updateStatus(uid, UserAddress.Status.DEFAULT.getValue(), UserAddress.Status.NOT_DEFAULT.getValue());
+		}
+		
+		
+		return dao.updateStatusById(addressId, address.getStatus(), UserAddress.Status.DEFAULT.getValue());
 	}
 }

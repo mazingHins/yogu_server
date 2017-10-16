@@ -37,5 +37,9 @@
 	<update id="updateStatus" >
 		update yg_user.yg_user_address set status=#{status} where uid=#{uid} and status=#{statusEQ}
 	</update>
+	
+	<update id="updateStatusById" >
+		update yg_user.yg_user_address set status=#{status} where address_id=#{addressId} and status=#{statusEQ}
+	</update>
 
 </mapper>
