@@ -50,4 +50,24 @@
 		where pay_id=#{payId}
 	</update>
 	
+	<select id="getByOrder" resultType="com.yogu.services.order.pay.entry.PayRecordPO">
+		SELECT * FROM yg_order.yg_pay_record WHERE order_no=#{orderNo} limit 1
+	</select>
+	
+	<update id="updatePayMode" >
+		update yg_order.yg_pay_record set pay_mode=#{newPayMode},use_coupon=#{useCoupon},total_fee=#{totalFee},pay_status=#{payStatus},
+		update_time=#{updateTime},order_fee=#{orderFee},goods_fee=#{goodsFee},coupon_fee=#{couponFee}
+		where pay_id=#{payId} and pay_mode=#{oldPayMode}
+	</update>
+	
+	<!-- 更新支付状态 -->
+	<update id="updatePayStatus" >
+		update yg_order.yg_pay_record set pay_status=#{newStatus},
+		update_time=#{updateTime}
+		<if test="notifyId > 0">
+			,notify_id=#{notifyId} 
+		</if>
+		where pay_id=#{payId} and pay_status=#{oldStatus}
+	</update>
+	
 </mapper>

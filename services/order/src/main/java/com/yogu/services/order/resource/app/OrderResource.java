@@ -8,6 +8,8 @@ import javax.inject.Singleton;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.ws.rs.BeanParam;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -33,6 +35,7 @@ import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.OrderMessages;
 import com.yogu.services.order.base.dto.Order;
 import com.yogu.services.order.base.service.OrderPayService;
+import com.yogu.services.order.base.service.OrderService;
 import com.yogu.services.order.base.service.SettleService;
 import com.yogu.services.order.base.service.param.CreateOrderParam;
 import com.yogu.services.order.base.service.param.PurchaseDetail;
@@ -40,6 +43,7 @@ import com.yogu.services.order.resource.param.CreateParam;
 import com.yogu.services.order.resource.param.NewSettleParam;
 import com.yogu.services.order.resource.vo.OrderPayVO;
 import com.yogu.services.order.resource.vo.order.OrderSettleVO;
+import com.yogu.services.order.resource.vo.pay.PayVO;
 import com.yogu.services.order.utils.OrderUtils;
 
 @Named
@@ -55,6 +59,9 @@ public class OrderResource {
 	
 	@Inject
 	private OrderPayService orderPayService;
+	
+	@Inject
+	private OrderService orderService;
 	
 	/**
 	 * 生成订单预支付信息，返回美食明细，配送费信息，优惠信息，<br>
@@ -179,6 +186,53 @@ public class OrderResource {
 			ParameterUtil.assertMaxLength(params.getRemark(), 100, OrderMessages.ORDER_ORDER_VALIDATECREATEORDER_REMARK_LENGTH_OVERLIMIT());
 		if (Validator.containsEmoji(remark))
 			throw new ServiceException(ResultCode.PARAMETER_ERROR, OrderMessages.ORDER_ORDER_VALIDATECREATEORDER_REMARK_EMOJI());
+	}
+	
+	/**
+	 * 更换支付方式，重新调用pay域，生成支付请求，成功后修改订单 封装并返回调用SDK所需的信息
+	 * 
+	 * @author Hins
+	 * @date 2015年8月24日 上午12:22:20
+	 * 
+	 * @param payMode - 支付方式  1- 支付宝；2-微信
+	 * @param orderNo - 订单编号
+	 * @return 调用SDK所需的信息
+	 */
+	@POST
+	@Path("v1/order/change.do")
+	public RestResult<PayVO> change( @FormParam("payMode") @DefaultValue("1") short payMode,
+			@FormParam("orderNo") long orderNo) {
+		long uid = SecurityContext.getUid();
+		String userIp = ThreadLocalContext.getThreadValue(ThreadLocalContext.REQ_CLIENT_IP);
+		logger.info("order#change | change pay mode  | uid: {}, ip: {}, payMode: {}, orderNo: {}", uid, userIp, payMode, orderNo);
+
+		// 验证参数
+		validateChange(uid, orderNo, payMode);
+
+		// 修改订单的支付方式
+		PayVO result = orderPayService.changePayMode(uid, orderNo, payMode, userIp);
+		
+		return new RestResult<PayVO>(result);
+	}
+	
+	/**
+	 * 验证更换支付方式方法的参数<br>
+	 * 返回验证通过后的service方法请求参数<br>
+	 * 参数不包括下单ip和优惠券id
+	 *
+	 * @param uid - 用户id
+	 * @param orderNo - 订单编号
+	 * @param payMode - 支付方式
+	 * @author hins
+	 * @date 2016年7月4日 下午5:07:13
+	 */
+	private void validateChange(long uid, long orderNo, short payMode){
+		ParameterUtil.assertNotNull(orderNo, OrderMessages.ORDER_COMMENT_VALIDATEADDCOMMENT_ORDERNO_EMPTY());
+		Order order = orderService.getByOrderNo(uid, orderNo);
+		ParameterUtil.assertNotNull(order, OrderMessages.ORDER_ORDERADMINAPI_ORDERDETAIL_ORDER_NOTEXIST());
+		PayMode mode = PayMode.valueOf(payMode);
+		ParameterUtil.assertNotNull(mode, OrderMessages.ORDER_ORDER_VALIDATECREATEORDER_MODE_ILLEGAL());
+		
 	}
 
 

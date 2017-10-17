@@ -29,5 +29,19 @@
 		SELECT * FROM yg_order.yg_order
 		WHERE order_no=#{orderNo} and uid=#{uid}
 	</select>
+	
+	<!-- 更新订订单支付流水，订单状态，支付方式，支付类型，优惠金额，实际支付金额，修改时间   hins 2015/12/31 update-->
+	<update id="updatePayNoAndSuccess" parameterType="Map">
+		update yg_order.yg_order
+		set pay_no = #{payNo}, status=#{newStatus}, pay_mode = #{payMode},
+		update_time=#{updateTime}, order_begin_time=#{orderBeginTime}
+		where order_id=#{orderId} and status=#{oldStatus}
+	</update>
+	
+	<!-- 更新订单支付流水号，支付类型，支付方式，修改时间   hins 2015/9/14 update-->
+	<update id="updatePayNo" parameterType="Map">
+		update yg_order.yg_order
+		set pay_no = #{payNo}, pay_mode = #{payMode}, update_time=#{updateTime}  where order_id=#{orderId} and status=#{oldStatus}
+	</update>
 
 </mapper>

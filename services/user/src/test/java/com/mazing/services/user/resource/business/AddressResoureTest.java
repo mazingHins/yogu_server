@@ -24,10 +24,10 @@ public class AddressResoureTest extends HttpResourceTest {
 		ApiReq<RestResult<?>> req = build("a/v1/user/address/save.do");
 		req.login("86", "13926426236", "abcd1234");
 
-		req.putPost("addressId", "2004");
+//		req.putPost("addressId", "2004");
 		req.putPost("contacts", "qiujun");
-		req.putPost("status", "1");
-		req.putPost("fullAddress", "广州市天河区珠江新城黄埔大道西海乐路12号");
+//		req.putPost("status", "1");
+		req.putPost("fullAddress", "广州市abcde");
 		req.putPost("phone", "15920575057");
 		RestResult<?> result = req.doPost();
 		assertNotNull(result.getObject());
@@ -37,7 +37,7 @@ public class AddressResoureTest extends HttpResourceTest {
 	@Test
 	public void list() {
 		ApiReq<RestResult<?>> req = build("a/v1/user/address/list");
-		req.login("86", "13926426236", "abcd1234");
+		req.login("86", "13145790175", "xzq01256918");
 
 		RestResult<?> result = req.doGet();
 		List<?> list = assertList(result);
@@ -60,7 +60,7 @@ public class AddressResoureTest extends HttpResourceTest {
 		ApiReq<RestResult<?>> req = build("a/v1/user/address/setDefault.do");
 		req.login("86", "13926426236", "abcd1234");
 		
-		req.putPost("addressId", "2004");
+		req.putPost("addressId", "6028");
 		
 		RestResult<?> result = req.doPost();
 		assertNotNull(result.getObject());

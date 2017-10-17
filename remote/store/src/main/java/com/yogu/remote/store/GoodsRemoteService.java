@@ -1,5 +1,8 @@
 package com.yogu.remote.store;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.inject.Named;
 
 import org.slf4j.Logger;
@@ -58,6 +61,25 @@ public class GoodsRemoteService {
 			logger.error("remote#goods#getGoodsTrack | Error | goodsId: {}, message: {}", goodsId, e.getMessage(), e);
 		}
 		return null;
+	}
+	
+	/**
+	 * 根据菜品Id获取菜品快照信息(可多个菜品ID)
+	 * 
+	 * @param dishIds 菜品Id
+	 * @return 菜品信息，若无，返回null
+	 */
+	public List<Goods> getGoodsTrackByIds(String goodsIds) {
+		try {
+			String json = HttpClientUtils.doGet(host + "/api/goodsTrack/list?goodsIds=" + goodsIds);
+			RestResult<List<Goods>> result = JsonUtils.parseObject(json, new TypeReference<RestResult<List<Goods>>>() {
+			});
+			if (result.isSuccess() && null != result.getObject())
+				return result.getObject();
+		} catch (Exception e) {
+			logger.error("remote#dish#getDishByIds | Error | goodsIds: {}, message: {}", goodsIds, e.getMessage(), e);
+		}
+		return Collections.emptyList();
 	}
 
 }

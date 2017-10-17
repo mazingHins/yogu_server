@@ -158,6 +158,8 @@ public class UserAddressServiceImpl implements UserAddressService {
 	}
 
 	@Override
+	@CacheClean({ @CacheCleanExpr(value = UserCacheKey.ADDRESS_LIST_PREFIX, expr = "0"),
+		@CacheCleanExpr(value = UserCacheKey.ADDRESS_PREFIX, expr = "1") })
 	public int setDefault(long uid, long addressId) {
 		UserAddress address = getById(addressId);
 

@@ -35,6 +35,9 @@ public class CommonConstants {
 	 * 所以，如果你更改了静态资源（webapp/static下的文件）记得使用工具上传最新内容到OSS中，并刷新CDN
 	 */
 	public static final String STATIC_DOMAIN;
+	
+	public static final String PAY_DOMAIN_CALLBACK;// 对第三方支付系统使用的域名
+
 
 	/**
 	 * 字母和数字（区分大小写） 2016/1/11 by ten
@@ -51,6 +54,17 @@ public class CommonConstants {
 			STATIC_DOMAIN = "https://static.mazing.com";
 		else
 			STATIC_DOMAIN = "";
+		
+		// 指明了使用prod，才使用线上配置，否则一律使用test环境
+		if (GlobalSetting.PROJENV_PROD.equals(GlobalSetting.getProjenv()))
+			PAY_DOMAIN_CALLBACK = "http://orderapi.yogubc.com";// 生产环境下PAY域名
+		else if (GlobalSetting.PROJENV_DEV.equals(GlobalSetting.getProjenv()))
+			PAY_DOMAIN_CALLBACK = "http://orderdev.yogubc.com";// 开发环境下PAY域名
+		else if (GlobalSetting.PROJENV_PUBPRE
+				.equals(GlobalSetting.getProjenv()))
+			PAY_DOMAIN_CALLBACK = "http://orderpre.yogubc.com";// ‘预发布’环境下PAY域名
+		else
+			PAY_DOMAIN_CALLBACK = "http://ordertest.yogubc.com";// 测试环境下PAY域名
 
 	}
 

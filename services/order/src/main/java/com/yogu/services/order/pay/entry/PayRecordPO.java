@@ -41,7 +41,7 @@ public class PayRecordPO implements Serializable {
 	private long orderFee = 0;
 	
 	/** 优惠券价格，冗余字段，单位分 */
-	private long discountFee = 0;
+	private long couponFee = 0;
 	
 	/** 商品价格，冗余字段，单位分 */
 	private long goodsFee = 0;
@@ -133,12 +133,12 @@ public class PayRecordPO implements Serializable {
 		this.orderFee = orderFee;
 	}
 
-	public long getDiscountFee() {
-		return discountFee;
+	public long getCouponFee() {
+		return couponFee;
 	}
 
-	public void setDiscountFee(long discountFee) {
-		this.discountFee = discountFee;
+	public void setCouponFee(long couponFee) {
+		this.couponFee = couponFee;
 	}
 
 	public long getGoodsFee() {

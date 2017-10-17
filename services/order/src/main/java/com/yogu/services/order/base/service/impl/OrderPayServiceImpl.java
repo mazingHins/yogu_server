@@ -1,5 +1,6 @@
 package com.yogu.services.order.base.service.impl;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -12,7 +13,9 @@ import com.yogu.commons.utils.DateUtils;
 import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.VOUtil;
+import com.yogu.core.constant.PayResultCode;
 import com.yogu.core.enums.BooleanConstants;
+import com.yogu.core.enums.order.OrderStatus;
 import com.yogu.core.enums.pay.PayMode;
 import com.yogu.core.web.OrderErrorCode;
 import com.yogu.core.web.ParameterUtil;
@@ -20,11 +23,13 @@ import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.OrderMessages;
 import com.yogu.remote.config.id.IdGenRemoteService;
+import com.yogu.remote.store.GoodsRemoteService;
 import com.yogu.remote.store.StoreRemoteService;
 import com.yogu.remote.user.dto.UserAndAddress;
 import com.yogu.remote.user.dto.UserProfile;
 import com.yogu.remote.user.provider.UserRemoteService;
 import com.yogu.services.order.base.dao.OrderDao;
+import com.yogu.services.order.base.dao.params.UpdateOrderPayPOJO;
 import com.yogu.services.order.base.dto.Order;
 import com.yogu.services.order.base.dto.OrderDetail;
 import com.yogu.services.order.base.entry.OrderPO;
@@ -36,7 +41,11 @@ import com.yogu.services.order.coupon.dto.Coupon;
 import com.yogu.services.order.coupon.dto.OrderCouponRecord;
 import com.yogu.services.order.coupon.service.CouponService;
 import com.yogu.services.order.coupon.service.OrderCouponRecordService;
+import com.yogu.services.order.pay.service.PayService;
+import com.yogu.services.order.pay.service.params.PayReqParams;
+import com.yogu.services.order.resource.vo.pay.PayVO;
 import com.yogu.services.order.utils.OrderUtils;
+import com.yogu.services.store.Goods;
 import com.yogu.services.store.StoreCreateOrderVO;
 
 
@@ -52,6 +61,9 @@ public class OrderPayServiceImpl implements OrderPayService {
 	private StoreRemoteService storeRemoteService;
 	
 	@Inject
+	private GoodsRemoteService goodsRemoteService;
+	
+	@Inject
 	private IdGenRemoteService idGenRemoteService;
 	
 	@Inject
@@ -65,6 +77,9 @@ public class OrderPayServiceImpl implements OrderPayService {
 	
 	@Inject
 	private OrderDao orderDao;
+	
+	@Inject
+	private PayService payService;
 
 	@Override
 	public Order createOrder(CreateOrderParam params, long uid) {
@@ -222,7 +237,205 @@ public class OrderPayServiceImpl implements OrderPayService {
 			}
 		}
 	}
+
+
+	@Override
+	public PayVO changePayMode(long uid, long orderNo, short payMode, String userIp) {
+		logger.info("order#service#changePayMode | 更改支付方式start | uid: {}, orderNo: {}, payMode: {}", uid, orderNo, payMode);
+
+		// 1. 验证订单是否存在，状态是否可以修改
+		OrderPO order = validateChangePayModeOrder(uid, orderNo, payMode);
+		order.setPayMode(payMode);
+
+		return updatePayModeToOnline(order, uid, payMode, userIp);
+	}
 	
+	/**
+	 * 验证更换支付方式的方法，订单是否存在，订单状态是否正确
+	 * 
+	 * @param uid - 用户id
+	 * @param orderNo - 订单编号
+	 * @param payType - 支付类型，取值参考枚举PayType
+	 * @author hins
+	 * @date 2016年7月4日 下午4:48:30
+	 * @return OrderPO
+	 */
+	private OrderPO validateChangePayModeOrder(long uid, long orderNo, short payMode) {
+		PayMode mode = PayMode.valueOf(payMode);
+		ParameterUtil.assertNotNull(mode, OrderMessages.ORDER_ORDER_VALIDATECREATEORDER_MODE_ILLEGAL());
+		
+		OrderPO order = orderDao.getByOrderNoUid(uid, orderNo);
+		if (order == null) {
+			logger.error("order#service#changePayMode | order not exist  | orderNo: {}", orderNo);
+			throw new ServiceException(OrderErrorCode.ORDER_NOT_EXIST, OrderMessages.ORDER_ORDERADMINAPI_ORDERDETAIL_ORDER_NOTEXIST());
+		}
+
+		// 2016-01-15 modify by hins 内容：针对超时被取消的订单，返回提示语
+		if (order.getStatus() == OrderStatus.CANCEL.getValue()) {
+			logger.error("order#service#changePayMode | 订单超时被取消 | orderNo: {}, status:{}", order.getOrderNo(), order.getStatus());
+			throw new ServiceException(OrderErrorCode.ORDER_STATUS_NOT_NON_PAYMENT,
+					OrderMessages.ORDER_ORDER_CHANGEPAYMODE_ORDER_STATUS_TIMEOUT());
+		}
+
+		if (order.getStatus() != OrderStatus.NON_PAYMENT.getValue()) {// 只有为待支付的订单才可以更换支付方式
+			logger.error("order#service#changePayMode | 订单状态不正常，需为待付款才能更换支付方式 | orderNo: {}, status:{}", order.getOrderNo(),
+					order.getStatus());
+			throw new ServiceException(OrderErrorCode.ORDER_STATUS_NOT_NON_PAYMENT,
+					OrderMessages.ORDER_ORDER_CHANGEPAYMODE_ORDER_STATUS_CHANGED());
+		}
+
+		return order;
+	}
+	
+	/**
+	 * 将支付方式修改成货到付款<br>
+	 * 若使用的优惠券金额>订单金额，则订单修改：支付方式=线上，支付平台，订单状态，serviceDay，sequence都要修改
+	 * 
+	 * @author Hins
+	 * @date 2016年1月6日 下午1:20:07
+	 * 
+	 * @param order - 订单对象
+	 * @param couponFee - 优惠金额
+	 * @param couponBearType - 优惠承担方
+	 * @param params - 请求更换支付方式接口参数
+	 */
+	private PayVO updatePayModeToOnline(OrderPO order, long uid, short payMode, String userIp) {
+		long orderNo = order.getOrderNo(); // 订单编号
+
+		PayVO pay = getPayment(uid, VOUtil.from(order, Order.class), userIp, order.getDiscountFee());
+		
+		// 2016-10-09 add by hins end
+		int rows = 0; // 数据库更新行数
+		
+		UpdateOrderPayPOJO pojo = initOrderPayPOJO(uid, order.getOrderId(), payMode, pay.getPayNo());
+		// 不需要支付，更新支付编号，serialNumber，sequence，是否使用优惠券，优惠金额，实付金额，订单状态，支付方式，支付平台，将优惠券记录变成“已使用”
+		if (pay.getPayCode() == PayResultCode.PAY_SUCCESS) {
+			pojo.setOrderBeginTime(pojo.getUpdateTime());
+			// 计算下单时候的预计送达时间到现在经过的秒数
+			// 因为可能存在：用户下单后，经过一段时间（如10分钟），再有支付成功回到，则要更新预计送达时间。
+			pojo.setNewStatus(OrderStatus.PENDING_ACCEPT.getValue());
+			rows = orderDao.updatePayNoAndSuccess(pojo);
+			orderCouponRecordService.recordUseSuccess(order.getOrderId());
+		} else {
+			// 需要支付，更新是支付编号，否使用优惠券，优惠金额，实付金额，支付方式，支付平台
+			rows = orderDao.updatePayNo(pojo);
+		}
+		pay.setTotalFee(order.getActualFee());
+
+		if (rows <= 0) {
+			logger.error("order#service#changePayMode | 更换支付方式 | uid: {}, orderNo: {}, payMode: {}", uid, orderNo, payMode);
+			throw new ServiceException(ResultCode.UNKNOWN_ERROR, OrderMessages.ORDER_ORDER_UPDATEPAYNO_FAILURE());
+		}
+		logger.info("order#service#changePayMode | 更改支付方式成功 | uid: {}, orderNo: {},  payMode: {}", uid, orderNo, payMode);
+		return pay;
+	}
+	
+	/**
+	 * 初始化要修改订单状态，支付编号等字段的POJO对象
+	 * 
+	 * @author Hins
+	 * @date 2016年1月6日 下午1:52:59
+	 * 
+	 * @param params - 更换支付方式接口请求参数
+	 * @param order - 订单对象
+	 * @param payNo - 支付编号
+	 * @return POJO对象
+	 */
+	private UpdateOrderPayPOJO initOrderPayPOJO(long uid, long orderId, short payMode, long payNo) {
+		UpdateOrderPayPOJO pojo = new UpdateOrderPayPOJO();
+		pojo.setOrderId(orderId);
+		pojo.setOldStatus(OrderStatus.NON_PAYMENT.getValue());
+		pojo.setPayMode(payMode);
+		pojo.setPayNo(payNo);
+		pojo.setUpdateTime(new Date());
+		return pojo;
+	}
+	
+	
+	/**
+	 * 请求pay域获取调用支付SDK所需信息。
+	 * 
+	 * @author Hins
+	 * @date 2015年9月12日 下午6:28:46
+	 * 
+	 * @param uid
+	 * @param order
+	 * @param userIp
+	 * @return
+	 */
+	private PayVO getPayment(long uid, Order order, String userIp, long couponFee) {
+		ParameterUtil.assertNotBlank(userIp, OrderMessages.ORDER_UTILS_VALIDATE_USERIP_ERROR());
+		if (order == null) {
+			logger.error("order#service#payNotify | order not exist");
+			throw new ServiceException(OrderErrorCode.ORDER_NOT_EXIST, OrderMessages.ORDER_ORDERADMINAPI_ORDERDETAIL_ORDER_NOTEXIST());
+		}
+
+		// 封装请求参数
+		PayReqParams req = new PayReqParams();
+		req.setOrderNo(order.getOrderNo());
+		req.setTotalFee(order.getActualFee());// 2015-12-26 modify by hins 内容：请求支付宝金额为实际应付金额
+		req.setPayMode(order.getPayMode());
+		req.setBuyerUid(order.getUid());
+		req.setSellerUid(order.getStoreId());
+		req.setUserIp(userIp);
+		// 2016-01-09 modify by hins 内容：根据优惠券版本的需求，新增2个传递参数使用优惠券费用，优惠券承担方
+		req.setCouponFee(couponFee);
+
+		req.setSubject("");
+		req.setBody(getBody(order.getOrderId()));
+		// 2016-10-10 add by hins 内容：请求参数加上美食价格，配送费，订单价格。作为冗余字段
+		req.setGoodsFee(order.getGoodsFee());
+		req.setOrderFee(order.getTotalFee());
+
+		PayVO pay = payService.createPay(req);
+		if (pay == null) {
+			logger.error("order#service#getPayment | 获取支付信息失败 | orderNo: {}", order.getOrderNo());
+			throw new ServiceException(OrderErrorCode.PAYAPI_GETPAY_ERROR, OrderMessages.ORDER_ORDER_GETPAYMENT_PAYMODE_ERROR());
+		}
+
+		pay.setOrderNo(order.getOrderNo());
+		return pay;
+	}
+	
+	/**
+	 * 根据订单ID，查询美食名称详情。<br>
+	 * 返回：美食名称，多个美食用英文逗号分隔，返回的名称长度不超过500<br>
+	 * modify by hins：因为接入米星付，没有订单明细。所以只有非米星付的订单，才验证订单明细
+	 * 
+	 * @author Hins
+	 * @date 2015年11月13日 下午3:16:25
+	 * 
+	 * @param orderId - 订单ID
+	 * @return 美食名称，若无，返回“”
+	 */
+	private String getBody(long orderId) {
+				
+		// 1. 根据订单ID，查询订单明细
+		List<OrderDetail> detailList = orderDetailService.listByOrderId(orderId);
+		if (detailList.isEmpty()) {
+			logger.error("order#service#getBody | 订单不存在购买明细 | orderId : {}", orderId);
+			throw new ServiceException(OrderErrorCode.ORDER_NOT_EXIST, OrderMessages.ORDER_ORDERADMINAPI_ORDERDETAIL_ORDER_NOTEXIST());
+		}
+
+		StringBuffer goodsIds = new StringBuffer();
+		// 2. 遍历明细，装载美食ID，多个用英文逗号分隔，用于批量查询菜品
+		for (OrderDetail detail : detailList) {
+			goodsIds.append(",").append(detail.getGoodsId());
+		}
+
+		// 3. 批量查询商品
+		List<Goods> goodsList = goodsRemoteService.getGoodsTrackByIds(goodsIds.toString());
+		if (goodsList == null) {
+			return "";
+		}
+
+		StringBuilder sf = new StringBuilder();
+		for (Goods dish : goodsList) {
+			sf.append(",").append(dish.getGoodsName());
+		}
+		String body = sf.substring(1);
+		return body.length() < 500 ? body : body.substring(0, 500);
+	}
 	
 
 

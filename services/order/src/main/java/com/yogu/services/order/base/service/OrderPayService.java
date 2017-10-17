@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.yogu.services.order.base.dto.Order;
 import com.yogu.services.order.base.service.param.CreateOrderParam;
+import com.yogu.services.order.resource.vo.pay.PayVO;
 
 public interface OrderPayService {
 	
@@ -20,5 +21,18 @@ public interface OrderPayService {
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
 	public Order createOrder(CreateOrderParam params, long uid);
+	
+	/**
+	 * 更换订单的支付方式。 若是货到付款订单，则修改订单类型，订单状态为待结单。<br>
+	 * 若是在线支付订单，则请求pay域获取调用支付SDK所需信息，获取SDK信息成功后修改支付方式和支付编号
+	 * 
+	 * @author Hins
+	 * @date 2015年8月15日 上午10:17:42
+	 * 
+	 * @param params - service方法请求参数
+	 * @return 若payType是线上支付，返回调用支付平台SKD方法所需参数；其他返回null
+	 */
+	@Transactional(propagation = Propagation.REQUIRED)
+	public PayVO changePayMode(long uid, long orderNo, short payMode, String userIp);
 
 }
