@@ -1,5 +1,8 @@
 package com.yogu.services.store.business.service.impl;
 
+import java.util.Collections;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -23,6 +26,15 @@ public class GoodsTrackServiceImpl implements GoodsTrackService {
 			return null;
 		}
 		return VOUtil.from(po, Goods.class);
+	}
+
+	@Override
+	public List<Goods> listTrackByIds(List<Long> goodsIds) {
+		if(goodsIds == null || goodsIds.isEmpty()){
+			return Collections.emptyList();
+		}
+		List<GoodsTrackPO> list = goodsTrackDao.listById(goodsIds);
+		return VOUtil.fromList(list, Goods.class);
 	}
 
 }

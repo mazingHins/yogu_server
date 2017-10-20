@@ -69,7 +69,7 @@ public class GoodsRemoteService {
 	 * @param dishIds 菜品Id
 	 * @return 菜品信息，若无，返回null
 	 */
-	public List<Goods> getGoodsTrackByIds(String goodsIds) {
+	public List<Goods> listGoodsTrackByIds(String goodsIds) {
 		try {
 			String json = HttpClientUtils.doGet(host + "/api/goodsTrack/list?goodsIds=" + goodsIds);
 			RestResult<List<Goods>> result = JsonUtils.parseObject(json, new TypeReference<RestResult<List<Goods>>>() {

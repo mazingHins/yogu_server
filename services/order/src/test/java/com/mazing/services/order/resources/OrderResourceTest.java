@@ -46,4 +46,16 @@ public class OrderResourceTest extends HttpResourceTest {
 		Assert.assertNotNull(result);
 	}
 	
+	@Test
+	public void change() {
+		ApiReq<RestResult<?>> req = build("a/v1/order/change.do");
+		req.login("86", "13926426236", "abcd1234");
+		req.putPost("payMode", "1");
+		req.putPost("orderNo", "1710300243887982");
+		
+		RestResult<?> result = req.doPost();
+
+
+		Assert.assertNotNull(result);
+	}
 }

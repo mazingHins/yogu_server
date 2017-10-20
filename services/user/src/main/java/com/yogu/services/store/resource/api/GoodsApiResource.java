@@ -20,6 +20,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,11 +79,31 @@ public class GoodsApiResource {
 	 * 根据ID查询商品快照信息
 	 */
 	@GET
-	@Path("dishTrack/get")
+	@Path("goodsTrack/get")
 	public RestResult<Goods> getGoodsTrackById(@QueryParam("goodsId") long goodsId) {
 		logger.debug("api#goods#getGoodsTrack | get goods | goodsId: {}", goodsId);
 		Goods dish = goodsTrackService.getTrackById(goodsId);
 		return new RestResult<>(dish);
+	}
+	
+	/**
+	 * 根据ID查询商品快照信息
+	 */
+	@GET
+	@Path("goodsTrack/list")
+	public RestResult<List<Goods>> listGoodsTrackById(@QueryParam("goodsIds") String goodsIds) {
+		logger.debug("api#goods#listGoodsTrackById | list goodsIds | goodsIds: {}", goodsIds);
+		if(StringUtils.isBlank(goodsIds)){
+			throw new ServiceException(ResultCode.PARAMETER_ERROR, "商品信息不能为空");
+		}
+		String[] array = goodsIds.trim().split(",");
+		List<Long> goodsList = new ArrayList<>(array.length);
+		for(String gid : array){
+			goodsList.add(Long.valueOf(gid));
+		}
+		
+		List<Goods> list = goodsTrackService.listTrackByIds(goodsList);
+		return new RestResult<>(list);
 	}
 	
 	/**

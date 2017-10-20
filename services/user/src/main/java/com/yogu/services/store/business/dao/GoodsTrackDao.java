@@ -1,5 +1,7 @@
 package com.yogu.services.store.business.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
 import com.yogu.commons.datasource.annocation.TheDataDao;
@@ -28,5 +30,10 @@ public interface GoodsTrackDao {
 	 * 根据商品key读取记录
 	 */
 	public GoodsTrackPO getByKey(@Param("goodsKey") long goodsKey);
+	
+	/**
+	 * 根据主键读取记录
+	 */
+	public List<GoodsTrackPO> listById(@Param("goodsIds") List<Long> goodsIds);
 	
 }

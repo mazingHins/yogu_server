@@ -427,7 +427,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 		}
 
 		// 3. 批量查询商品
-		List<Goods> goodsList = goodsRemoteService.getGoodsTrackByIds(goodsIds.toString());
+		List<Goods> goodsList = goodsRemoteService.listGoodsTrackByIds(goodsIds.toString());
 		if (goodsList == null) {
 			return "";
 		}

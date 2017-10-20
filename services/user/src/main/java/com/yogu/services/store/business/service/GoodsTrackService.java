@@ -1,5 +1,7 @@
 package com.yogu.services.store.business.service;
 
+import java.util.List;
+
 import com.yogu.services.store.Goods;
 
 /**
@@ -9,5 +11,8 @@ import com.yogu.services.store.Goods;
 public interface GoodsTrackService {
 	
 	public Goods getTrackById(long goodsId);
-
+	
+	public List<Goods> listTrackByIds(List<Long> goodsIds);
+	
+	
 }
