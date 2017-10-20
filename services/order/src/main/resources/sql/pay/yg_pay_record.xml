@@ -38,12 +38,6 @@
 		where pay_id=#{payId} and pay_status=#{oldStatus}
 	</update>
 	
-	<update id="updatePayMode" >
-		update yg_order.yg_pay_record set pay_mode=#{newPayMode},has_discount=#{hasDiscount},total_fee=#{totalFee},pay_status=#{payStatus},delivery_fee=#{deliveryFee},
-		update_time=#{updateTime},order_fee=#{orderFee},goods_fee=#{goodsFee},coupon_fee=#{couponFee}
-		where pay_id=#{payId} and pay_mode=#{oldPayMode}
-	</update>
-	
 	<!-- 修改支付记录的是否使用优惠字段 -->
 	<update id="updateHasDiscount" >
 		update yg_order.yg_pay_record set has_discount=#{hasDiscount},total_fee=#{totalFee},pay_status=#{payStatus}
@@ -58,16 +52,6 @@
 		update yg_order.yg_pay_record set pay_mode=#{newPayMode},use_coupon=#{useCoupon},total_fee=#{totalFee},pay_status=#{payStatus},
 		update_time=#{updateTime},order_fee=#{orderFee},goods_fee=#{goodsFee},coupon_fee=#{couponFee}
 		where pay_id=#{payId} and pay_mode=#{oldPayMode}
-	</update>
-	
-	<!-- 更新支付状态 -->
-	<update id="updatePayStatus" >
-		update yg_order.yg_pay_record set pay_status=#{newStatus},
-		update_time=#{updateTime}
-		<if test="notifyId > 0">
-			,notify_id=#{notifyId} 
-		</if>
-		where pay_id=#{payId} and pay_status=#{oldStatus}
 	</update>
 	
 </mapper>
