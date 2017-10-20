@@ -99,6 +99,8 @@ public class GoodsApiResource {
 		String[] array = goodsIds.trim().split(",");
 		List<Long> goodsList = new ArrayList<>(array.length);
 		for(String gid : array){
+			if(StringUtils.isBlank(gid))
+				continue;
 			goodsList.add(Long.valueOf(gid));
 		}
 		
