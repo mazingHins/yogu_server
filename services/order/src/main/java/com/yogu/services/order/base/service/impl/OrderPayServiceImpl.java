@@ -44,6 +44,7 @@ import com.yogu.services.order.coupon.service.OrderCouponRecordService;
 import com.yogu.services.order.pay.service.PayService;
 import com.yogu.services.order.pay.service.params.PayReqParams;
 import com.yogu.services.order.resource.vo.pay.PayVO;
+import com.yogu.services.order.utils.OrderNO;
 import com.yogu.services.order.utils.OrderUtils;
 import com.yogu.services.store.Goods;
 import com.yogu.services.store.StoreCreateOrderVO;
@@ -100,6 +101,8 @@ public class OrderPayServiceImpl implements OrderPayService {
 		
 		// 5. 尝试使用优惠卷
 		long orderId = idGenRemoteService.getNextOrderId(); // 订单id，防止接下来操作出现异常，释放优惠券
+		order.setOrderId(orderId);
+		order.setOrderNo(OrderNO.next(uid, orderId));
 		OrderCouponRecord couponRecord = useCoupon(VOUtil.from(order, OrderPO.class), params.getCouponId());
 		long couponFee = couponRecord == null ? 0 : couponRecord.getCouponFee();
 		order.setDiscountFee(couponFee);
