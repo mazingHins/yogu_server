@@ -13,6 +13,8 @@ import com.yogu.commons.utils.DateUtils;
 import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.VOUtil;
+import com.yogu.core.SysType;
+import com.yogu.core.base.BaseParams;
 import com.yogu.core.constant.PayResultCode;
 import com.yogu.core.enums.BooleanConstants;
 import com.yogu.core.enums.order.OrderStatus;
@@ -20,6 +22,7 @@ import com.yogu.core.enums.pay.PayMode;
 import com.yogu.core.web.OrderErrorCode;
 import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.ResultCode;
+import com.yogu.core.web.context.SecurityContext;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.OrderMessages;
 import com.yogu.remote.config.id.IdGenRemoteService;
@@ -389,7 +392,15 @@ public class OrderPayServiceImpl implements OrderPayService {
 		// 2016-10-10 add by hins 内容：请求参数加上美食价格，配送费，订单价格。作为冗余字段
 		req.setGoodsFee(order.getGoodsFee());
 		req.setOrderFee(order.getTotalFee());
-
+		
+		// 2016-02-20 modify by hins 内容：根据操作系统版本，验证target
+		BaseParams baseParam = SecurityContext.getBaseParams();
+		String sysName = baseParam.getSysName();
+		SysType sysType = SysType.getSysType(sysName);
+		ParameterUtil.assertNotNull(sysType, OrderMessages.ORDER_ORDER_GETPAYMENT_SYSTYPE_EMPTY());
+		req.setSysType(sysType.getValue());
+		req.setTarget(baseParam.getTarget());
+		
 		PayVO pay = payService.createPay(req);
 		if (pay == null) {
 			logger.error("order#service#getPayment | 获取支付信息失败 | orderNo: {}", order.getOrderNo());
