@@ -1,12 +1,8 @@
 package com.yogu.services.order.base.service.impl;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
@@ -17,38 +13,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.yogu.CommonConstants;
 import com.yogu.commons.cache.redis.Redis;
-import com.yogu.commons.concurrent.ExecutorFactory;
-import com.yogu.commons.utils.CollectionUtils;
-import com.yogu.commons.utils.DateUtils;
-import com.yogu.commons.utils.HttpClientUtils;
 import com.yogu.commons.utils.PageUtils;
-import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.VOUtil;
-import com.yogu.core.consumer.messageBean.AutoDeliverOrderBO;
-import com.yogu.core.consumer.messageBean.ConfirmReceiptBO;
-import com.yogu.core.enums.BooleanConstants;
-import com.yogu.core.enums.Role;
-import com.yogu.core.enums.ThirdExpressCode;
-import com.yogu.core.enums.order.ExpressStatus;
 import com.yogu.core.enums.order.OrderStatus;
-import com.yogu.core.enums.order.OrderStatusUtils;
-import com.yogu.core.enums.pay.PayType;
-import com.yogu.core.remote.config.ConfigGroupConstants;
-import com.yogu.core.remote.config.ConfigRemoteService;
-import com.yogu.core.sms.SmsServiceFactory;
 import com.yogu.core.web.OrderErrorCode;
-import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.OrderMessages;
-import com.yogu.remote.user.dto.UserProfile;
-import com.yogu.remote.user.provider.UserRemoteService;
 import com.yogu.services.order.base.dao.OrderDao;
 import com.yogu.services.order.base.dto.Order;
 import com.yogu.services.order.base.entry.OrderPO;
 import com.yogu.services.order.base.service.OrderService;
+import com.yogu.services.order.resource.vo.order.UserOrderDetailVO;
 
 /**
  * OrderService 的实现类
@@ -146,6 +123,28 @@ public class OrderServiceImpl implements OrderService {
 		// #TODO 更新门店交易中余额 并 记录交易流水明细 (同步操作, 考虑下是否用MQ来写)
 		
 
+	}
+
+	@Override
+	public List<Order> listOrderByUid(long uid, int pageNo, int pageSize) {
+		int offset = PageUtils.offset(pageNo, pageSize);
+		List<OrderPO> list = orderDao.listByUid(uid, offset, pageSize);
+		if(list.isEmpty()){
+			return Collections.emptyList();
+		}
+		return VOUtil.fromList(list, Order.class);
+	}
+
+	@Override
+	public UserOrderDetailVO userOrdeDetail(long uid, long orderNo) {
+		OrderPO order = orderDao.getByOrderNoUid(uid, orderNo);
+		if (order == null) {
+			logger.error("orderDetail#service#getByOrderNo | order not exist | uid: {}, " + "orderNo: {}", uid, orderNo);
+			throw new ServiceException(OrderErrorCode.ORDER_NOT_EXIST, OrderMessages.ORDER_ORDERADMINAPI_ORDERDETAIL_ORDER_NOTEXIST());
+		}
+		
+		
+		return VOUtil.from(order, UserOrderDetailVO.class);
 	}
 
 

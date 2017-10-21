@@ -27,6 +27,7 @@ import com.yogu.commons.utils.VOUtil;
 import com.yogu.commons.utils.Validator;
 import com.yogu.core.enums.order.OrderConstants;
 import com.yogu.core.enums.pay.PayMode;
+import com.yogu.core.web.OrderErrorCode;
 import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
@@ -235,5 +236,22 @@ public class OrderResource {
 		
 	}
 
+	@POST
+	@Path("v1/order/confirm.do")
+	public RestResult<Integer> confirm(@FormParam("orderNo") long orderNo) {
+		// 登录验证
+		long uid = SecurityContext.getUid();
+
+		logger.info("#order#confirmReceive | confirm has received | userId: {}, orderNo: {}", uid, orderNo);
+
+		if (orderNo <= 0)
+			throw new ServiceException(OrderErrorCode.ORDER_NOT_EXIST, OrderMessages.ORDER_ORDERADMINAPI_ORDERDETAIL_ORDER_NOTEXIST());
+
+		//确认收货
+		orderService.userReceiveConfirm(uid, orderNo);
+
+		return new RestResult<Integer>(1);
+	}
+	
 
 }

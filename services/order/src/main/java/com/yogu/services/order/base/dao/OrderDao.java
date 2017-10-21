@@ -1,5 +1,9 @@
 package com.yogu.services.order.base.dao;
 
+import java.util.List;
+
+import org.apache.ibatis.annotations.Param;
+
 import com.yogu.services.order.base.dao.params.UpdateOrderPayPOJO;
 import com.yogu.services.order.base.entry.OrderPO;
 
@@ -68,5 +72,7 @@ public interface OrderDao {
 	 * @return 返回操作成功的行数，如果没有修改，返回0
 	 */
 	public int updatePayNo(UpdateOrderPayPOJO pojo);
+	
+	public List<OrderPO> listByUid(long uid, int offset, int pageSize);
 	
 }

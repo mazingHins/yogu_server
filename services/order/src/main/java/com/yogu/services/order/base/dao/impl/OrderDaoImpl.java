@@ -1,6 +1,7 @@
 package com.yogu.services.order.base.dao.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.inject.Named;
@@ -57,6 +58,15 @@ public class OrderDaoImpl extends MyBatisDao implements OrderDao {
 		map.put("payNo", pojo.getPayNo());
 		map.put("updateTime", pojo.getUpdateTime());
 		return super.update("com.mazing.services.order.base.dao.OrderDao.updatePayNo", map);
+	}
+
+	@Override
+	public List<OrderPO> listByUid(long uid, int offset, int pageSize) {
+		Map<String, Object> map = new HashMap<>(14);
+		map.put("uid", uid);
+		map.put("offset", offset);
+		map.put("pageSize", pageSize);
+		return super.list("com.mazing.services.order.base.dao.OrderDao.listByUid", map);
 	}
 	
 

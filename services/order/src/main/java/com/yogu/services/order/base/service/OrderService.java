@@ -1,6 +1,9 @@
 package com.yogu.services.order.base.service;
 
+import java.util.List;
+
 import com.yogu.services.order.base.dto.Order;
+import com.yogu.services.order.resource.vo.order.UserOrderDetailVO;
 
 /**
  * 订单表 <br>
@@ -55,5 +58,18 @@ public interface OrderService {
 	 * @param orderNo 订单号
 	 */
 	public void userReceiveConfirm(long uid, long orderNo);
+	
+	
+	public List<Order> listOrderByUid(long uid, int pageNo, int pageSize);
+	
+	/**
+	 * 用户查看订单详情信息
+	 * 返回订单信息，订单美食列表，配送费，商家基础信息
+	 * 
+	 * @param uid - 用户ID
+	 * @param orderNo - 订单编号
+	 * @return
+	 */
+	public UserOrderDetailVO userOrdeDetail(long uid, long orderNo);
 
 }
