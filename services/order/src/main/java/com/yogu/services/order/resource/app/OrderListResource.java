@@ -3,6 +3,7 @@ package com.yogu.services.order.resource.app;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import javax.ws.rs.GET;
@@ -37,7 +38,7 @@ public class OrderListResource {
 	
 	private static final Logger logger = LoggerFactory.getLogger(OrderListResource.class);
 	
-	@Resource
+	@Inject
 	private OrderService orderService;
 
 	/**
@@ -48,9 +49,17 @@ public class OrderListResource {
 	@GET
 	@Path("v1/order/list")
 	public RestResult<List<UserOrderVO>> listOrder(@QueryParam("pageIndex") int pageIndex// 第几页（1开始），小于1则默认第一页
-			, @QueryParam("pageSize") Integer pageSize) {
+			, @QueryParam("pageSize") int pageSize) {
 		long uid = SecurityContext.getUid();
 		logger.debug("order#listInOrder | 进行中的订单列表 | uid: {}", uid);
+		
+		if (pageIndex < 1) {
+			pageIndex = 1;
+		}
+
+		if (pageSize < 1 || pageSize > 50) {
+			pageIndex = 10;
+		}
 
 		List<Order> list = orderService.listOrderByUid(uid, pageIndex, pageSize);
 		
