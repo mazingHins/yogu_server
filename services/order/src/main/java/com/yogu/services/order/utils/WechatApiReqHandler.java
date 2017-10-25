@@ -120,22 +120,6 @@ public class WechatApiReqHandler {
 	}
 	
 	/**
-	 * 调用微信 网页支付的 “统一下单”api，并解析返回结果 (请区别于方法 createUnified())
-	 * 
-	 * @author felix 2016-04-12
-	 * 
-	 * @param payNo - 支付编号
-	 * @param params - order获取支付sdk的请求参数
-	 */
-	public static WechatUnifiedOrderResData createUnifiedH5Pay(long payNo, PayReqParams params, String openid, String key) {
-		Builder builder = new Builder();
-		// 构造请求参数
-		builder.initUnifiedOrderH5PayParameter(payNo, params, openid);
-		// 调用微信“统一下单api”并返回结果
-		return builder.createUnifiedOrderH5Pay(key);
-	}
-	
-	/**
 	 * 输出微信接口请求日志<br>
 	 * 只清空appid，mchid，sign等，然后直接JsonUtils.toJSONString输出字符串<br>
 	 * 如果传入的参数非WechatBaseResData子类，返回WechatBaseResData相关的日志(appid，mchid，sign清空)
@@ -316,10 +300,9 @@ public class WechatApiReqHandler {
 		 */
 		public void initUnifiedorderParamete(long payNo, PayReqParams params) {
 			parameters = new TreeMap<String, String>();
-			String target = params.getTarget();
-			String appId = TerraceUtils.INSTANCE.getWechat().getAppid(target, params.getSysType());
+			String appId = TerraceUtils.INSTANCE.getWechat().getAppid();
 			parameters.put("appid", appId);
-			parameters.put("mch_id", TerraceUtils.INSTANCE.getWechat().getMchId(target, params.getSysType()));
+			parameters.put("mch_id", TerraceUtils.INSTANCE.getWechat().getMchId());
 			parameters.put("body", params.getSubject());
 			parameters.put("detail", params.getBody());
 			parameters.put("out_trade_no", String.valueOf(payNo));
@@ -331,33 +314,6 @@ public class WechatApiReqHandler {
 			parameters.put("nonce_str", String.valueOf(System.currentTimeMillis()));// #TODO 暂时用当前时间毫秒数代替
 		}
 		
-		/**
-		 * 微信公众号支付统一下单接口参数
-		 * @param payNo
-		 * @param params
-		 * @param openid    
-		 * @author east
-		 * @date 2017年4月26日 下午3:03:59
-		 */
-		public void initUnifiedOrderH5PayParameter(long payNo, PayReqParams params, String openid) {
-			parameters = new TreeMap<String, String>();
-			//普通公众号商户
-			parameters.put("appid", TerraceUtils.INSTANCE.getWechat().getMpAppid());
-			parameters.put("mch_id", TerraceUtils.INSTANCE.getWechat().getMpMchId());
-			
-			parameters.put("nonce_str", String.valueOf(System.currentTimeMillis()));
-			parameters.put("body", params.getSubject());
-			parameters.put("detail", params.getBody());
-			parameters.put("out_trade_no", String.valueOf(payNo));
-			parameters.put("fee_type", "CNY");
-			parameters.put("total_fee", String.valueOf(params.getTotalFee()));
-			parameters.put("spbill_create_ip", params.getUserIp());
-			parameters.put("notify_url", TerraceUtils.INSTANCE.getWechat().getNotifyUrl());
-			parameters.put("trade_type", "JSAPI");
-			// #TODO 根据buyerUid获取用户的openid
-			parameters.put("openid", openid);
-		}
-
 		/**
 		 * 调用微信“统一下单”api，并解析返回结果
 		 * 

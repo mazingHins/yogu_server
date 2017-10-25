@@ -30,5 +30,18 @@ public enum PayStatus{
     public short getValue() {
         return value;
     }
+    
+    public static PayStatus values(short value){
+    	 switch (value) {
+         case 10:
+             return TRADE_SUCCESS;
+         case 20:
+             return TRADE_FAIL;
+         case 30:
+             return TRADE_CLOSED;
+         default:
+             return null;
+     }
+    }
 
 }

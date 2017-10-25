@@ -4,10 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.yogu.CommonConstants;
-import com.yogu.TargetConstants;
 import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.cfg.DesPropertiesEncoder;
-import com.yogu.core.SysType;
 import com.yogu.core.remote.config.ConfigGroupConstants;
 import com.yogu.core.remote.config.ConfigRemoteService;
 
@@ -115,53 +113,15 @@ public enum TerraceUtils {
 
 		String prodMchId = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_PROD_MCHID); // prod版商户号
 
-		String orgKey = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_ORG_KEY); // org版API密钥
-
-		String orgAppid = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_ORG_APPID); // org版公众账号ID
-
-		String orgMchId = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_ORG_MCHID); // org版商户号
-
-		String prodMazingKey = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_PROD_MAZING_KEY); // 4.0版本新的app
-																								// prod版API密钥
-
-		String prodMazingAppid = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_PROD_MAZING_APPID); // 4.0版本新的app
-																									// prod版公众账号ID
-
-		String prodMazingMchId = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_PROD_MAZING_MCHID); // 4.0版本新的app
-																									// prod版商户号
-
-		String orgMazingKey = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_ORG_MAZING_KEY); // 4.0版本新的app
-																							// org版API密钥
-
-		String orgMazingAppid = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_ORG_MAZING_APPID); // 4.0版本新的app
-																								// org版公众账号ID
-
-		String orgMMazingchId = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_ORG_MAZING_MCHID); // 4.0版本新的app
-																								// org版商户号
-
 		String packageStr = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_PACKAGE); // 扩展字段
 																					// 暂填写固定值Sign=WXPay
-
-		String mpAppid = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_MP_APPID); // 公众号版appid
-
-		String mpMchId = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_MP_MCHID); // 公众号版商户号
-
-		String mpKey = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_MP_KEY); // 公众号版支付api密钥
-
 		String serviceMpMchId = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_SERVICE_MP_MCHID); // 公众号版服务商商户号
 
 		String serviceMpKey = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_SERVICE_MP_KEY); // 公众号版服务商支付api密钥
 
 		notifyUrl = payDomain + wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_PAY_NOTIFY); // 微信回调地址
 
-		//初始化微信小程序支付配置
-		String mpappAppId = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_MPAPP_APPID); //微信小程序支付appId
-		String mpappMchId = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_MPAPP_MCHID); //微信小程序支付商户号
-		String mpappKey = wechatMap.get(PayConstants.CONFIG_KEY_WECHAT_MPAPP_KEY); //微信小程序支付密钥
-		
-		wechat = new WeChatPayConfig(prodKey, prodAppid, orgKey, orgAppid, prodMchId, orgMchId, mpAppid, mpMchId, mpKey,
-				prodMazingKey, prodMazingAppid, prodMazingMchId, orgMazingKey, orgMazingAppid, orgMMazingchId,
-				packageStr, notifyUrl, serviceMpMchId, serviceMpKey, mpappAppId, mpappMchId, mpappKey);
+		wechat = new WeChatPayConfig(prodKey, prodAppid, prodMchId, packageStr, notifyUrl, serviceMpMchId, serviceMpKey);
 		// ------------微信支付接口相关配置 end-------------------
 
 		// ------------支付宝退款接口相关配置 start-------------------
@@ -295,47 +255,14 @@ public enum TerraceUtils {
 	 */
 	public static class WeChatPayConfig {
 
-		private static final String orgCertPath = "wechat.apiclient.cert.org.p12";
 
 		private static final String prodCertPath = "wechat.apiclient.cert.prod.p12";
-
-		private static final String mpCertPath = "wechat.apiclient.cert.mp.p12";
-
-		private static final String orgMazingCertPath = "wechat.apiclient.cert.org.mazing.p12";
-
-		private static final String prodMazingCertPath = "wechat.apiclient.cert.prod.mazing.p12";
-		
-		private static final String mpAppCertPath = "wechat.apiclient.cert.mpapp.p12";
 
 		private String prodKey; // prod版API密钥
 
 		private String prodAppid; // prod版公众账号ID
 
 		private String prodMchId;// prod版商户号
-
-		private String orgKey; // org版API密钥
-
-		private String orgAppid; // org版公众账号ID
-
-		private String orgMchId;// org版商户号
-
-		private String mpAppid; // 公众号版的appid
-
-		private String mpMchId; // 公众号版的商户号
-
-		private String mpKey; // 公众号版的支付API密钥
-
-		private String prodMazingKey; // 4.0版本新的app prod版API密钥
-
-		private String prodMazingAppid; // 4.0版本新的app prod版公众账号ID
-
-		private String prodMazingMchId; // 4.0版本新的app prod版商户号
-
-		private String orgMazingKey; // 4.0版本新的app org版API密钥
-
-		private String orgMazingAppid; // 4.0版本新的app org版公众账号ID
-
-		private String orgMazingMchId; // 4.0版本新的app org版商户号
 
 		private String packageStr;// 扩展字段 暂填写固定值Sign=WXPay
 
@@ -345,59 +272,25 @@ public enum TerraceUtils {
 
 		private String serviceMpKey;// 公众号版服务商支付api密钥
 
-		private String mpappAppId; //小程序appid
-		
-		private String mpappMchId; //小程序商户号
-		
-		private String mpappKey; //小程序支付api密钥
-		
 		private Map<String, String> keyMap; // key-公众账号ID，value-API密钥的集合，用于支付回调时根据appId获取密钥
 
 		private Map<String, String> mchIdMap; // key-公众账号ID，value-商户号的集合，用于支付回调时根据appId获取商户号
 
-		public WeChatPayConfig(String prodKey, String prodAppid, String orgKey, String orgAppid, String prodMchId,
-				String orgMchId, String mpAppid, String mpMchId, String mpKey, String prodMazingKey,
-				String prodMazingAppid, String prodMazingMchId, String orgMazingKey, String orgMazingAppid,
-				String orgMazingMchId, String packageStr, String notifyUrl, String serviceMpMchId, String serviceMpKey,
-				String mpappAppId, String mpappMchId, String mpappKey) {
+		public WeChatPayConfig(String prodKey, String prodAppid, String prodMchId,
+				String packageStr, String notifyUrl, String serviceMpMchId, String serviceMpKey) {
 			this.prodKey = prodKey;
 			this.prodAppid = prodAppid;
 			this.prodMchId = prodMchId;
-			this.orgKey = orgKey;
-			this.orgAppid = orgAppid;
-			this.orgMchId = orgMchId;
-			this.mpAppid = mpAppid;
-			this.mpMchId = mpMchId;
-			this.mpKey = mpKey;
-			this.prodMazingKey = prodMazingKey;
-			this.prodMazingAppid = prodMazingAppid;
-			this.prodMazingMchId = prodMazingMchId;
-			this.orgMazingKey = orgMazingKey;
-			this.orgMazingAppid = orgMazingAppid;
-			this.orgMazingMchId = orgMazingMchId;
 			this.packageStr = packageStr;
 			this.notifyUrl = notifyUrl;
 			this.serviceMpMchId = serviceMpMchId;
 			this.serviceMpKey = serviceMpKey;
-			this.mpappAppId = mpappAppId;
-			this.mpappMchId = mpappMchId;
-			this.mpappKey = mpappKey;
 
 			keyMap = new HashMap<String, String>(6);
 			keyMap.put(prodAppid, prodKey);
-			keyMap.put(orgAppid, orgKey);
-			keyMap.put(mpAppid, mpKey);
-			keyMap.put(prodMazingAppid, prodMazingKey);
-			keyMap.put(orgMazingAppid, orgMazingKey);
-			keyMap.put(mpappAppId, mpappKey);
 			
 			mchIdMap = new HashMap<String, String>(4);
 			mchIdMap.put(prodAppid, prodMchId);
-			mchIdMap.put(orgAppid, orgMchId);
-			mchIdMap.put(mpAppid, mpMchId);
-			mchIdMap.put(prodMazingAppid, prodMazingMchId);
-			mchIdMap.put(orgMazingAppid, orgMazingMchId);
-			mchIdMap.put(mpappAppId, mpappMchId);
 		}
 
 		/**
@@ -412,20 +305,7 @@ public enum TerraceUtils {
 		 * @return
 		 */
 		public String getKey(String target, short sysType) {
-			if (SysType.Android.getValue() == sysType) {
-				return TargetConstants.ONLINE_NEW.equals(target) ? prodMazingKey : prodKey;
-			}
-
-			if (TargetConstants.ORG.equals(target)) {
-				return orgKey;
-			} else if (TargetConstants.ONLINE.equals(target)) {
-				return prodKey;
-			} else if (TargetConstants.ORG_NEW.equals(target)) {
-				return orgMazingKey;
-			} else if (TargetConstants.ONLINE_NEW.equals(target)) {
-				return prodMazingKey;
-			}
-			return null;
+			return prodKey;
 		}
 
 		/**
@@ -442,22 +322,8 @@ public enum TerraceUtils {
 		 *            - 操作系统类型
 		 * @return
 		 */
-		public String getAppid(String target, short sysType) {
-
-			if (SysType.Android.getValue() == sysType) {
-				return TargetConstants.ONLINE_NEW.equals(target) ? prodMazingAppid : prodAppid;
-			}
-
-			if (TargetConstants.ORG.equals(target)) {
-				return orgAppid;
-			} else if (TargetConstants.ONLINE.equals(target)) {
-				return prodAppid;
-			} else if (TargetConstants.ORG_NEW.equals(target)) {
-				return orgMazingAppid;
-			} else if (TargetConstants.ONLINE_NEW.equals(target)) {
-				return prodMazingAppid;
-			}
-			return null;
+		public String getAppid() {
+			return prodAppid;
 		}
 
 		/**
@@ -499,21 +365,8 @@ public enum TerraceUtils {
 		 *            - 客户端版本，参照IosTargetConstants
 		 * @return
 		 */
-		public String getMchId(String target, short sysType) {
-			if (SysType.Android.getValue() == sysType) {
-				return TargetConstants.ONLINE_NEW.equals(target) ? prodMazingMchId : prodMchId;
-			}
-
-			if (TargetConstants.ORG.equals(target)) {
-				return orgMchId;
-			} else if (TargetConstants.ONLINE.equals(target)) {
-				return prodMchId;
-			} else if (TargetConstants.ORG_NEW.equals(target)) {
-				return orgMazingMchId;
-			} else if (TargetConstants.ONLINE_NEW.equals(target)) {
-				return prodMazingMchId;
-			}
-			return null;
+		public String getMchId() {
+			return prodMchId;
 		}
 
 		/**
@@ -531,42 +384,10 @@ public enum TerraceUtils {
 				return null;
 			}
 
-			if (appId.equals(orgAppid)) {
-				return orgCertPath;
-			}
-
 			if (appId.equals(prodAppid)) {
 				return prodCertPath;
 			}
-
-			if (appId.equals(mpAppid)) {
-				return mpCertPath;
-			}
-
-			if (appId.equals(orgMazingAppid)) {
-				return orgMazingCertPath;
-			}
-
-			if (appId.equals(prodMazingAppid)) {
-				return prodMazingCertPath;
-			}
-			
-			if (appId.equals(mpappAppId)) {
-				return mpAppCertPath;
-			}
 			return null;
-		}
-
-		public String getMpAppid() {
-			return mpAppid;
-		}
-
-		public String getMpMchId() {
-			return mpMchId;
-		}
-
-		public String getMpKey() {
-			return mpKey;
 		}
 
 		public String getPackageStr() {
@@ -583,17 +404,6 @@ public enum TerraceUtils {
 
 		public String getServiceMpKey() {
 			return serviceMpKey;
-		}
-		public String getMpappAppId() {
-			return mpappAppId;
-		}
-
-		public String getMpappMchId() {
-			return mpappMchId;
-		}
-
-		public String getMpappKey() {
-			return mpappKey;
 		}
 
 	}

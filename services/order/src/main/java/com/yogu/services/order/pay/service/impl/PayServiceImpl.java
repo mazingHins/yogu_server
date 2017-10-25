@@ -2,7 +2,6 @@ package com.yogu.services.order.pay.service.impl;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -15,8 +14,6 @@ import org.slf4j.LoggerFactory;
 
 import com.yogu.alarm.AlarmSender;
 import com.yogu.cfg.GlobalSetting;
-import com.yogu.commons.utils.Base64;
-import com.yogu.commons.utils.DateUtils;
 import com.yogu.commons.utils.OSUtil;
 import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.VOUtil;
@@ -24,23 +21,23 @@ import com.yogu.core.SysType;
 import com.yogu.core.constant.PayResultCode;
 import com.yogu.core.enums.BooleanConstants;
 import com.yogu.core.enums.CurrencyType;
-import com.yogu.core.enums.pay.MerchantType;
-import com.yogu.core.enums.pay.NotifyEnum.*;
 import com.yogu.core.enums.pay.NotifyEnum;
+import com.yogu.core.enums.pay.NotifyEnum.AlipayTradeStatus;
+import com.yogu.core.enums.pay.NotifyEnum.PayRecordStatus;
 import com.yogu.core.enums.pay.PayMode;
+import com.yogu.core.enums.pay.PayStatus;
 import com.yogu.core.enums.pay.PayType;
 import com.yogu.core.utils.ComputeUtils;
 import com.yogu.core.web.OrderErrorCode;
 import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.PayErrorCode;
-import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.PayMessages;
 import com.yogu.remote.config.id.IdGenRemoteService;
 import com.yogu.remote.user.provider.UserRemoteService;
+import com.yogu.services.order.base.service.OrderPayService;
 import com.yogu.services.order.pay.dto.AlipayPayNotify;
-import com.yogu.services.order.pay.dto.PayDiscountRecord;
 import com.yogu.services.order.pay.dto.PayRecord;
 import com.yogu.services.order.pay.dto.WechatPayNotify;
 import com.yogu.services.order.pay.dto.WechatPayRecord;
@@ -56,7 +53,6 @@ import com.yogu.services.order.resource.vo.pay.PayVO;
 import com.yogu.services.order.resource.vo.pay.WechatPayVO;
 import com.yogu.services.order.utils.GenerateUtils;
 import com.yogu.services.order.utils.TerraceUtils;
-import com.yogu.services.order.utils.TerraceUtils.NewAliPay;
 import com.yogu.services.order.utils.WechatApiReqHandler;
 import com.yogu.services.order.utils.protocol.WechatUnifiedOrderResData;
 import com.yogu.services.order.utils.sign.common.RSAUtil;
@@ -88,9 +84,9 @@ public class PayServiceImpl implements PayService {
 
 	@Inject
 	private WechatPayNotifyService wechatPayNotifyService;
-
+	
 	@Inject
-	private UserRemoteService userRemoteService;
+	private OrderPayService orderPayService;
 
 	@Override
 	public PayVO createPay(PayReqParams params) {
@@ -342,8 +338,8 @@ public class PayServiceImpl implements PayService {
 		String target = params.getTarget();
 		if (record != null && org.apache.commons.lang3.StringUtils.isNotBlank(record.getPrepayId())) {
 			result.setPrepayId(record.getPrepayId());
-			result.setAppid(TerraceUtils.INSTANCE.getWechat().getAppid(target, params.getSysType()));
-			result.setPartnerId(TerraceUtils.INSTANCE.getWechat().getMchId(target, params.getSysType()));
+			result.setAppid(TerraceUtils.INSTANCE.getWechat().getAppid());
+			result.setPartnerId(TerraceUtils.INSTANCE.getWechat().getMchId());
 			result.setPackageStr(TerraceUtils.INSTANCE.getWechat().getPackageStr());
 			result.setTimestamp(String.valueOf(record.getTimestamp()));
 			result.setNoncestr(record.getNonceStr());
@@ -354,8 +350,8 @@ public class PayServiceImpl implements PayService {
 			// WechatUnifiedHandler.builder().createUnifiedorder(payNo, params);
 			if (WechatNotifyUtils.valiteApiResponseResult(data)) { // 统一下单成功
 				result.setPrepayId(data.getPrepay_id());
-				result.setAppid(TerraceUtils.INSTANCE.getWechat().getAppid(target, params.getSysType()));
-				result.setPartnerId(TerraceUtils.INSTANCE.getWechat().getMchId(target, params.getSysType()));
+				result.setAppid(TerraceUtils.INSTANCE.getWechat().getAppid());
+				result.setPartnerId(TerraceUtils.INSTANCE.getWechat().getMchId());
 				result.setPackageStr(TerraceUtils.INSTANCE.getWechat().getPackageStr());
 				result.setTimestamp(String.valueOf(System.currentTimeMillis() / 1000));
 				result.setNoncestr(String.valueOf(System.currentTimeMillis())); 
@@ -545,8 +541,8 @@ public class PayServiceImpl implements PayService {
 	 * @param tradeFlag - 支付是否成功
 	 * @param notifyUrl - 回调order域的URL
 	 */
-	private void callBack(long payId, long payNo, long insideTradeNo, boolean tradeFlag) {
-		//#TODO 调用order域，支付成功
+	private void callBack(long payId, long payNo, long orderNo, boolean tradeFlag) {
+		orderPayService.payNotify(orderNo, payNo, tradeFlag ? PayStatus.TRADE_SUCCESS.getValue() : PayStatus.TRADE_FAIL.getValue(), StringUtils.EMPTY);
 		logger.info("pay#service#callback | 回调order结果 | success: {}");
 	}
 

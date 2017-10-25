@@ -16,22 +16,22 @@ public class PayRecordDaoImpl extends MyBatisDao implements PayRecordDao {
 
 	@Override
 	public void save(PayRecordPO po) {
-		super.insert("com.mazing.services.pay.pay.dao.PayRecordDao.save", po);
+		super.insert("com.yogu.services.order.pay.dao.PayRecordDao.save", po);
 	}
 
 	@Override
 	public PayRecordPO getById(long payId) {
-		return super.get("com.mazing.services.pay.pay.dao.PayRecordDao.getById", payId);
+		return super.get("com.yogu.services.order.pay.dao.PayRecordDao.getById", payId);
 	}
 
 	@Override
 	public PayRecordPO getByPayNo(long payNo) {
-		return super.get("com.mazing.services.pay.pay.dao.PayRecordDao.getByPayNo", payNo);
+		return super.get("com.yogu.services.order.pay.dao.PayRecordDao.getByPayNo", payNo);
 	}
 
 	@Override
 	public PayRecordPO getByOrderNo(long orderNo) {
-		return super.get("com.mazing.services.pay.pay.dao.PayRecordDao.getByOrderNo", orderNo);
+		return super.get("com.yogu.services.order.pay.dao.PayRecordDao.getByOrderNo", orderNo);
 	}
 	
 	@Override
@@ -47,7 +47,7 @@ public class PayRecordDaoImpl extends MyBatisDao implements PayRecordDao {
 		map.put("orderFee", params.getOrderFee());
 		map.put("payStatus", params.getPayStatus());
 		map.put("updateTime", DateUtils.getUniformCurrentTimeForThread());
-		return super.update("com.mazing.services.pay.pay.dao.PayRecordDao.updatePayMode", map);
+		return super.update("com.yogu.services.order.pay.dao.PayRecordDao.updatePayMode", map);
 	}
 	
 	@Override
@@ -58,7 +58,7 @@ public class PayRecordDaoImpl extends MyBatisDao implements PayRecordDao {
 		map.put("newStatus", newStatus);
 		map.put("notifyId", notifyId);
 		map.put("updateTime", DateUtils.getUniformCurrentTimeForThread());
-		return super.update("com.mazing.services.pay.pay.dao.PayRecordDao.updatePayStatus", map);
+		return super.update("com.yogu.services.order.pay.dao.PayRecordDao.updatePayStatus", map);
 	}
 
 }

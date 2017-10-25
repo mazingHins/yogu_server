@@ -48,5 +48,13 @@
 		SELECT * FROM yg_order.yg_order
 		WHERE uid=#{uid} order by create_time desc limit #{offset},#{pageSize}
 	</select>
+	
+	<!-- 更新订单为已支付 -->
+	<update id="updatePayOrder" parameterType="Map">
+		update
+		yg_order.yg_order set pay_no = #{payNo}, status=#{newStatus},
+		update_time=#{updateTime},order_begin_time=#{orderBeginTime}
+		where order_id=#{orderId} and status=#{oldStatus}
+	</update>
 
 </mapper>

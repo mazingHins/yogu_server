@@ -369,10 +369,10 @@ public class ApiAuthenticatorImpl implements Authenticator {
 
 		// 计算签名摘要
 		String source = SignUtils.signSource(params);
-		logger.debug("api#interceptor | sign source: {}", source);
-		logger.debug("api#interceptor | sign secret: {}", secret);
+		logger.info("api#interceptor | sign source: {}", source);
+		logger.info("api#interceptor | sign secret: {}", secret);
 		String ssign = SignUtils.signHmacSha1(source, secret);
-		logger.debug("api#interceptor | sign encrypt: {}", ssign);
+		logger.info("api#interceptor | sign encrypt: {}", ssign);
 
 		// if (skipSign) {
 		// logger.info("api#interceptor | skip sign");

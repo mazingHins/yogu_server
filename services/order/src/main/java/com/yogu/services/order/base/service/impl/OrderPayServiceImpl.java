@@ -19,6 +19,7 @@ import com.yogu.core.constant.PayResultCode;
 import com.yogu.core.enums.BooleanConstants;
 import com.yogu.core.enums.order.OrderStatus;
 import com.yogu.core.enums.pay.PayMode;
+import com.yogu.core.enums.pay.PayStatus;
 import com.yogu.core.web.OrderErrorCode;
 import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.ResultCode;
@@ -450,7 +451,99 @@ public class OrderPayServiceImpl implements OrderPayService {
 		String body = sf.substring(1);
 		return body.length() < 500 ? body : body.substring(0, 500);
 	}
+
+
+	@Override
+	public void payNotify(long orderNo, long payNo, short status, String remark) {
+		// 1. 验证订单是否满足合法回调
+		OrderPO order = validatepPayNotify(orderNo, payNo, status, remark);
+
+		// 订单状态非待付款，不做处理（防止pay域多次回调）
+		if (order.getStatus() != OrderStatus.NON_PAYMENT.getValue()) {
+			// 若支付回调结果为“支付成功”且订单已被取消（支付回调结果还没到达服务器，用户已经取消了订单）
+			logger.error("order#service#payNotify | 订单状态不等于未付款 | orderNo: {}, payNo: {}, status: {}", orderNo, payNo,
+					order.getStatus());
+			return;
+		}
+
+		if (status == PayStatus.TRADE_SUCCESS.getValue()) {// 支付成功，更新订单状态，新增订单轨迹记录
+			payNotifySuccess(order, payNo);
+		} 
+	}
 	
+	/**
+	 * 验证pay域支付回调order方法参数
+	 * 
+	 * @param orderNo - 订单编号
+	 * @param payNo - 支付编号
+	 * @param status - 支付结果状态
+	 * @param remark - 备注
+	 * @return
+	 * @author hins
+	 * @date 2016年6月16日 下午4:46:04
+	 * @return OrderPO
+	 */
+	private OrderPO validatepPayNotify(long orderNo, long payNo, short status, String remark) {
+		// 验证：参数，订单是否存在，订单记录中的支付编号跟payNo是否一致
+		if (StringUtils.isNotBlank(remark)) {
+			ParameterUtil.assertMaxLength(remark, 64, OrderMessages.ORDER_ORDER_PAYNOTIFY_REMARK_LENGTH_MAX());
+		}
+		ParameterUtil.assertGreaterThanOrEqual(orderNo, 1, OrderMessages.ORDER_ORDER_PAYNOTIFY_ORDERNO_NOTEXIST());
+		ParameterUtil.assertGreaterThanOrEqual(payNo, 1, OrderMessages.ORDER_ORDER_PAYNOTIFY_PAYNO_NOTEXIST());
+
+		OrderPO order = orderDao.getByOrderNo(orderNo);
+		if (order == null) {
+			logger.error("order#service#payNotify | order not exist  | orderNo: {}", orderNo);
+			throw new ServiceException(OrderErrorCode.ORDER_NOT_EXIST, OrderMessages.ORDER_ORDERADMINAPI_ORDERDETAIL_ORDER_NOTEXIST());
+		}
+
+		// 验证订单记录中的支付编号跟payNo是否一致（不验证订单是否现金支付，现金支付的订单的支付编号为0，根payNo永远不相等）
+		if (order.getPayNo() != payNo) {
+			logger.error("order#service#payNotify | 订单的支付编号跟回调通知的支付编号不一致 | orderNo: {}, opayNo: {}, payNo: {}", orderNo, order.getPayNo(),
+					payNo);
+			throw new ServiceException(OrderErrorCode.ORDER_NOT_EXIST, OrderMessages.ORDER_ORDERADMINAPI_ORDERDETAIL_ORDER_NOTEXIST());
+		}
+		
+		PayStatus payStatus = PayStatus.values(status);
+		if (payStatus == null) {
+			logger.error("order#service#payNotify | pay status illegal | orderNo: {}, payNo: {}, status: {}", orderNo,
+					payNo, status);
+			throw new ServiceException(ResultCode.PARAMETER_ERROR, "支付结果不合法");
+		}
+
+
+		return order;
+	}
+	
+	/**
+	 * pay域回调order域。订单支付成功的执行逻辑
+	 * 
+	 * @param order - 订单信息
+	 * @param store - 餐厅信息
+	 * @param payNo - 支付编号
+	 * @author hins
+	 * @date 2016年6月16日 下午4:52:35
+	 * @return void
+	 */
+	private void payNotifySuccess(OrderPO order, long payNo) {
+
+		if (order.getUseCoupon() == BooleanConstants.TRUE) {
+			orderCouponRecordService.recordUseSuccess(order.getOrderId());
+		}
+
+		// hins 2015/10/23 修改。内容：更新预计送达时间
+		UpdateOrderPayPOJO po = new UpdateOrderPayPOJO();
+		po.setOrderId(order.getOrderId());
+		po.setPayNo(payNo);
+		po.setOldStatus(order.getStatus());
+		po.setNewStatus(OrderStatus.PENDING_ACCEPT.getValue());
+		// 计算下单时候的预计送达时间到现在经过的秒数
+		// 因为可能存在：用户下单后，经过一段时间（如10分钟），再有支付成功回到，则要更新预计送达时间。
+		po.setOrderBeginTime(new Date());
+
+		orderDao.payOrder(po);
+
+	}
 
 
 }

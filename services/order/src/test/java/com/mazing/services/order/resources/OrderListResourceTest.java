@@ -30,7 +30,7 @@ public class OrderListResourceTest extends HttpResourceTest {
 	public void detail() {
 		ApiReq<RestResult<?>> req = build("a/v1/order/detail");
 		req.login("86", "13926426236", "abcd1234");
-		req.putPost("orderNo", "");
+		req.putPost("orderNo", "1710300243887982");
 		RestResult<?> result = req.doGet();
 
 		Assert.assertNotNull(result);

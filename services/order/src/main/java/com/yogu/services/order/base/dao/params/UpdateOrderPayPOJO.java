@@ -45,11 +45,6 @@ public class UpdateOrderPayPOJO {
 	 */
 	private Date orderBeginTime;
 
-	/**
-	 * 订单预计送达时间
-	 */
-	private Date deliveryTime;
-
 	public long getOrderId() {
 		return orderId;
 	}
@@ -104,14 +99,6 @@ public class UpdateOrderPayPOJO {
 
 	public void setOrderBeginTime(Date orderBeginTime) {
 		this.orderBeginTime = orderBeginTime;
-	}
-
-	public Date getDeliveryTime() {
-		return deliveryTime;
-	}
-
-	public void setDeliveryTime(Date deliveryTime) {
-		this.deliveryTime = deliveryTime;
 	}
 
 }

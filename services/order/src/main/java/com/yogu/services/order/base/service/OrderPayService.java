@@ -34,5 +34,19 @@ public interface OrderPayService {
 	 */
 	@Transactional(propagation = Propagation.REQUIRED)
 	public PayVO changePayMode(long uid, long orderNo, short payMode, String userIp);
+	
+	/**
+	 * 前置条件：pay域支付回调后，要order返回success，若为返回，会继续回调。所以order要处理同一张订单多次回调的情况。 接收到支付回调后，更新订单状态，新增订单轨迹。
+	 * 
+	 * @author Hins
+	 * @date 2015年8月15日 上午10:19:02
+	 * 
+	 * @param orderNo - 订单ID
+	 * @param payNo - 支付系统流水号
+	 * @param status - 支付结果
+	 * @param remark - 备注
+	 */
+	public void payNotify(long orderNo, long payNo, short status, String remark);
+
 
 }

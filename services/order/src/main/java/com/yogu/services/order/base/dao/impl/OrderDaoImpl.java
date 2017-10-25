@@ -68,6 +68,18 @@ public class OrderDaoImpl extends MyBatisDao implements OrderDao {
 		map.put("pageSize", pageSize);
 		return super.list("com.yogu.services.order.base.dao.OrderDao.listByUid", map);
 	}
+
+	@Override
+	public int payOrder(UpdateOrderPayPOJO po) {
+		Map<String, Object> map = new HashMap<>(8);
+		map.put("orderId", po.getOrderId());
+		map.put("payNo", po.getPayNo());
+		map.put("oldStatus", po.getOldStatus());
+		map.put("newStatus", po.getNewStatus());
+		map.put("orderBeginTime", po.getOrderBeginTime());
+		map.put("updateTime", po.getOrderBeginTime());
+		return super.update("com.yogu.services.order.base.dao.OrderDao.updatePayOrder", map);
+	}
 	
 
 }
