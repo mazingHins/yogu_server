@@ -26,7 +26,7 @@ public interface GoodsTagMpDao {
 	/**
 	 * 根据主键读取记录
 	 */
-	public GoodsTagPO getById(@Param("tagId") long tagId, @Param("goodsId") long goodsId);
+	public GoodsTagMpPO getById(@Param("tagId") long tagId, @Param("goodsId") long goodsId);
 
 	/**
 	 * 通过标签id，获取标签下的所有商品，结果无序
