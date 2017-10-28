@@ -5,7 +5,7 @@
     <display-name>web-backend-admin</display-name>
 
 	<listener>
-    	<listener-class>com.mazing.commons.server.clean.CleanServletContextListener</listener-class>
+    	<listener-class>com.yogu.commons.server.clean.CleanServletContextListener</listener-class>
     </listener>
 
 	<servlet>
@@ -51,7 +51,7 @@
 	<!-- 日志增加traceId -->
 	<filter>
 		<filter-name>mdcFilter</filter-name>
-		<filter-class>com.mazing.commons.server.forward.LoggerMDCFilter</filter-class>
+		<filter-class>com.yogu.commons.server.forward.LoggerMDCFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>mdcFilter</filter-name>
@@ -60,39 +60,17 @@
 
 	<filter>
 		<filter-name>adminFilter</filter-name>
-		<filter-class>com.mazing.services.backend.admin.context.AdminFilter</filter-class>
+		<filter-class>com.yogu.services.backend.admin.contextt.AdminFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>adminFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-
-    <servlet>
-		<servlet-name>PulseServlet</servlet-name>
-		<servlet-class>com.mazing.commons.server.pulse.PulseServlet</servlet-class>
-	</servlet>
-    <servlet-mapping>
-		<servlet-name>PulseServlet</servlet-name>
-		<url-pattern>/pulse</url-pattern>
-	</servlet-mapping>
-
-    <servlet>
-        <servlet-name>VersionServlet</servlet-name>
-        <servlet-class>com.mazing.commons.server.version.VersionServlet</servlet-class>
-        <init-param>
-        	<param-name>version.file.path</param-name>
-        	<param-value>/version.txt</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>VersionServlet</servlet-name>
-        <url-pattern>/version</url-pattern>
-    </servlet-mapping>
-
+	
 	<!-- 帐号系统登录的filter -->
 	<filter>
 		<filter-name>mazingLogin</filter-name>
-		<filter-class>com.mazing.commons.sdk.user.MazingLoginFilter</filter-class>
+		<filter-class>com.yogu.commons.sdk.user.MazingLoginFilter</filter-class>
 		<init-param>
 			<param-name>appkey</param-name>
 			<param-value>F58A1328D42DB1F5A981CA9713F7586D5BD97FCF2AE76CF29356D46EA8673E0D</param-value>
@@ -104,16 +82,16 @@
 		<init-param>
 			<!-- appkey 和 appsecret 解密的类，实现 com.mazing.commons.sdk.user.encrypt.ConfigurationDecoder -->
 			<param-name>decoder</param-name>
-			<param-value>com.mazing.commons.sdk.user.encrypt.DefaultConfigurationDecoder</param-value>
+			<param-value>com.yogu.commons.sdk.user.encrypt.DefaultConfigurationDecoder</param-value>
 		</init-param>
 		<init-param>
 			<!-- 必须使用 https -->
 			<param-name>callback</param-name>
-			<param-value>https://admin.mazing.com/open/mazing/login</param-value>
+			<param-value>https://admin.yogubc.com/open/yogu/login</param-value>
 		</init-param>
 		<init-param>
 			<param-name>exclude</param-name>
-			<param-value>/open/mazing/*, /open/health/status, /admin/error, /admin/exception</param-value>
+			<param-value>/open/yogu/*, /open/health/status, /admin/error, /admin/exception</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>

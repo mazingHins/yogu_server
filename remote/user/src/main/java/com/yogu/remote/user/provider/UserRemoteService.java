@@ -1,7 +1,10 @@
 package com.yogu.remote.user.provider;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Named;
 
@@ -12,10 +15,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.yogu.CommonConstants;
 import com.yogu.commons.utils.HttpClientUtils;
 import com.yogu.commons.utils.JsonUtils;
+import com.yogu.commons.utils.StringUtils;
 import com.yogu.core.web.RestResult;
 import com.yogu.remote.user.dto.UserAddress;
 import com.yogu.remote.user.dto.UserAndAddress;
-import com.yogu.remote.user.dto.UserProfile;
 import com.yogu.remote.user.dto.UserProfile;
 
 
@@ -135,8 +138,34 @@ public class UserRemoteService {
 		}
 		return null;
 	}
+
 	
-	
+	/**
+	 * 根据帐号读取 uid 等信息，不会返回null
+	 * 
+	 * @param countryCode
+	 *            国家代码
+	 * @param passport
+	 *            帐号
+	 * @return 返回json信息{uid: ..., nickname: ...}
+	 */
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public Map<String, Object> getUidByPassport(String countryCode, String passport) {
+		Map<String, String> map = new HashMap<>(4);
+		map.put("countryCode", StringUtils.trimToEmpty(countryCode));
+		map.put("passport", StringUtils.trimToEmpty(passport));
+		try {
+			String json = HttpClientUtils.doGet(host + "/api/v1/user/get", map);
+
+			RestResult<HashMap> result = JsonUtils.parseObject(json, new TypeReference<RestResult<HashMap>>() {
+			});
+			if (result.isSuccess() && result.getObject() != null)
+				return result.getObject();
+		} catch (Exception e) {
+			logger.error("user#remote#getUidByPassport | Error | countryCode: {}, passport: {}", countryCode, "***", e);
+		}
+		return Collections.emptyMap();
+	}
 	
 
 }

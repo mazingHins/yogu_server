@@ -68,7 +68,7 @@
 	</bean>
   
 	<!-- 异常处理，将AnnotationMethodHandlerAdapter同样规则来输出结果-->
-	<bean id="handlerExceptionResolver" class="com.mazing.commons.spring.HandlerMethodExceptionResolver">
+	<bean id="handlerExceptionResolver" class="com.yogu.commons.spring.HandlerMethodExceptionResolver">
 		<!-- 没有被#ResponseBody标记的Controller方法将返回错误页面 -->
 		<property name="defaultErrorView" value="error_zh_CN.jsp"/>
 		<!-- 标有#ResponseBody注解的Controller方法，将使用此输出JSON-->
@@ -98,7 +98,7 @@
 
 	<!-- 拦截器：验签 -->
     <mvc:interceptors>
-		<bean class="com.mazing.commons.spring.auth.jsp.WebAuthInterceptor">
+		<bean class="com.yogu.commons.spring.auth.jsp.WebAuthInterceptor">
 			<!-- 设置验签的路径，英文逗号隔开 -->
 			<!--<property name="paths" value="/*" />-->
 			<property name="exclude">
@@ -110,12 +110,12 @@
 			</property>
 		</bean>
 		<!-- 权限验证 -->
-		<bean class="com.mazing.services.backend.admin.annotation.authority.AuthorityInterceptor">
+		<bean class="com.yogu.services.backend.admin.annotation.authority.AuthorityInterceptor">
 		</bean>
     </mvc:interceptors>
 
 	<!-- 英文;隔开多个package -->
-    <context:component-scan base-package="com.mazing">
+    <context:component-scan base-package="com.yogu">
 		<!-- <context:include-filter type="annotation" expression="org.aspectj.lang.annotation.Aspect" /> -->
     	<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
     </context:component-scan>

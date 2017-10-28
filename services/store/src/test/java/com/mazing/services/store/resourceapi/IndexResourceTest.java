@@ -31,5 +31,16 @@ public class IndexResourceTest extends HttpResourceTest {
 		Map<?, ?> map = assertMap(result);
 	}
 
+	@Test
+	public void listRecommend() {
+
+		ApiReq<RestResult<?>> req = build("p/v1/index/recommend");
+		req.putGet("lastTime", "0");
+		req.putGet("pageSize", "10");
+		RestResult<?> result = req.doGet();
+
+		Map<?, ?> map = assertMap(result);
+	}
+	
 
 }

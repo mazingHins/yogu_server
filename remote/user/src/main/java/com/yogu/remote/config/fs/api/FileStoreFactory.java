@@ -19,8 +19,7 @@ public class FileStoreFactory {
     public static FileStore createFileStore() {
         // 阿里云
         if (GlobalSetting.CLOUD_ALIYUN.equals(GlobalSetting.getCloud())) {
-            return new AliyunOssStore(CloudSettings.getFileStoreApiUrl(),
-                    CloudSettings.getCloudAccessKey(), CloudSettings.getCloudAccessSecret());
+            return new AliyunOssStore("https://oss-cn-shenzhen.aliyuncs.com","LTAIL5xJo5boi1kn", "ILMQJ2aKfGQJumyCAb32TgPdeGZRg2");
         }
 
 //        // 仅用于本地测试

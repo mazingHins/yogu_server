@@ -85,8 +85,8 @@
 			<keepalive-max>64</keepalive-max>
             <thread-max>32</thread-max>
 
-			<jvm-arg>-Xmx256m</jvm-arg>
-			<jvm-arg>-Xms128m</jvm-arg>
+			<jvm-arg>-Xmx80m</jvm-arg>
+			<jvm-arg>-Xms64m</jvm-arg>
 
 			<jvm-arg>-server</jvm-arg>
 			<jvm-arg>-d64</jvm-arg>
@@ -110,7 +110,7 @@
     <!--
     <server-multi id-prefix="app-" address-list="${app_servers}" port="6800"/>
     -->
-    <server id="mazing-backend-admin" address="127.0.0.1" port="6301">
+    <server id="yogu-backend-admin" address="127.0.0.1" port="6301">
 		<watchdog-port>6401</watchdog-port>
         <http address="*" port="6201" />
 	</server>
@@ -131,25 +131,25 @@
     </host-deploy>
 
     <!-- the default host, matching any host name -->
-    <host id="admin.mazing.com">
+    <host id="admin.yogu.com">
       <!--
          - webapps can be overridden/extended in the resin.xml
         -->
-      <host-name>admin.mazing.com</host-name>
+      <host-name>admin.yogu.com</host-name>
       
-      <web-app id="/" document-directory="/data/webapps/admin.mazing.com/" archive-path="/data/app/mazing/web/mazing-backend-admin.war" redeploy-mode="manual">
+      <web-app id="/" document-directory="/data/webapps/admin.yogu.com/" archive-path="/data/app/yogu/web/yogu-backend-admin.war" redeploy-mode="manual">
             <form-parameter-max>200</form-parameter-max>
             <character-encoding>UTF-8</character-encoding>
             <session-config>
                 <enable-url-rewriting>false</enable-url-rewriting>
             </session-config>
-            <stdout-log path="/data/log/resin/admin/mazing-backend-admin.stdout.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
+            <stdout-log path="/data/log/resin/admin/yogu-backend-admin.stdout.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
             	<rollover-size>32mb</rollover-size>
-                <archive-format>mazing-backend-admin.stdout.log.%m-%d.gz</archive-format>
+                <archive-format>yogu-backend-admin.stdout.log.%m-%d.gz</archive-format>
             </stdout-log>
-            <stderr-log path="/data/log/resin/admin/mazing-backend-admin.stderr.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
+            <stderr-log path="/data/log/resin/admin/yogu-backend-admin.stderr.log"  timestamp="[%Y-%m-%d %H:%M:%S.%s] [%{thread}] " >
             	<rollover-size>32mb</rollover-size>
-                <archive-format>mazing-backend-admin.stderr.log.%m-%d.gz</archive-format>
+                <archive-format>yogu-backend-admin.stderr.log.%m-%d.gz</archive-format>
             </stderr-log>
             <!-- 
             <access-log path="/data/log/resin/admin/mazing-backend-admin.access.log" >

@@ -108,7 +108,7 @@ public class AliyunOssStore extends AbstractFileStore {
         logger.info("aliyun store file|filename=" + filename + "|bucket=" + fileCategory);
 
         // 获取云上的 bucket name
-        String bucketName = CloudSettings.getFileStoreBucket(FileStoreConstant.BUCKET_IMAGE);
+        String bucketName = "yg-img-test";
         if (StringUtils.isEmpty(bucketName)) {
             throw new ServiceException(ResultCode.SYSTEM_CONFIG_ERROR,
                     "系统配置错误，bucket " + fileCategory.getId() + " 不存在！");
