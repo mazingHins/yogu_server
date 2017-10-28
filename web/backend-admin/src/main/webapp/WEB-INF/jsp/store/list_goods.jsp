@@ -1,11 +1,8 @@
-<%@ page import="com.mazing.core.enums.merchant.StoreBizType" %>
-<%@ page import="com.mazing.core.enums.merchant.StoreStatus" %>
-<%@ page import="com.mazing.core.enums.pay.PayType" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<%@ include file="/include/meta.html"%>
-	<title>餐厅列表</title>
+	<title>商品列表</title>
 </head>
 <body class="skin-blue sidebar-mini">
 <div class="wrapper">
@@ -21,7 +18,7 @@
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
 			<h1>
-				餐厅列表
+				商品列表
 				<small></small>
 			</h1>
 			<!--
@@ -37,8 +34,7 @@
 				<div class="col-xs-12">
 					<ul id="storeTab" class="nav nav-tabs">
 						<li class="active"><a href="#storeListTab" data-toggle="tab">
-							餐厅列表 </a></li>
-						<li><a href="#storeMapTab" data-toggle="tab" onclick="displayMap()">所有餐厅配送范围地图</a></li>
+							商品列表 </a></li>
 					</ul>
 					<div id="storeTabContent" class="tab-content">
 						<!-- tab start -->
@@ -69,24 +65,23 @@
 												<thead>
 												<tr>
 													<th>ID</th>
-													<th>餐厅名称</th>
-													<th>地址</th>
-													<th>联系电话</th>
-													<th>餐厅类型</th>
+													<th>商品名称</th>
+													<th>商品头像</th>
+													<th>零售价</th>
+													<th>批发价</th>
+													<th>排序</th>
 													<th>状态</th>
-													<th>创建时间</th>
 													<th>操作</th>
-													<th>备注</th>
 												</tr>
 												</thead>
 												<script id="listTableTpl" type="text/html">
 													{{each object as value i}}
 													<tr>
 														<td>
-															{{value.storeId}}
+															{{value.goodsId}}
 														</td>
-														<td><a href="/admin/store/storeDetail.xhtm?storeId={{value.storeId}}">{{value.storeName}}</a></td>
-														<td>{{value.address}}</td>
+														<td><a href="/admin/goods/goodsDetail.xhtm?goodsKey={{value.goodsKey}}">{{value.goodsName}}</a></td>
+														<td>{{value.cardImg}}</td>
 														<td>{{value.phone}}</td>
 														<td>
 															{{if value.bizType == <%=StoreBizType.NORMAL.getValue()%>}}

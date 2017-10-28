@@ -1,7 +1,9 @@
 package com.yogu.remote.store;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Named;
 
@@ -78,6 +80,31 @@ public class GoodsRemoteService {
 				return result.getObject();
 		} catch (Exception e) {
 			logger.error("remote#dish#getDishByIds | Error | goodsIds: {}, message: {}", goodsIds, e.getMessage(), e);
+		}
+		return Collections.emptyList();
+	}
+	
+	/**
+	 * 搜索美食，分页形式返回
+	 * 
+	 * @param query 关键字
+	 * @param pageIndex 第几页（1开始）
+	 * @param pageSize 每页多少条数据
+	 */
+	public List<Goods> query(String query, int pageIndex, int pageSize) {
+		try {
+			Map<String, String> params = new HashMap<>();
+			params.put("query", query);
+			params.put("pageSize", pageSize + "");
+			params.put("pageIndex", pageIndex + "");
+			String json = HttpClientUtils.doGet(host + "/api/goods/query", 3000, params);
+			RestResult<List<Goods>> result = JsonUtils.parseObject(json, new TypeReference<RestResult<List<Goods>>>() {
+			});
+			if (result.isSuccess() && null != result.getObject())
+				return result.getObject();
+		} catch (Exception e) {
+			logger.error("remote#goods#query | Error | query: {}, pageIndex: {}, pageSize: {}, message: {}"//
+					, query, pageIndex, pageSize, e.getMessage(), e);
 		}
 		return Collections.emptyList();
 	}

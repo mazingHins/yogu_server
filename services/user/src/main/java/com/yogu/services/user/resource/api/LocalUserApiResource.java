@@ -1,5 +1,7 @@
 package com.yogu.services.user.resource.api;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -89,6 +91,26 @@ public class LocalUserApiResource {
 		UserProfileInsideVO result = new UserProfileInsideVO();
 		result.setUid(profile.getUid());
 		result.setNickname(profile.getNickname());
+		return new RestResult<>(result);
+	}
+	
+	/**
+	 * @Description: 根据userId获取UserProfile信息(可多个userId)
+	 * @author Hins
+	 * @date 2015年8月17日 上午11:58:23
+	 * 
+	 * @param uids
+	 * @return
+	 */
+	@GET
+	@Path("v1/user/list")
+	public RestResult<List<UserProfile>> getUserProfileUids(@QueryParam("uids") String uids) {
+		logger.info("api#user#getUserProfileUids |get user information  | uids: {}", uids);
+		ParameterUtil.assertNotBlank(uids, "参数为空");
+		List<UserProfile> result = userService.listUserProfile(ParameterUtil.str2longs(uids));
+		if (result == null) {
+			return new RestResult<>(ResultCode.RECORD_NOT_EXIST, "not found.");
+		}
 		return new RestResult<>(result);
 	}
 

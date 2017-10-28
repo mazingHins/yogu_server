@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.inject.Named;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,7 +16,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.yogu.CommonConstants;
 import com.yogu.commons.utils.HttpClientUtils;
 import com.yogu.commons.utils.JsonUtils;
-import com.yogu.commons.utils.StringUtils;
 import com.yogu.core.web.RestResult;
 import com.yogu.remote.user.dto.UserAddress;
 import com.yogu.remote.user.dto.UserAndAddress;
@@ -165,6 +165,43 @@ public class UserRemoteService {
 			logger.error("user#remote#getUidByPassport | Error | countryCode: {}, passport: {}", countryCode, "***", e);
 		}
 		return Collections.emptyMap();
+	}
+	
+	/**
+	 * 根据用户ID（多个）批量查询用户信息 根据查询结果，装载到map返回，key-用户ID，value-用户信息
+	 * 
+	 * @author Hins
+	 * @date 2015年8月17日 上午11:45:57
+	 * 
+	 * @param uid
+	 * @return UserProfile信息集合，key-userId，value-UserProfile，若无返回empty map
+	 */
+	public Map<Long, UserProfile> getUserProfileByUids(long... uid) {
+		Map<Long, UserProfile> map = new HashMap<Long, UserProfile>(uid.length * 4 / 3 + 1);
+		try {
+			String params = "";
+			if (uid != null) {
+				params = StringUtils.join(uid, ',');
+				// for (long id : uid) {
+				// params = params + "," + id;
+				// }
+				// params = params.substring(1, params.length());
+			}
+			String json = HttpClientUtils.doGet(host + "/api/v1/user/list?uids=" + params);
+
+			RestResult<List<UserProfile>> result = JsonUtils.parseObject(json,
+					new TypeReference<RestResult<List<UserProfile>>>() {
+					});
+			List<UserProfile> userList = result.getObject();
+			if (userList == null || userList.isEmpty())
+				return map;
+			for (UserProfile user : userList)
+				map.put(user.getUid(), user);
+			return map;
+		} catch (Exception e) {
+			logger.error("user#remote#getUserProfileByUids | Error | uid: {}, message: {}", uid, e.getMessage(), e);
+		}
+		return map;
 	}
 	
 
