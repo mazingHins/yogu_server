@@ -17,6 +17,7 @@ import com.yogu.core.SysType;
 import com.yogu.core.base.BaseParams;
 import com.yogu.core.constant.PayResultCode;
 import com.yogu.core.enums.BooleanConstants;
+import com.yogu.core.enums.CurrencyType;
 import com.yogu.core.enums.order.OrderStatus;
 import com.yogu.core.enums.pay.PayMode;
 import com.yogu.core.enums.pay.PayStatus;
@@ -382,6 +383,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 		req.setOrderNo(order.getOrderNo());
 		req.setTotalFee(order.getActualFee());// 2015-12-26 modify by hins 内容：请求支付宝金额为实际应付金额
 		req.setPayMode(order.getPayMode());
+		req.setCurrencyType(CurrencyType.CNY.getValue());
 		req.setBuyerUid(order.getUid());
 		req.setSellerUid(order.getStoreId());
 		req.setUserIp(userIp);
