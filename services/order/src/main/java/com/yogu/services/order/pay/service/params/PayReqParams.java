@@ -4,11 +4,6 @@ public class PayReqParams {
 	
 
 	/**
-	 * 支付请求来源：1-线上支付；2-货到付款
-	 */
-	private short sourceType;
-
-	/**
 	 * 内部平台订单号
 	 */
 	private long orderNo;
@@ -82,14 +77,6 @@ public class PayReqParams {
 	 * 订单总价，单位分
 	 */
 	private long orderFee;
-
-	public short getSourceType() {
-		return sourceType;
-	}
-
-	public void setSourceType(short sourceType) {
-		this.sourceType = sourceType;
-	}
 
 	public long getTotalFee() {
 		return totalFee;

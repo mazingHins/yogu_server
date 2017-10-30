@@ -473,8 +473,6 @@ public class PayServiceImpl implements PayService {
 
 		CurrencyType type = CurrencyType.valueOf(params.getCurrencyType());
 		ParameterUtil.assertNotNull(type, PayMessages.LOCALBALANCEAPI_GETPAY_PARAMS_CURRENCYTYPE_ILLEGAL());
-		PayType source = PayType.valueOf(params.getSourceType());
-		ParameterUtil.assertNotNull(source, PayMessages.LOCALBALANCEAPI_GETPAY_PARAMS_SOURCETYPE_ILLEGAL());
 		ParameterUtil.assertGreaterThanOrEqual(params.getOrderNo(), 1, PayMessages.LOCALBALANCEAPI_GETPAY_PARAMS_TRADENO_ILLEGAL());
 		ParameterUtil.assertGreaterThanOrEqual(params.getTotalFee(), 0, PayMessages.LOCALBALANCEAPI_GETPAY_PARAMS_TOTALFEE_ILLEGAL());
 		ParameterUtil.assertGreaterThanOrEqual(params.getBuyerUid(), 1, PayMessages.LOCALBALANCEAPI_GETPARAMS_BUYERID_ILLEGAL());
