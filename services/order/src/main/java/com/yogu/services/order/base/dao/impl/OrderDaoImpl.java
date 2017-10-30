@@ -57,7 +57,7 @@ public class OrderDaoImpl extends MyBatisDao implements OrderDao {
 		map.put("oldStatus", pojo.getOldStatus());
 		map.put("payNo", pojo.getPayNo());
 		map.put("updateTime", pojo.getUpdateTime());
-		return super.update("ccom.yogu.services.order.base.dao.OrderDao.updatePayNo", map);
+		return super.update("com.yogu.services.order.base.dao.OrderDao.updatePayNo", map);
 	}
 
 	@Override
