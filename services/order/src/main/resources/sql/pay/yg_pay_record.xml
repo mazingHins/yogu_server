@@ -5,12 +5,12 @@
 
 		<!-- 新增 -->
 	<insert id="save" parameterType="com.yogu.services.order.pay.entry.PayRecordPO" useGeneratedKeys="false" >
-		insert into yg_order.yg_pay_record (pay_id,pay_no,order_no,pay_mode,notify_id,buyer_uid,store_id,total_fee,order_fee,coupon_fee,goods_fee,use_coupon,pay_status,create_time,update_time,finish_time) values (#{payId},#{payNo},#{orderNo},#{payMode},#{notifyId},#{buyerUid},#{storeId},#{totalFee},#{orderFee},#{couponFee},#{goodsFee},#{useCoupon},#{notifyUrl},#{payStatus},#{createTime},#{updateTime},#{finishTime})
+		insert into yg_order.yg_pay_record (pay_id,pay_no,order_no,pay_mode,notify_id,buyer_uid,store_id,total_fee,order_fee,coupon_fee,goods_fee,use_coupon,pay_status,create_time,update_time,finish_time) values (#{payId},#{payNo},#{orderNo},#{payMode},#{notifyId},#{buyerUid},#{storeId},#{totalFee},#{orderFee},#{couponFee},#{goodsFee},#{useCoupon},#{payStatus},#{createTime},#{updateTime},#{finishTime})
 	</insert>
 
 	<!-- 更新 -->
 	<update id="update" parameterType="com.yogu.services.order.pay.entry.PayRecordPO">
-		update yg_order.yg_pay_record set pay_no=#{payNo},order_no=#{orderNo},pay_mode=#{payMode},notify_id=#{notifyId},buyer_uid=#{buyerUid},store_id=#{storeId},total_fee=#{totalFee},order_fee=#{orderFee},coupon_fee=#{couponFee},goods_fee=#{goodsFee},use_coupon=#{useCoupon},notify_url=#{notifyUrl},pay_status=#{payStatus},update_time=#{updateTime},finish_time=#{finishTime} where pay_id=#{payId}
+		update yg_order.yg_pay_record set pay_no=#{payNo},order_no=#{orderNo},pay_mode=#{payMode},notify_id=#{notifyId},buyer_uid=#{buyerUid},store_id=#{storeId},total_fee=#{totalFee},order_fee=#{orderFee},coupon_fee=#{couponFee},goods_fee=#{goodsFee},use_coupon=#{useCoupon},pay_status=#{payStatus},update_time=#{updateTime},finish_time=#{finishTime} where pay_id=#{payId}
 	</update>
 
 	<!-- 根据主键读取记录（主键可能有多个） -->
