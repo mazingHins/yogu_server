@@ -12,7 +12,6 @@ import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.VOUtil;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
-import com.yogu.remote.order.StoreRemoteService;
 import com.yogu.services.order.pay.service.params.PayReqParams;
 import com.yogu.services.order.utils.protocol.WechatApplyRefundResData;
 import com.yogu.services.order.utils.protocol.WechatBaseResData;
@@ -363,8 +362,6 @@ public class WechatApiReqHandler {
 			}
 		}
 		
-		private StoreRemoteService storeRemoteService = new StoreRemoteService();
-
 	}
 
 }
