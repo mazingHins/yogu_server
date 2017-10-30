@@ -44,7 +44,7 @@
 		where pay_id=#{payId}
 	</update>
 	
-	<select id="getByOrder" resultType="com.yogu.services.order.pay.entry.PayRecordPO">
+	<select id="getByOrderNo" resultType="com.yogu.services.order.pay.entry.PayRecordPO">
 		SELECT * FROM yg_order.yg_pay_record WHERE order_no=#{orderNo} limit 1
 	</select>
 	
