@@ -97,22 +97,7 @@
 	</bean> 
 
 	<!-- 拦截器：验签 -->
-    <mvc:interceptors>
-		<bean class="com.yogu.commons.spring.auth.jsp.WebAuthInterceptor">
-			<!-- 设置验签的路径，英文逗号隔开 -->
-			<!--<property name="paths" value="/*" />-->
-			<property name="exclude">
-				<set>
-					<value>/open/mazing/login.do</value>
-					<value>/admin/error</value>
-					<value>/admin/exception</value>
-				</set>
-			</property>
-		</bean>
-		<!-- 权限验证 -->
-		<bean class="com.yogu.services.backend.admin.annotation.authority.AuthorityInterceptor">
-		</bean>
-    </mvc:interceptors>
+    
 
 	<!-- 英文;隔开多个package -->
     <context:component-scan base-package="com.yogu">

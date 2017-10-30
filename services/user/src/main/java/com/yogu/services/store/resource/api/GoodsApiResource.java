@@ -197,7 +197,7 @@ public class GoodsApiResource {
 		}
  		
 		// 2. 装载返回结果
-		long goodsFee = 0;	// 总商品价格
+		long goodsFee = 0, storeId = 0;	// 总商品价格
 		Map<Long, GoodsOrderVO> goodsm = new HashMap<Long, GoodsOrderVO>();
 		for(PurchaseDetail detail : list){
 			Goods goods = goodsMap.get(detail.getGoodsKey());
@@ -211,11 +211,13 @@ public class GoodsApiResource {
 			vo.setTotalFee(tmp);
 			goodsFee = goodsFee + tmp;
 			goodsm.put(goods.getGoodsKey(), vo);
+			storeId = goods.getStoreId();
 		}
 		
 		StoreCreateOrderVO result = new StoreCreateOrderVO();
 		result.setGoodsFee(goodsFee);
 		result.setGoodsMap(goodsm);
+		result.setStoreId(storeId);
 		logger.info("api#LoaclOrderApiResource#createOrder | 创建订单接口，有关store域的操作success | result: {}", JsonUtils.toJSONString(result));
 		return new RestResult<>(result);
 		

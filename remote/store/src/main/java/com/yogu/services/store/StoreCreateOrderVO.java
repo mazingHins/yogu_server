@@ -28,6 +28,8 @@ public class StoreCreateOrderVO {
 	 */
 	private String body;
 	
+	private long storeId;
+	
 	public Map<Long, GoodsOrderVO> getGoodsMap() {
 		return goodsMap;
 	}
@@ -52,5 +54,12 @@ public class StoreCreateOrderVO {
 		this.body = body;
 	}
 
+	public long getStoreId() {
+		return storeId;
+	}
+
+	public void setStoreId(long storeId) {
+		this.storeId = storeId;
+	}
 	
 }

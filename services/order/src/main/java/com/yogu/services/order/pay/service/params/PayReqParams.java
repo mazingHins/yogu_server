@@ -29,14 +29,9 @@ public class PayReqParams {
 	private long buyerUid;
 
 	/**
-	 * 餐厅店主ID
-	 */
-	private long storeUid;
-
-	/**
 	 * 餐厅ID
 	 */
-	private long sellerUid;
+	private long storeId;
 
 	/**
 	 * 终端IP
@@ -110,14 +105,6 @@ public class PayReqParams {
 		this.buyerUid = buyerUid;
 	}
 
-	public long getSellerUid() {
-		return sellerUid;
-	}
-
-	public void setSellerUid(long sellerUid) {
-		this.sellerUid = sellerUid;
-	}
-
 	public String getUserIp() {
 		return userIp;
 	}
@@ -181,13 +168,13 @@ public class PayReqParams {
 	public void setOrderFee(long orderFee) {
 		this.orderFee = orderFee;
 	}
-
-	public long getStoreUid() {
-		return storeUid;
+	
+	public long getStoreId() {
+		return storeId;
 	}
 
-	public void setStoreUid(long storeUid) {
-		this.storeUid = storeUid;
+	public void setStoreId(long storeId) {
+		this.storeId = storeId;
 	}
 
 	public long getOrderNo() {

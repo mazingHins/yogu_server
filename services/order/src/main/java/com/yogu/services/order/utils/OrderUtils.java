@@ -28,10 +28,6 @@ public class OrderUtils {
 	
 	private static final Logger logger = LoggerFactory.getLogger(OrderUtils.class);
 	
-	private static final String OPEN_ALIPAY_PAY = "1";	// 平台启用支付宝支付的开关值
-	
-	private static final String OPEN_WECHAT_PAY = "1";	// 平台启用微信支付的开关值
-
 	/**
 	 * 判断费用金额是否超限
 	 * 
@@ -86,7 +82,7 @@ public class OrderUtils {
 		order.setFullAddress(StringUtils.isBlank(address.getFullAddress()) ? StringUtils.EMPTY : address.getFullAddress());
 		order.setContacts(address.getContacts());
 		order.setPhone(address.getPhone());
-//		order.setStoreId(store.getStoreId());
+		order.setStoreId(storeOrder.getStoreId());
 		order.setDiscountFee(0);
 		order.setTotalFee(order.getGoodsFee());
 		order.setActualFee(order.getTotalFee());

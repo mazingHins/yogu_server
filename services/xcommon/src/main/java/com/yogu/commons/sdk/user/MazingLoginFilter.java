@@ -3,8 +3,23 @@
  */
 package com.yogu.commons.sdk.user;
 
-import com.yogu.commons.sdk.user.encrypt.DefaultConfigurationDecoder;
-import com.yogu.commons.utils.encrypt.HMacSHA1;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.util.Args;
@@ -12,13 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.util.UrlPathHelper;
 
-import javax.servlet.*;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.*;
+import com.yogu.commons.sdk.user.encrypt.DefaultConfigurationDecoder;
 
 /**
  * Mazing统一登录接入方式的Filter <br>
@@ -34,11 +43,9 @@ public class MazingLoginFilter implements Filter {
 
 	private String callbackUrl;// 登录帐号后回调的地址
 
-	private String encodedCallbackUrl;
-
 	private MazingGetEncryptKeyThread getEncryptKeyThread = null;
 
-	private static final String LOGIN_URL = "https://user.mazing.com/open/mazing/login.xhtm";
+	private static final String LOGIN_URL = "/admin/login.xhtm";
 
 	private static final Set<String> STATIC_FILE_SET = new HashSet<>();
 
@@ -89,12 +96,6 @@ public class MazingLoginFilter implements Filter {
 
 		getEncryptKeyThread = new MazingGetEncryptKeyThread(appkey, appsecret, decoder, new MazingLoginContext());
 		getEncryptKeyThread.start();
-
-		try {
-			encodedCallbackUrl = URLEncoder.encode(this.callbackUrl, "utf-8");
-		} catch (UnsupportedEncodingException e) {
-			// ignore
-		}
 
 		initExclude(exclude);
 	}
@@ -169,11 +170,7 @@ public class MazingLoginFilter implements Filter {
 	 * @return
 	 */
 	private String createLoginUrl() {
-		long t = System.currentTimeMillis();
-		String appId = getEncryptKeyThread.getAppKey();
-		String sign = HMacSHA1.getSignature(appId + callbackUrl + t, getEncryptKeyThread.getAppSecret());
-		String url = LOGIN_URL + "?akey=" + appId + "&callback=" + encodedCallbackUrl + "&t=" + t + "&sign=" + sign;
-		return url;
+		return LOGIN_URL;
 	}
 
 	/**

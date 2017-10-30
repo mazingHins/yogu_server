@@ -385,7 +385,7 @@ public class OrderPayServiceImpl implements OrderPayService {
 		req.setPayMode(order.getPayMode());
 		req.setCurrencyType(CurrencyType.CNY.getValue());
 		req.setBuyerUid(order.getUid());
-		req.setSellerUid(order.getStoreId());
+		req.setStoreId(order.getStoreId());
 		req.setUserIp(userIp);
 		// 2016-01-09 modify by hins 内容：根据优惠券版本的需求，新增2个传递参数使用优惠券费用，优惠券承担方
 		req.setCouponFee(couponFee);

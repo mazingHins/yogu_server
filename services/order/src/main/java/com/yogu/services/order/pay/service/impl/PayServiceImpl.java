@@ -476,7 +476,6 @@ public class PayServiceImpl implements PayService {
 		ParameterUtil.assertGreaterThanOrEqual(params.getOrderNo(), 1, PayMessages.LOCALBALANCEAPI_GETPAY_PARAMS_TRADENO_ILLEGAL());
 		ParameterUtil.assertGreaterThanOrEqual(params.getTotalFee(), 0, PayMessages.LOCALBALANCEAPI_GETPAY_PARAMS_TOTALFEE_ILLEGAL());
 		ParameterUtil.assertGreaterThanOrEqual(params.getBuyerUid(), 1, PayMessages.LOCALBALANCEAPI_GETPARAMS_BUYERID_ILLEGAL());
-		ParameterUtil.assertGreaterThanOrEqual(params.getSellerUid(), 1, PayMessages.LOCALBALANCEAPI_GETPARAMS_SELLERUID_ILLEGAL());
 		ParameterUtil.assertGreaterThanOrEqual(params.getCouponFee(), 0, PayMessages.LOCALBALANCEAPI_GETPARAMS_COUPONFEE_ILLEGAL());
 
 		ParameterUtil.assertNotBlank(params.getUserIp(), PayMessages.LOCALBALANCEAPI_GETPARAMS_USERIP_EMPTY());

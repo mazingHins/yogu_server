@@ -524,7 +524,13 @@ public class UserServiceImpl implements UserService {
 		}
 		
 		return invite.getUid();
-		
 	}
+	
+	@Override
+	public User webLogin(String countryCode, String passport, String password, String ip) {
+		// web 登录 2016/3/11 by ten
+		return doLogin(countryCode, passport, password, null, null, ip, null, "webLogin");
+	}
+
 
 }

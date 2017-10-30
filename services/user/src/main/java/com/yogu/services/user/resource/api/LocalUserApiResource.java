@@ -1,29 +1,40 @@
 package com.yogu.services.user.resource.api;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.yogu.commons.utils.LogUtil;
+import com.yogu.commons.utils.ThreadLocalContext;
 import com.yogu.commons.validation.constraints.NotBlank;
+import com.yogu.core.base.BaseParams;
 import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
+import com.yogu.core.web.context.SecurityContext;
+import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.UserMessages;
 import com.yogu.remote.user.dto.User;
 import com.yogu.remote.user.dto.UserProfile;
 import com.yogu.services.user.base.service.UserService;
 import com.yogu.services.user.resource.vo.UserProfileInsideVO;
+import com.yogu.web.UserToken;
 
 /**
  * 用户相关的 本地API，提供给集群内部使用的
@@ -112,6 +123,44 @@ public class LocalUserApiResource {
 			return new RestResult<>(ResultCode.RECORD_NOT_EXIST, "not found.");
 		}
 		return new RestResult<>(result);
+	}
+	
+	@POST
+	@Path("security/webLogin.do")
+	public RestResult<Map<String, Object>> login(@FormParam("countryCode") String countryCode,
+			@FormParam("passport") String passport, @FormParam("password") String password, @FormParam("ip") String ip, @Context HttpServletRequest request) {
+		logger.info("user#api#webLogin | web登录start | ip: {}", ip);
+
+		String token = UserToken.getNew();
+		Map<String, Object> map = new HashMap<>(4);
+		int code = ResultCode.FAILURE;
+		String message = "失败";
+		try {
+			User loginUser = userService.webLogin(countryCode, passport, password, ip);
+			if (loginUser == null) {
+				message = "帐号或密码错误";
+			} else {
+				map.put("uid", loginUser.getUid());
+				map.put("nickname", loginUser.getNickname());
+				map.put("ut", token);
+
+				//new LoginInfoStore(loginUser.getUid(), token, secret, new Date()).addDevice(passport, LoginInfoStore.WEB, "", "").save();
+				BaseParams base = new BaseParams();
+				base.setAppName("web");
+				base.setAppVersion("1.0");
+				base.setSysName("");
+				base.setSysVersion("");
+				ThreadLocalContext.putThreadValue(SecurityContext.BASE_PARAMS, base);
+				code = ResultCode.SUCCESS;
+				message = "成功";
+			}
+		} catch (ServiceException e) {
+			code = e.getCode();
+			message = e.getMessage();
+		}
+
+		logger.info("user#api#webLogin | web登录{} | code: {}, message: {}", (code == ResultCode.SUCCESS ? "成功" : "失败"), code, message);
+		return new RestResult<>(code, message, map);
 	}
 
 }

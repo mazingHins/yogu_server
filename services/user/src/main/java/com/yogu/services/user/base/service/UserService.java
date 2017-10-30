@@ -40,6 +40,17 @@ public interface UserService {
 	 */
 	User appLogin(String countryCode, String passport, String password, BaseParams base, Point point,
 				  String ip, String ut);
+	
+	/**
+	 * web登录逻辑
+	 * @param countryCode 国家代码
+	 * @param passport 通行证
+	 * @param password 密码
+	 * @param ip 用户IP
+	 * @return 登录成功，返回用户信息
+	 * @author ten 2016/3/11
+	 */
+	User webLogin(String countryCode, String passport, String password, String ip);
 
 	/**
 	 * 判断登录是否成功, 无密登录, 验证码在上层已经校验
