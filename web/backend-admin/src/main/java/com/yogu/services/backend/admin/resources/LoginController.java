@@ -24,6 +24,7 @@ import com.yogu.commons.utils.IpAddressUtils;
 import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.LogUtil;
 import com.yogu.core.utils.MazingDomainUtils;
+import com.yogu.services.backend.admin.resources.form.ApplyLoginForm;
 import com.yogu.services.backend.admin.resources.form.LoginForm;
 
 /**
@@ -42,7 +43,7 @@ public class LoginController {
      * @return
      */
     @RequestMapping("login.xhtm")
-    public String index(BindingResult bindingResult, Model model) throws Exception {
+    public String index(@Valid ApplyLoginForm applyLoginForm, BindingResult bindingResult, Model model) throws Exception {
         if (bindingResult.hasErrors()) {
             String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
             logger.error("open#mazing#login | 应用请求登录参数错误");
