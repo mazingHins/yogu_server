@@ -44,6 +44,8 @@ public class MazingLoginFilter implements Filter {
 	private String callbackUrl;// 登录帐号后回调的地址
 
 	private static final String LOGIN_URL = "/admin/login.xhtm";
+	
+	private MazingGetEncryptKeyThread getEncryptKeyThread = null;
 
 	private static final Set<String> STATIC_FILE_SET = new HashSet<>();
 
@@ -91,6 +93,9 @@ public class MazingLoginFilter implements Filter {
 		}
 
 		logger.info("mazing#sdk#filter | callback: {}", callbackUrl);
+		
+		getEncryptKeyThread = new MazingGetEncryptKeyThread(appkey, appsecret, decoder, new MazingLoginContext());
+		getEncryptKeyThread.start();
 
 		initExclude(exclude);
 	}
