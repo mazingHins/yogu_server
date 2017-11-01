@@ -38,7 +38,7 @@ public class AdminLoggerAspect {
     private static final Logger logger = LoggerFactory.getLogger(AdminLoggerAspect.class);
 
     //标注该方法体为后置通知，当目标方法执行成功后执行该方法体
-    @AfterReturning(value = "within(com.mazing.services.backend.admin..*) && @annotation(adminLog)", returning = "obj")
+    @AfterReturning(value = "within(com.yogu.services.backend.admin..*) && @annotation(adminLog)", returning = "obj")
     public void addLogSuccess(JoinPoint jp, AdminLog adminLog, Object obj) {
 
 //        Object[] parames = jp.getArgs();//获取目标方法体参数
@@ -314,7 +314,7 @@ public class AdminLoggerAspect {
         return clazz != null && clazz.getClassLoader() == null;
     }
 
-    @AfterThrowing(pointcut="within(com.mazing.services.backend.admin..*) && @annotation(adminLog)", throwing="ex")
+    @AfterThrowing(pointcut="within(com.yogu.services.backend.admin..*) && @annotation(adminLog)", throwing="ex")
     public void addLogException(JoinPoint jp, AdminLog adminLog, Exception ex){
         logger.error("admin#aspect#addLogException | 记录方法执行异常的日志 | signature: {}, targetClass: {}, message: {}",
                 jp.getSignature().toString(),
