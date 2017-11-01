@@ -43,7 +43,7 @@ public class LoginController {
      * @return
      */
     @RequestMapping("login.xhtm")
-    public ModelAndView index(@Valid ApplyLoginForm applyLoginForm, BindingResult bindingResult) throws Exception {
+    public ModelAndView index(@Valid ApplyLoginForm applyLoginForm, BindingResult bindingResult) {
     	logger.info("login.xhtm start");
     	Map<String, Object> model = new HashMap<>();
         if (bindingResult.hasErrors()) {
