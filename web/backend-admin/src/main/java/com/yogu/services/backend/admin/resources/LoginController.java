@@ -48,12 +48,12 @@ public class LoginController {
             String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
             logger.error("open#mazing#login | 应用请求登录参数错误");
             model.addAttribute("message", message);
-            return "open/mazing/error";
+            return ("open/mazing/error");
         }
 
         long time = System.currentTimeMillis();
         model.addAttribute("t", time);
-        return "open/mazing/login";
+        return ("/open/mazing/login");
     }
 
     /**
@@ -77,13 +77,13 @@ public class LoginController {
 		if (bindingResult.hasErrors()) {
 			message = bindingResult.getAllErrors().get(0).getDefaultMessage();
 			logger.error("open#mazing#login | 参数错误 | message: {}", message);
-			return "open/mazing/error";
+			 return ("open/mazing/error");
 
 		}
 		if (!MazingDomainUtils.isMazingDomain(form.getCallback())) {
 			message = "非法的域名";
 			logger.error("open#mazing#login | 用户登录结果，回调url非法 | callback: {}", form.getCallback());
-			return "open/mazing/error";
+			return ("open/mazing/error");
 		} else {
 			Map<String, Object> loginResult = doLogin(form, ip);
 
