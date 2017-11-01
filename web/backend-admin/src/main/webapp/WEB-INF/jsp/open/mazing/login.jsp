@@ -26,10 +26,6 @@
   <input type="password" name="password" class="login-input" placeholder="Password">
   <input type="submit" value="Login" class="login-submit">
   <input type="hidden" name="countryCode" value="86"/>
-  <input type="hidden" name="appKey" value="<c:out value="${appKey}" escapeXml="true"/>"/>
-  <input type="hidden" name="callback" value="<c:out value="${callback}" escapeXml="true"/>"/>
-  <input type="hidden" name="token" value="<c:out value="${token}" escapeXml="true"/>"/>
-    <input type="hidden" name="t" value="<c:out value="${t}" />"/>
   <p class="login-help" style="display: none; color: #f0C800;" id="errorMessage"></p>
   <p class="login-help"><a href="#">Forgot password?</a></p>
 </form>

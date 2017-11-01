@@ -96,9 +96,6 @@
 		<property name="defaultEncoding" value="UTF-8" />
 	</bean> 
 
-	<!-- 拦截器：验签 -->
-    
-
 	<!-- 英文;隔开多个package -->
     <context:component-scan base-package="com.yogu">
 		<!-- <context:include-filter type="annotation" expression="org.aspectj.lang.annotation.Aspect" /> -->

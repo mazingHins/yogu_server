@@ -92,8 +92,7 @@ public class LoginController {
 			if (loginResult.containsKey("success")) {
 				boolean success = (Boolean) loginResult.get("success");
 				message = (String) loginResult.get("message");
-				logger.info("open#mazing#login | 用户登录结果 | success: {}, code: {}, message: {}", success,
-						loginResult.get("code"), message);
+				logger.info("open#mazing#login | 用户登录结果 | success: {}, code: {}, message: {}", success, loginResult.get("code"), message);
 				if (success) {
 					Map<String, Object> user = (Map<String, Object>) loginResult.get("object");
 					// 写 cookie
