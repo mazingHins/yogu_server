@@ -131,7 +131,7 @@
     </host-deploy>
 
     <!-- the default host, matching any host name -->
-    <host id="admin.yogu.com">
+    <host id="admin.yogubc.com">
       <!--
          - webapps can be overridden/extended in the resin.xml
         -->
