@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.backend.admin.dao.RoleDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.backend.admin.entry.RolePO" useGeneratedKeys="false" >
+		insert into yg_admin.yg_role (role_id,role_name,role_type,remarks,operator,last_modify,create_time) values (#{roleId},#{roleName},#{roleType},#{remarks},#{operator},#{lastModify},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据 -->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM yg_admin.yg_role WHERE role_id=#{roleId}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.yogu.services.backend.admin.entry.RolePO">
+		update yg_admin.yg_role set role_name=#{roleName},role_type=#{roleType},remarks=#{remarks},operator=#{operator},last_modify=#{lastModify} where role_id=#{roleId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.RolePO">
+		SELECT * FROM yg_admin.yg_role WHERE role_id=#{roleId}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.yogu.services.backend.admin.entry.RolePO">
+		SELECT * FROM yg_admin.yg_role
+	</select>
+
+	<select id="getByName" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.RolePO">
+		<![CDATA[
+			select * from yg_admin.yg_role where role_name = #{name}
+		]]>
+	</select>
+
+	<select id="statRole" parameterType="Map" resultType="int">
+		select count(1) from yg_admin.yg_role where 1=1
+		<if test="name != null and name!=''">
+			and role_name like #{name}
+		</if>
+	</select>
+
+	<select id="listRolesForPaging" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.RolePO">
+		select * from yg_admin.yg_role where 1=1
+		<if test="rolename != null and rolename!=''">
+			and role_name like #{rolename}
+		</if>
+
+		order by role_id desc limit #{startIndex}, #{limit}
+	</select>
+
+	<!-- 返回所有的角色 -->
+	<select id="listRoles" resultType="com.yogu.services.backend.admin.entry.RolePO">
+		select * from yg_admin.yg_role
+	</select>
+
+	<select id="listByAccount" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.RolePO">
+		<![CDATA[
+			select * from yg_admin.yg_role where role_id in
+			   (select role_id from yg_admin.yg_account_role_relation where uid = #{uid}) order by role_type desc
+		]]>
+	</select>
+</mapper>

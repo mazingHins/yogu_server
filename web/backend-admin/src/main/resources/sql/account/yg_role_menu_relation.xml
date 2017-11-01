@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.backend.admin.dao.RoleMenuRelationDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.backend.admin.entry.RoleMenuRelationPO" useGeneratedKeys="false" >
+		insert into yg_admin.yg_role_menu_relation (role_id,menu_id) values (#{roleId},#{menuId})
+	</insert>
+
+	<!-- 根据主键，删除数据 -->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM yg_admin.yg_role_menu_relation WHERE menu_id=#{menuId} AND role_id=#{roleId}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.yogu.services.backend.admin.entry.RoleMenuRelationPO">
+		update yg_admin.yg_role_menu_relation set  where menu_id=#{menuId} and role_id=#{roleId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.RoleMenuRelationPO">
+		SELECT * FROM yg_admin.yg_role_menu_relation WHERE menu_id=#{menuId} AND role_id=#{roleId}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.yogu.services.backend.admin.entry.RoleMenuRelationPO">
+		SELECT * FROM yg_admin.yg_role_menu_relation
+	</select>
+
+	<!-- 根据角色编号获取角色编号集合 -->
+	<select id="listMenusByRoleId" parameterType ="Map" resultType="com.yogu.services.backend.admin.entry.RoleMenuRelationPO">
+		select * from yg_admin.yg_role_menu_relation where role_id = #{roleId}
+	</select>
+
+	<!-- 批量插入角色菜单关联关系 -->
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into yg_admin.yg_role_menu_relation(role_id,menu_id) values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.roleId},#{item.menuId})
+		</foreach>
+	</insert>
+
+	<!-- 根据角色编号删除角色/菜单关联关系 -->
+	<delete id="deleteByRoleId" parameterType="Map">
+		delete from yg_admin.yg_role_menu_relation where role_id = #{roleId}
+	</delete>
+
+	<!-- 依据菜单删除角色菜单关系 -->
+	<delete id="deleteByMenu" parameterType="java.lang.Integer">
+		delete from yg_admin.yg_role_menu_relation where menu_id = #{menuId}
+	</delete>
+</mapper>

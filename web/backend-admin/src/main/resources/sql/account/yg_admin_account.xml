@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.backend.admin.dao.AdminAccountDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.backend.admin.entry.AdminAccountPO" useGeneratedKeys="false" >
+		insert into yg_admin.yg_admin_account (uid,realname,operator,status,mobile_no,default_data,last_modify,create_time) values (#{uid},#{realname},#{operator},#{status},#{mobileNo},#{defaultData},#{lastModify},#{createTime})
+	</insert>
+
+	<!-- 根据主键，删除数据 -->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM yg_admin.yg_admin_account WHERE uid=#{uid}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.yogu.services.backend.admin.entry.AdminAccountPO">
+		update yg_admin.yg_admin_account set realname=#{realname},operator=#{operator},mobile_no=#{mobileNo},last_modify=#{lastModify} where uid=#{uid}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.AdminAccountPO">
+		SELECT * FROM yg_admin.yg_admin_account WHERE uid=#{uid}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.yogu.services.backend.admin.entry.AdminAccountPO">
+		SELECT * FROM yg_admin.yg_admin_account
+	</select>
+
+	<!-- 修改账户状态 -->
+	<update id="updateStatus" parameterType="Map">
+		update yg_admin.yg_admin_account set status = #{newStatus},last_modify = #{lastModify} where uid = #{uid} and status = #{oldStatus}
+	</update>
+
+	<!-- 分页显示显示用户 -->
+	<select id="listAccounts" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.AdminAccountPO">
+		select * from yg_admin.yg_admin_account where
+		<choose>
+			<when test="keyword != null and keyword != ''">
+				realname like #{keyword} and
+			</when>
+		</choose>
+		<![CDATA[
+			1=1 order by uid DESC limit #{startIndex},#{limit}
+		]]>
+	</select>
+
+	<!-- 获取用户账号总数 -->
+	<select id="statAccount" resultType="Integer" parameterType="Map">
+		select count(*) from yg_admin.yg_admin_account where 1=1
+		<choose>
+			<when test="keyword != null and keyword != ''">
+				and realname like #{keyword}
+			</when>
+		</choose>
+	</select>
+</mapper>

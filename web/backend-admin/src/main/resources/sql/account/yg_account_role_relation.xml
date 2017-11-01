@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.backend.admin.dao.AccountRoleRelationDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.backend.admin.entry.AccountRoleRelationPO" useGeneratedKeys="false" >
+		insert into yg_admin.yg_account_role_relation (uid,role_id) values (#{uid},#{roleId})
+	</insert>
+
+	<!-- 根据主键，删除数据 -->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM yg_admin.yg_account_role_relation WHERE role_id=#{roleId} AND uid=#{uid}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.yogu.services.backend.admin.entry.AccountRoleRelationPO">
+		update yg_admin.yg_account_role_relation set  where role_id=#{roleId} and uid=#{uid}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.AccountRoleRelationPO">
+		SELECT * FROM yg_admin.yg_account_role_relation WHERE role_id=#{roleId} AND uid=#{uid}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.yogu.services.backend.admin.entry.AccountRoleRelationPO">
+		SELECT * FROM yg_admin.yg_account_role_relation
+	</select>
+
+	<!-- 通过用户编号查询该用户对应的角色信息 -->
+	<select id="listRoleByAccount" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.RolePO">
+		<![CDATA[
+			select * from yg_admin.yg_role where role_id in
+			   (select role_id from yg_admin.yg_account_role_relation where uid = #{uid}) order by role_id desc
+		]]>
+	</select>
+
+	<!-- 根据用户编号获取角色编号 -->
+	<select id="listByAccountId" parameterType="Long" resultType="com.yogu.services.backend.admin.entry.AccountRoleRelationPO">
+		select * from yg_admin.yg_account_role_relation where uid = #{uid};
+	</select>
+
+	<!-- 判断用户/角色是否已经存在 -->
+	<select id="isExist" parameterType="ccom.yogu.services.backend.admin.entry.RolePO" resultType="java.lang.Integer">
+		<![CDATA[
+			select count(uid) from yg_admin.yg_account_role_relation where uid = #{uid} and role_id = #{roleId}
+		]]>
+	</select>
+
+	<!-- 删除指定用户、角色信息 -->
+	<delete id="deleteSpecAccountRole" parameterType="com.yogu.services.backend.admin.entry.AccountRoleRelationPO">
+		delete from yg_admin.yg_account_role_relation where uid = #{uid} and role_id = #{roleId}
+	</delete>
+
+	<!-- 依据用户删除用户角色信息 -->
+	<delete id="deleteByAccount" parameterType="java.lang.Long">
+		delete from yg_admin.yg_account_role_relation where uid = #{uid}
+	</delete>
+
+</mapper>

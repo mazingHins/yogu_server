@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.backend.admin.dao.RoleResRelationDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.backend.admin.entry.RoleResRelationPO" useGeneratedKeys="false" >
+		insert into yg_admin.yg_role_res_relation (role_id,res_id) values (#{roleId},#{resId})
+	</insert>
+
+	<!-- 批量插入角色资源关联关系 -->
+	<insert id="insertBatch" parameterType="java.util.List">
+		insert into yg_admin.yg_role_res_relation (role_id,res_id) values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(#{item.roleId},#{item.resId})
+		</foreach>
+	</insert>
+
+	<!-- 根据roleId读取角色的资源权限 -->
+	<select id="listByRole" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.RoleResRelationPO">
+		SELECT * FROM yg_admin.yg_role_res_relation WHERE  role_id=#{roleId}
+	</select>
+
+	<!-- 删除角色对应的资源权限 -->
+	<delete id="deleteByRole" parameterType="Map">
+		DELETE FROM yg_admin.yg_role_res_relation WHERE  role_id=#{roleId}
+	</delete>
+
+	<!-- 查询角色访问的URL -->
+	<select id="listResourceByRole" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.UrlResourcePO">
+		SELECT b.* FROM yg_admin.yg_role_res_relation a INNER JOIN yg_admin.yg_url_resource b ON a.res_id=b.res_id and a.role_id=#{roleId}
+	</select>
+</mapper>

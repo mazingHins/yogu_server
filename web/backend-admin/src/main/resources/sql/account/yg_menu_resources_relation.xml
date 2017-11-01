@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.backend.admin.dao.MenuResourcesRelationDao">
+
+	<!-- 新增 -->
+	<insert id="save" parameterType="com.yogu.services.backend.admin.entry.MenuResourcesRelationPO" useGeneratedKeys="false" >
+		insert into yg_admin.yg_menu_resources_relation (menu_id,res_id) values (#{menuId},#{resId})
+	</insert>
+
+	<!-- 根据主键，删除数据 -->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM yg_admin.yg_menu_resources_relation WHERE menu_id=#{menuId} AND res_id=#{resId}
+	</delete>
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.yogu.services.backend.admin.entry.MenuResourcesRelationPO">
+		update yg_admin.yg_menu_resources_relation set  where menu_id=#{menuId} and res_id=#{resId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.MenuResourcesRelationPO">
+		SELECT * FROM yg_admin.yg_menu_resources_relation WHERE menu_id=#{menuId} AND res_id=#{resId}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll" resultType="com.yogu.services.backend.admin.entry.MenuResourcesRelationPO">
+		SELECT * FROM yg_admin.yg_menu_resources_relation
+	</select>
+
+	<!-- 查询指定菜单下的资源   -->
+	<select id="listSpecResourceByMenu" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.UrlResourcePO">
+		<![CDATA[
+			select * from yg_admin.yg_url_resource a inner join yg_admin.yg_menu_resources_relation b on a.res_id=b.res_id where a.app_id=#{appId} and b.menu_id=#{menuId} order by a.sequence desc, a.parent_res_id desc
+		 ]]>
+	</select>
+
+	<!-- 查询指定菜单资源 -->
+	<select id="getMenuResource" parameterType="Map" resultType="com.yogu.services.backend.admin.entry.MenuResourcesRelationPO">
+		<![CDATA[
+			select * from yg_admin.yg_menu_resources_relation where menu_id = #{menuId} and res_id = #{resId}
+		]]>
+	</select>
+
+	<!-- 删除指定菜单/资源关系 -->
+	<delete id="deleteSpecResourceMenu" parameterType="com.mazing.services.backend.admin.entry.MenuResourcesRelationPO">
+		delete from yg_admin.yg_menu_resources_relation where  menu_id = #{menuId} and res_id = #{resId}
+	</delete>
+
+	<!-- 查询菜单下的资源 -->
+	<select id="listResource" parameterType="List" resultType="java.lang.Integer">
+		select res_id from yg_admin.yg_menu_resources_relation where menu_id in
+		<foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+			(#{item})
+		</foreach>
+	</select>
+
+	<!-- 依据资源获取菜单资源关系 -->
+	<select id="getByResource" parameterType="java.lang.Integer" resultType="com.mazing.services.backend.admin.entry.MenuResourcesRelationPO">
+		select * from yg_admin.yg_menu_resources_relation where res_id = #{resId}
+	</select>
+
+	<!-- 依据资源删除菜单资源关系 -->
+	<delete id="deleteByResource" parameterType="java.lang.Integer">
+		delete from yg_admin.yg_menu_resources_relation where res_id = #{resId}
+	</delete>
+
+	<!-- 依据资源更新菜单资源关系 -->
+	<update id="updateMenuByResource" parameterType="com.mazing.services.backend.admin.entry.MenuResourcesRelationPO">
+		update yg_admin.yg_menu_resources_relation set menu_id = #{menuId} where res_id = #{resId}
+	</update>
+</mapper>
