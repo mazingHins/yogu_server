@@ -135,7 +135,7 @@
       <!--
          - webapps can be overridden/extended in the resin.xml
         -->
-      <host-name>admin.yogu.com</host-name>
+      <host-name>admin.yogubc.com</host-name>
       
       <web-app id="/" document-directory="/data/webapps/admin.yogu.com/" archive-path="/data/app/yogu/web/yogu-backend-admin.war" redeploy-mode="manual">
             <form-parameter-max>200</form-parameter-max>
