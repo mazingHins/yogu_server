@@ -44,6 +44,7 @@ public class LoginController {
      */
     @RequestMapping("login.xhtm")
     public ModelAndView index(@Valid ApplyLoginForm applyLoginForm, BindingResult bindingResult) throws Exception {
+    	logger.info("login.xhtm start");
     	Map<String, Object> model = new HashMap<>();
         if (bindingResult.hasErrors()) {
             String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
@@ -51,7 +52,7 @@ public class LoginController {
             model.put("message", message);
             return new ModelAndView("/open/mazing/error", model);
         }
-
+        logger.info("login.xhtm success");
         long time = System.currentTimeMillis();
         model.put("t", time);
         return new ModelAndView("/open/mazing/login", model);
