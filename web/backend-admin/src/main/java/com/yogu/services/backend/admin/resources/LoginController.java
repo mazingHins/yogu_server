@@ -11,10 +11,10 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.yogu.CommonConstants;
@@ -43,17 +43,18 @@ public class LoginController {
      * @return
      */
     @RequestMapping("login.xhtm")
-    public String index(@Valid ApplyLoginForm applyLoginForm, BindingResult bindingResult, Model model) throws Exception {
+    public ModelAndView index(@Valid ApplyLoginForm applyLoginForm, BindingResult bindingResult) throws Exception {
+    	Map<String, Object> model = new HashMap<>();
         if (bindingResult.hasErrors()) {
             String message = bindingResult.getAllErrors().get(0).getDefaultMessage();
             logger.error("open#mazing#login | 应用请求登录参数错误");
-            model.addAttribute("message", message);
-            return ("open/mazing/error");
+            model.put("message", message);
+            return new ModelAndView("/open/mazing/error", model);
         }
 
         long time = System.currentTimeMillis();
-        model.addAttribute("t", time);
-        return ("/open/mazing/login");
+        model.put("t", time);
+        return new ModelAndView("/open/mazing/login", model);
     }
 
     /**
