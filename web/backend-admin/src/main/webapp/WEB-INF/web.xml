@@ -60,7 +60,7 @@
 
 	<filter>
 		<filter-name>adminFilter</filter-name>
-		<filter-class>com.yogu.services.backend.admin.contextt.AdminFilter</filter-class>
+		<filter-class>com.yogu.services.backend.admin.context.AdminFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>adminFilter</filter-name>
