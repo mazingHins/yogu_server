@@ -42,7 +42,7 @@
 	</select>
 
 	<!-- 判断用户/角色是否已经存在 -->
-	<select id="isExist" parameterType="ccom.yogu.services.backend.admin.entry.RolePO" resultType="java.lang.Integer">
+	<select id="isExist" parameterType="com.yogu.services.backend.admin.entry.RolePO" resultType="java.lang.Integer">
 		<![CDATA[
 			select count(uid) from yg_admin.yg_account_role_relation where uid = #{uid} and role_id = #{roleId}
 		]]>
