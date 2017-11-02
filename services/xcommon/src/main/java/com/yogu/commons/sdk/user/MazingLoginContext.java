@@ -183,7 +183,7 @@ public class MazingLoginContext extends MazingWebContext{
             MazingCookie mc = new MazingCookie(DOMAIN, true);
             mc.setCookie(response, COOKIE_KEY, value, cookieTimeout);
         } catch (Exception e) {
-            logger.error("mazing#sdk#login | 加密cookie失败");
+            logger.error("mazing#sdk#login | 加密cookie失败 | encryptKey2: {}, context: {}", encryptKey2, context, e);
             throw new RuntimeException("加密cookie失败");
         }
     }
