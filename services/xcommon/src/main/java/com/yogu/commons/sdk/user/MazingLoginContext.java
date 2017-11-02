@@ -25,7 +25,7 @@ public class MazingLoginContext extends MazingWebContext{
 
     private static final String COOKIE_KEY = "mazing_id";
 
-    private static final String DOMAIN = "mazing.com";
+    private static final String DOMAIN = "yogubc.com";
 
     /**
      * 获取 uid
