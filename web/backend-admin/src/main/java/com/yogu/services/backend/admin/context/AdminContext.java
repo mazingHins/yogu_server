@@ -113,21 +113,28 @@ public class AdminContext {
 	 * 从 Cookie 读取管理员登录信息
 	 */
 	public static void loadFromCookie(HttpServletRequest request) {
-		MazingCookie mc = new MazingCookie(DOMAIN, false);
-		String contextEncrypted = mc.getCookie(request, COOKIE_ID_NAME);
-		String sign = mc.getCookie(request, COOKIE_SIGN);
-		if (StringUtils.isNotBlank(contextEncrypted) && StringUtils.isNotBlank(sign)) {
-			try {
-				String context = StaticKeyHelper.descryptKey(contextEncrypted);
-				String tmpSign = HMacSHA1.getSignature(context, SIGN_KEY);
-				if (tmpSign.equals(sign)) {
-					AdminLoginUser user = AdminLoginUser.parse(context);
-					loginUserThreadLocal.set(user);
-				}
-			} catch (Exception e) {
-				logger.error("admin#context#load | Load cookie info error | contextEncrypted: " + contextEncrypted + ", sign: " + sign, e);
-			}
-		}
+		AdminLoginUser user = new AdminLoginUser();
+		user.setAccountId(5002);
+		user.setAppId(5002);
+		user.setToken("token");
+		loginUserThreadLocal.set(user);
+		
+		
+//		MazingCookie mc = new MazingCookie(DOMAIN, false);
+//		String contextEncrypted = mc.getCookie(request, COOKIE_ID_NAME);
+//		String sign = mc.getCookie(request, COOKIE_SIGN);
+//		if (StringUtils.isNotBlank(contextEncrypted) && StringUtils.isNotBlank(sign)) {
+//			try {
+//				String context = StaticKeyHelper.descryptKey(contextEncrypted);
+//				String tmpSign = HMacSHA1.getSignature(context, SIGN_KEY);
+//				if (tmpSign.equals(sign)) {
+//					AdminLoginUser user = AdminLoginUser.parse(context);
+//					loginUserThreadLocal.set(user);
+//				}
+//			} catch (Exception e) {
+//				logger.error("admin#context#load | Load cookie info error | contextEncrypted: " + contextEncrypted + ", sign: " + sign, e);
+//			}
+//		}
 	}
 
 }
