@@ -636,15 +636,22 @@ public class MenuServiceImpl implements MenuService {
 		return VOUtil.fromList(collections, UrlResource.class);
 		*/
 		Map<Integer, UrlResourcePO> resourceMap = new HashMap<>(10);
-		for (AccountRoleRelation arr : accountRoleList) {
-			List<UrlResourcePO> list = roleResRelationDao.listResourceByRole(arr.getRoleId());
-			for (UrlResourcePO res : list) {
-				Integer resId = res.getResId();
-				if (!resourceMap.containsKey(resId)) {
-					resourceMap.put(resId, res);
-				}
+		List<UrlResourcePO> list = urlResourceDao.listAll();
+		for (UrlResourcePO res : list) {
+			Integer resId = res.getResId();
+			if (!resourceMap.containsKey(resId)) {
+				resourceMap.put(resId, res);
 			}
 		}
+//		for (AccountRoleRelation arr : accountRoleList) {
+//			List<UrlResourcePO> list = roleResRelationDao.listResourceByRole(arr.getRoleId());
+//			for (UrlResourcePO res : list) {
+//				Integer resId = res.getResId();
+//				if (!resourceMap.containsKey(resId)) {
+//					resourceMap.put(resId, res);
+//				}
+//			}
+//		}
 		Collection<UrlResourcePO> collections = resourceMap.values();
 		return VOUtil.fromList(collections, UrlResource.class);
 	}
