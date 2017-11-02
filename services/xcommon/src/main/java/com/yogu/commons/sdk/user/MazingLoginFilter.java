@@ -43,7 +43,7 @@ public class MazingLoginFilter implements Filter {
 
 	private String callbackUrl;// 登录帐号后回调的地址
 
-	private static final String LOGIN_URL = "https://admin.yogubc.com/open/yogu/login.xhtm";
+	private static final String LOGIN_URL = "http://admin.yogubc.com/open/yogu/login.xhtm";
 
 	private MazingGetEncryptKeyThread getEncryptKeyThread = null;
 

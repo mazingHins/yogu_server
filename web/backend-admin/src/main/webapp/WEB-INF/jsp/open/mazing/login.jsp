@@ -30,25 +30,6 @@
   <p class="login-help"><a href="#">Forgot password?</a></p>
 </form>
 
-<script type="text/javascript">
-    $(function () {
-        $('#loginForm').ajaxForm({
-            complete: function (xhr) {
-              try {
-                eval('json=' + xhr.responseText);
-                if (json.success) {
-                    window.location.href = json.object;
-                }
-                else {
-                    $("#errorMessage").html(json.message);
-                    $("#errorMessage").css("display", "block");
-                }
 
-              } catch (e) {
-              }
-            }
-        });
-    });
-</script>
 </body>
 </html>

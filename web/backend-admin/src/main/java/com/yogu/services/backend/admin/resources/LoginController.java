@@ -71,18 +71,17 @@ public class LoginController {
      * @param bindingResult 表单校验结果，spring注入
      * @return result.success=true表示成功，result.callback=要跳转的地址
      */
-    @ResponseBody
     @RequestMapping("login.do")
-    public RestResult<String> login(@Valid LoginForm form,  BindingResult bindingResult, HttpServletRequest request,
+    public String login(@Valid LoginForm form,  BindingResult bindingResult, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		String ip = IpAddressUtils.getClientIpAddr(request);
 		logger.info("open#mazing#login | 用户登录start | countryCode: {}, passport: {}, ip: {}", form.getCountryCode(),
 				LogUtil.hidePassport(form.getPassport()), ip);
 
 		String message = "参数错误";
-		int code = ResultCode.FAILURE;
 		if (bindingResult.hasErrors()) {
 			logger.error("open#mazing#login | 参数错误 | message: {}", message);
+			 return "open/mazing/error";
 		}
 		Map<String, Object> loginResult = doLogin(form, ip);
 
@@ -96,6 +95,7 @@ public class LoginController {
 				if (adminAccount == null) {
 		            logger.error("admin#login | 管理员登录错误: 不是管理员 | uid: {}, ip: {}", user.get("uid"), ip);
 		            message = "您不是管理员，不能登录系统";
+		            return "open/mazing/error";
 		        }else{
 		        	// 写 cookie
 					Map<String, Object> map = new HashMap<>(4);
@@ -104,12 +104,10 @@ public class LoginController {
 					map.put("nickname", user.get("nickname"));
 					map.put("loginTime", System.currentTimeMillis());
 					MazingLoginContext.saveMazingLoginUserToCookie(response, map);
-					message = "成功";
-					code = ResultCode.SUCCESS;
 		        }
 			}
 		}
-		return new RestResult<>(code, message, "/admin/welcome.xhtm");
+		return "/index";
 	}
 
 
