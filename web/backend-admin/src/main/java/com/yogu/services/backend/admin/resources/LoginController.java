@@ -92,7 +92,7 @@ public class LoginController {
 			logger.info("open#mazing#login | 用户登录结果 | success: {}, code: {}, message: {}", success, loginResult.get("code"), message);
 			if (success) {
 				Map<String, Object> user = (Map<String, Object>) loginResult.get("object");
-				AdminAccount adminAccount = adminAccountService.getById((Long)user.get("uid"));
+				AdminAccount adminAccount = adminAccountService.getById((Integer)user.get("uid"));
 				if (adminAccount == null) {
 		            logger.error("admin#login | 管理员登录错误: 不是管理员 | uid: {}, ip: {}", user.get("uid"), ip);
 		            message = "您不是管理员，不能登录系统";
