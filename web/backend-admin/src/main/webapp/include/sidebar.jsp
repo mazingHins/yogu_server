@@ -1,11 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
-<%@ page import="com.mazing.commons.server.context.MainframeBeanFactory" %>
-<%@ page import="com.mazing.commons.utils.resource.MenuItem" %>
-<%@ page import="com.mazing.services.backend.admin.service.MenuService" %>
-<%@ page import="com.mazing.services.backend.admin.util.AppConstants" %>
-<%@ page import="com.mazing.services.backend.admin.util.HtmlMenuGenerator" %>
-<%@ page import="com.mazing.services.backend.admin.context.AdminContext" %>
+<%@ page import="com.yogu.commons.server.context.MainframeBeanFactory" %>
+<%@ page import="com.yogu.commons.utils.resource.MenuItem" %>
+<%@ page import="com.yogu.services.backend.admin.service.MenuService" %>
+<%@ page import="com.yogu.services.backend.admin.util.AppConstants" %>
+<%@ page import="com.yogu.services.backend.admin.util.HtmlMenuGenerator" %>
+<%@ page import="com.yogu.services.backend.admin.context.AdminContext" %>
 <!-- Left side column. contains the logo and sidebar -->
 <aside class="main-sidebar" th:fragment="sidebar">
 
