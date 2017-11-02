@@ -64,11 +64,8 @@ public class LoginController {
      * @param bindingResult 表单校验结果，spring注入
      * @return result.success=true表示成功，result.callback=要跳转的地址
      */
-    @ResponseBody
     @RequestMapping("login.do")
-    public String login(@Valid LoginForm form,
-                                     BindingResult bindingResult,
-                                     HttpServletRequest request,
+    public String login(@Valid LoginForm form,  BindingResult bindingResult, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		String ip = IpAddressUtils.getClientIpAddr(request);
 		logger.info("open#mazing#login | 用户登录start | countryCode: {}, passport: {}, ip: {}", form.getCountryCode(),
@@ -107,8 +104,7 @@ public class LoginController {
 				}
 			}
 		}
-
-		return "admin/welcome.xhtm";
+		return ("/index");
 	}
 
 
