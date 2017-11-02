@@ -277,33 +277,33 @@ public class ApiAuthenticatorImpl implements Authenticator {
 		String ctxPath = helper.getOriginatingContextPath(request);
 		//logger.info("apiAuth#authenticate | 开始校验封签 | checkSecurityPath");
 		uri = uri.replaceFirst(ctxPath, "");
-		if (uri.startsWith("/api/security/")) {
-			Map<String, String[]> params = readHeaderParams(request);
-			Map<String, String[]> pm = new HashMap<>(request.getParameterMap());
-			params.putAll(pm);
-			params.remove("sign");
-			String sign = getSign(request);
-			if (StringUtils.isBlank(sign)) {
-				throw new AuthenticationException(ResultCode.PARAMETER_ERROR, "sign is empty.");
-			}
-
-			// 校验appKey
-			String appKey = SignUtils.getParam(params, "akey", "");
-			// 获取appSecret
-			String secret = (appKey == null ? null : ConfigRemoteService.getConfig(ConfigGroupConstants.APP_KEY, appKey));
-
-			if (secret == null) {
-				logger.error("api#interceptor | secret=null | apikey: {}", LogUtil.hideAppKey(appKey));
-			}
-			String source = SignUtils.signSource(params);
-
-			String tmpSign = HMacSHA1.getSignature(source, secret);
-			if (tmpSign == null || !tmpSign.equals(sign)) {
-				logger.error("api#interceptor | 签名失败 | queryString: " + request.getQueryString());
-				logger.error("api#interceptor | 签名失败 | ip: {}, source: {}, sign: {}, tmpSign: {}", ip, source, sign, tmpSign);
-				throw new AuthenticationException(ResultCode.PARAMETER_ERROR, "sign is incorrect.");
-			}
-		}
+//		if (uri.startsWith("/api/security/")) {
+//			Map<String, String[]> params = readHeaderParams(request);
+//			Map<String, String[]> pm = new HashMap<>(request.getParameterMap());
+//			params.putAll(pm);
+//			params.remove("sign");
+//			String sign = getSign(request);
+//			if (StringUtils.isBlank(sign)) {
+//				throw new AuthenticationException(ResultCode.PARAMETER_ERROR, "sign is empty.");
+//			}
+//
+//			// 校验appKey
+//			String appKey = SignUtils.getParam(params, "akey", "");
+//			// 获取appSecret
+//			String secret = (appKey == null ? null : ConfigRemoteService.getConfig(ConfigGroupConstants.APP_KEY, appKey));
+//
+//			if (secret == null) {
+//				logger.error("api#interceptor | secret=null | apikey: {}", LogUtil.hideAppKey(appKey));
+//			}
+//			String source = SignUtils.signSource(params);
+//
+//			String tmpSign = HMacSHA1.getSignature(source, secret);
+//			if (tmpSign == null || !tmpSign.equals(sign)) {
+//				logger.error("api#interceptor | 签名失败 | queryString: " + request.getQueryString());
+//				logger.error("api#interceptor | 签名失败 | ip: {}, source: {}, sign: {}, tmpSign: {}", ip, source, sign, tmpSign);
+//				throw new AuthenticationException(ResultCode.PARAMETER_ERROR, "sign is incorrect.");
+//			}
+//		}
 	}
 
 	// ####
