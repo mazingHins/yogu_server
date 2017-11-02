@@ -5,12 +5,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Cookie 操作，不涉及任何加密的内容
  * @author ten 2015/11/16.
  */
 public class MazingCookie {
+	
+	 protected static final Logger logger = LoggerFactory.getLogger(MazingCookie.class);
 
     // private static final Logger logger = LoggerFactory.getLogger(MazingCookie.class);
 
@@ -85,6 +89,7 @@ public class MazingCookie {
             return null;
         }
         for (int i = 0; i < cookies.length; i++) {
+        	logger.info(" cookie name | name: {}, cname: {}, cvalue: {}", name, cookies[i].getName(), cookies[i].getValue());
             if (name.equals(cookies[i].getName())) {
                 String value = cookies[i].getValue();
 
