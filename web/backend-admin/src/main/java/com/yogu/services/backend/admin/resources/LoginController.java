@@ -10,6 +10,7 @@ import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +24,12 @@ import com.yogu.commons.utils.HttpClientUtils;
 import com.yogu.commons.utils.IpAddressUtils;
 import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.LogUtil;
-import com.yogu.core.utils.MazingDomainUtils;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
+import com.yogu.services.backend.admin.dto.AdminAccount;
 import com.yogu.services.backend.admin.resources.form.ApplyLoginForm;
 import com.yogu.services.backend.admin.resources.form.LoginForm;
+import com.yogu.services.backend.admin.service.AdminAccountService;
 
 /**
  * 用户登录
@@ -39,6 +41,9 @@ public class LoginController {
 
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
 	private static final String host = CommonConstants.USER_DOMAIN;
+	
+	@Autowired
+	private AdminAccountService adminAccountService;
 
     /**
      * 登录主页，xhtm 仅用于展示页面
@@ -79,19 +84,20 @@ public class LoginController {
 		if (bindingResult.hasErrors()) {
 			logger.error("open#mazing#login | 参数错误 | message: {}", message);
 		}
-		if (!MazingDomainUtils.isMazingDomain(form.getCallback())) {
-			message = "非法的域名";
-			logger.error("open#mazing#login | 用户登录结果，回调url非法 | callback: {}", form.getCallback());
-		} else {
-			Map<String, Object> loginResult = doLogin(form, ip);
+		Map<String, Object> loginResult = doLogin(form, ip);
 
-			if (loginResult.containsKey("success")) {
-				boolean success = (Boolean) loginResult.get("success");
-				message = (String) loginResult.get("message");
-				logger.info("open#mazing#login | 用户登录结果 | success: {}, code: {}, message: {}", success, loginResult.get("code"), message);
-				if (success) {
-					Map<String, Object> user = (Map<String, Object>) loginResult.get("object");
-					// 写 cookie
+		if (loginResult.containsKey("success")) {
+			boolean success = (Boolean) loginResult.get("success");
+			message = (String) loginResult.get("message");
+			logger.info("open#mazing#login | 用户登录结果 | success: {}, code: {}, message: {}", success, loginResult.get("code"), message);
+			if (success) {
+				Map<String, Object> user = (Map<String, Object>) loginResult.get("object");
+				AdminAccount adminAccount = adminAccountService.getById(Long.valueOf((String) user.get("uid")));
+				if (adminAccount == null) {
+		            logger.error("admin#login | 管理员登录错误: 不是管理员 | uid: {}, ip: {}", user.get("uid"), ip);
+		            message = "您不是管理员，不能登录系统";
+		        }else{
+		        	// 写 cookie
 					Map<String, Object> map = new HashMap<>(4);
 					map.put("token", user.get("ut"));
 					map.put("uid", user.get("uid"));
@@ -100,7 +106,7 @@ public class LoginController {
 					MazingLoginContext.saveMazingLoginUserToCookie(response, map);
 					message = "成功";
 					code = ResultCode.SUCCESS;
-				}
+		        }
 			}
 		}
 		return new RestResult<>(code, message, "/admin/welcome.xhtm");
