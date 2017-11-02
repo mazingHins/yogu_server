@@ -264,7 +264,7 @@ public class MenuServiceImpl implements MenuService {
 
 	@Override
 	public MenuItem getMenuTree(int appId) {
-		List<MenuPO> menuList = menuDao.listByAppId(appId);
+		List<MenuPO> menuList = menuDao.listAll();
 		MenuItem root = new MenuItem("root", "", true);
 		if (menuList.size() > 0) {
 			buildTreeMap(appId, root, menuList);
@@ -278,7 +278,7 @@ public class MenuServiceImpl implements MenuService {
 		if (accountId <= 0) {
 			return new MenuItem("root", "", true);
 		}
-		List<MenuPO> menuList = menuDao.listByAppId(appId);
+		List<MenuPO> menuList = menuDao.listAll();
 		menuList = gainHasPermissionMenu(accountId, menuList);
 		MenuItem root = new MenuItem("root", "", true);
 		if (menuList.size() > 0) {

@@ -291,7 +291,7 @@ public class RoleServiceImpl implements RoleService {
 
 	@Override
 	public List<RoleMenuRelation> listRoleMenus(int roleId) {
-		return VOUtil.fromList(roleMenuRelationDao.listMenusByRoleId(roleId), RoleMenuRelation.class);
+		return VOUtil.fromList(roleMenuRelationDao.listAll(), RoleMenuRelation.class);
 	}
 
 	@Override

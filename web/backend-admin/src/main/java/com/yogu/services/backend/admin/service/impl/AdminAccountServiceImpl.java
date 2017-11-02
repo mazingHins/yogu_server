@@ -191,7 +191,7 @@ public class AdminAccountServiceImpl implements AdminAccountService {
 
 	@Override
 	public List<AccountRoleRelation> listAccountRoles(long uid) {
-		return VOUtil.fromList(accountRoleRelationDao.listRoleByAccount(uid), AccountRoleRelation.class);
+		return VOUtil.fromList(accountRoleRelationDao.listAll(), AccountRoleRelation.class);
 	}
 
 	@Override
