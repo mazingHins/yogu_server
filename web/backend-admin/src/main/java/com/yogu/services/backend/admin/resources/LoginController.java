@@ -24,6 +24,8 @@ import com.yogu.commons.utils.IpAddressUtils;
 import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.LogUtil;
 import com.yogu.core.utils.MazingDomainUtils;
+import com.yogu.core.web.RestResult;
+import com.yogu.core.web.ResultCode;
 import com.yogu.services.backend.admin.resources.form.ApplyLoginForm;
 import com.yogu.services.backend.admin.resources.form.LoginForm;
 
@@ -64,25 +66,22 @@ public class LoginController {
      * @param bindingResult 表单校验结果，spring注入
      * @return result.success=true表示成功，result.callback=要跳转的地址
      */
+    @ResponseBody
     @RequestMapping("login.do")
-    public String login(@Valid LoginForm form,  BindingResult bindingResult, HttpServletRequest request,
+    public RestResult<String> login(@Valid LoginForm form,  BindingResult bindingResult, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		String ip = IpAddressUtils.getClientIpAddr(request);
 		logger.info("open#mazing#login | 用户登录start | countryCode: {}, passport: {}, ip: {}", form.getCountryCode(),
 				LogUtil.hidePassport(form.getPassport()), ip);
 
-		String message = "";
-
+		String message = "参数错误";
+		int code = ResultCode.FAILURE;
 		if (bindingResult.hasErrors()) {
-			message = bindingResult.getAllErrors().get(0).getDefaultMessage();
 			logger.error("open#mazing#login | 参数错误 | message: {}", message);
-			 return ("open/mazing/error");
-
 		}
 		if (!MazingDomainUtils.isMazingDomain(form.getCallback())) {
 			message = "非法的域名";
 			logger.error("open#mazing#login | 用户登录结果，回调url非法 | callback: {}", form.getCallback());
-			return ("open/mazing/error");
 		} else {
 			Map<String, Object> loginResult = doLogin(form, ip);
 
@@ -99,12 +98,12 @@ public class LoginController {
 					map.put("nickname", user.get("nickname"));
 					map.put("loginTime", System.currentTimeMillis());
 					MazingLoginContext.saveMazingLoginUserToCookie(response, map);
-					// redirect
 					message = "成功";
+					code = ResultCode.SUCCESS;
 				}
 			}
 		}
-		return ("/index");
+		return new RestResult<>(code, message, "/admin/welcome.xhtm");
 	}
 
 
