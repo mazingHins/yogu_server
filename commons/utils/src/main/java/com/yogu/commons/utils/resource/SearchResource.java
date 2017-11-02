@@ -31,7 +31,7 @@ public class SearchResource {
 	/**
 	 * 默认的资源路径
 	 */
-	public static final String DEFAULT_RESOURCE_PATH = "com/mazing/services/backend/**/*.class";
+	public static final String DEFAULT_RESOURCE_PATH = "com/yogu/services/backend/**/*.class";
 
 	/**
 	 * 菜单描述
