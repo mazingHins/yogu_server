@@ -1,7 +1,6 @@
-<%@ page import="com.mazing.core.enums.pay.PayMode"%>
-<%@ page import="com.mazing.core.enums.pay.PayType" %>
-<%@ page import="com.mazing.core.enums.order.OrderStatus" %>
-<%@ page import="com.mazing.core.enums.order.OrderIsSysConfirm" %>
+<%@ page import="com.yogu.core.enums.pay.PayMode"%>
+<%@ page import="com.yogu.core.enums.pay.PayType" %>
+<%@ page import="com.yogu.core.enums.order.OrderStatus" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -156,10 +155,8 @@
 			{{/if}}
 			{{if status == <%=OrderStatus.CONFIRM_RECEIPT_USER.getValue()%>}}
 			<span style="color:green;">买家确认收货</span>
-				{{if sysConfirm == <%=OrderIsSysConfirm.YES.getValue()%>}}
 				<!-- 订单是否自动签收, 1-不是, 2-是 -->
 				（<span style="color: green;">系统自动签收</span>）
-				{{/if}}
 			{{/if}}
 			{{if status == <%=OrderStatus.HAS_COMMENT.getValue()%>}}
 			<span style="color:green;">买家已评论</span>
@@ -301,10 +298,8 @@
 			{{if userConfirmTime <= 0}}
 			    未确认收货
 			{{/if}}
-			{{if sysConfirm == <%=OrderIsSysConfirm.YES.getValue()%>}}
 				<!-- 订单是否自动签收, 1-不是, 2-是 -->
 				（<span style="color: green;">系统自动签收</span>）
-			{{/if}}
 		</td>
 	</tr>
 	<tr>

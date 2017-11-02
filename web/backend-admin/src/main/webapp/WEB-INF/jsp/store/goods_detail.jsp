@@ -1,7 +1,7 @@
-<%@ page import="com.mazing.core.enums.Role" %>
-<%@ page import="com.mazing.core.enums.merchant.StoreBizType" %>
-<%@ page import="com.mazing.core.enums.merchant.StoreStatus" %>
-<%@ page import="com.mazing.core.enums.BooleanConstants" %>
+<%@ page import="com.yogu.core.enums.Role" %>
+<%@ page import="com.yogu.core.enums.merchant.StoreBizType" %>
+<%@ page import="com.yogu.core.enums.merchant.StoreStatus" %>
+<%@ page import="com.yogu.core.enums.BooleanConstants" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

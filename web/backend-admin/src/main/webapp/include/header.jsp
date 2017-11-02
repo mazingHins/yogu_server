@@ -1,4 +1,4 @@
-<%@ page import="com.mazing.services.backend.admin.context.AdminContext" %>
+<%@ page import="com.yogu.services.backend.admin.context.AdminContext" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8" %>
 <!-- Main Header -->

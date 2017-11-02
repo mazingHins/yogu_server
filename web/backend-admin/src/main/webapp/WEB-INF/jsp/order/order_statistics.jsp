@@ -1,6 +1,6 @@
-<%@ page import="static com.mazing.core.enums.merchant.OrderPickType.*" %>
-<%@ page import="com.mazing.core.enums.order.OrderStatus" %>
-<%@ page import="com.mazing.core.constant.CouponBearTypeConstants" %>
+<%@ page import="static com.yogu.core.enums.merchant.OrderPickType.*" %>
+<%@ page import="com.yogu.core.enums.order.OrderStatus" %>
+<%@ page import="com.yogu.core.constant.CouponBearTypeConstants" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>

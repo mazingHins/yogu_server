@@ -1,8 +1,7 @@
-<%@ page import="com.mazing.core.enums.pay.PayType" %>
-<%@ page import="com.mazing.core.enums.order.OrderIsSysConfirm" %>
-<%@ page import="com.mazing.core.enums.order.OrderStatus" %>
-<%@ page import="com.mazing.core.enums.BooleanConstants" %>
-<%@ page import="com.mazing.core.enums.order.ExpressStatus" %>
+<%@ page import="com.yogu.core.enums.pay.PayType" %>
+<%@ page import="com.yogu.core.enums.order.OrderIsSysConfirm" %>
+<%@ page import="com.yogu.core.enums.order.OrderStatus" %>
+<%@ page import="com.yogu.core.enums.BooleanConstants" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -185,9 +184,7 @@
 													{{if value.allowRefund == <%=BooleanConstants.TRUE%>}}
 													<a href="javascript:void(0)" onclick="cancel({{value.orderNoStr}}, this)">退款订单</a>
 													&nbsp;
-													{{if value.isThirdExpress == <%=BooleanConstants.TRUE%> && value.expressStatus != <%=ExpressStatus.CANCEL_EXPRESS.getValue()%>}}
 														<a href="javascript:void(0)" onclick="cancelSfExpress({{value.orderNoStr}}, this)">取消顺丰专送</a>
-													{{/if}}
 													{{/if}}
 													{{if value.payType == <%=PayType.CASH.getValue()%>}}
 													<a href="javascript:void(0)" onclick="cancel({{value.orderNoStr}}, this)">取消订单</a>
