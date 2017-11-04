@@ -27,6 +27,8 @@ public interface GoodsDao {
 	 */
 	public GoodsPO getById(@Param("goodsId") long goodsId);
 	
+	public void deleteById(@Param("goodsId") long goodsId);
+	
 	/**
 	 * 根据商品key读取记录
 	 */
@@ -78,5 +80,18 @@ public interface GoodsDao {
 
 	public List<GoodsPO> listByKey(@Param("goodsKeys") List<Long> goodsKeys);
 	
+	public List<GoodsPO> listByLikeName(@Param("goodsName") String goodsName, @Param("offset") int offset, @Param("pageSize") int pageSize);
+	
+	/**
+     * 修改菜品的上下架状态和排序值，即时生效，但对修改前已经下的订单不会产生影响。
+     * 只能修改自己店的数据，角色限制：店主、管理员（待定）
+     * 如果角色不对，返回没有权限的错误。
+     * @param storeId 菜品ID
+     * @param status 需要修改的上下架状态。
+     *             1表示正常上架，2表示下架。
+     * @param sequence 排序值
+     * @return result.success=true为成功，result.object为null
+     */
+	int updateStatus(@Param("goodsId") long goodsId, @Param("status") short status);
 
 }

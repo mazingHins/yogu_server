@@ -14,6 +14,11 @@
 		SELECT * FROM yg_user.yg_goods WHERE goods_id=#{goodsId}
 	</select>
 	
+	<!-- 根据主键，删除数据 -->
+	<delete id="deleteById" parameterType="Map">
+		DELETE FROM yg_user.yg_goods WHERE goods_id=#{goodsId}
+	</delete>
+	
 	<select id="getByKey" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
 		SELECT * FROM yg_user.yg_goods WHERE goods_key=#{goodsKey}
 	</select>
@@ -57,5 +62,18 @@
 			#{item}
 		</foreach>
 	</select>
+	
+	<select id="listByLikeName" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
+		SELECT * FROM yg_user.yg_goods WHERE 
+		<if test="goodsName != null">
+			goods_name like CONCAT('%',#{goodsName},'%') 
+		</if>
+		limit offset,#{pageSize}
+	</select>
+	
+	<!-- 更新菜品的上下架状态 Felix 2015/8/27 -->
+	<update id="updateStatus" parameterType="Map">
+		UPDATE yg_user.yg_goods set status=#{status} where goods_id=#{goodsId}
+	</update>
 
 </mapper>

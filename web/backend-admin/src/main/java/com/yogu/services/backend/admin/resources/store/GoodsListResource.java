@@ -32,6 +32,16 @@ public class GoodsListResource {
 	@Autowired
 	private GoodsRemoteService goodsRemoteService;
 	
+	 /**
+     * 门店列表主页，xhtm 仅用于展示页面，ajax 调用 接口获取参数
+     * @return
+     */
+    @RequestMapping("list.xhtm")
+    @MenuResource("餐厅列表主页")
+    public String index() {
+        return ("/store/list_goods");
+    }
+	
 	/**
 	 * 查询符合条件的美食列表
 	 * 
@@ -41,7 +51,7 @@ public class GoodsListResource {
 	 * @return 返回不为空的列表
 	 */
 	@ResponseBody
-	@MenuResource("查询美食列表")
+	@MenuResource("查询商品列表")
 	@RequestMapping(value = "query", method = RequestMethod.POST)
 	public RestResult<List<Goods>> query(@RequestParam(value = "keyword", required = false) String keyword, @RequestParam("page") int page,
 			@RequestParam("pageSize") int pageSize) {
@@ -58,6 +68,18 @@ public class GoodsListResource {
 					list.add(goods);
 		return new RestResult<>(list);
 	}
+	
+	@ResponseBody
+	@MenuResource("查看商品详情")
+	@RequestMapping(value = "detail", method = RequestMethod.POST)
+	public RestResult<Goods> detail(@RequestParam(value = "goodsKey") long goodsKey) {
 
+		logger.info("admin#goodsListResource#query | 查看商品详情 |  goodsKey: {}", goodsKey);
+
+		Goods result = goodsRemoteService.getGoodsByKey(goodsKey);
+		return new RestResult<>(result);
+	}
+
+	
 
 }

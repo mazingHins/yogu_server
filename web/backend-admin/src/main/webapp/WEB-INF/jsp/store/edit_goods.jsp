@@ -37,69 +37,46 @@
 			</div>
 			<div class="row">
 				<div class="col-md-12">
-					<form class="form-horizontal" method="post">
+					<form id="editGoods" class="form-horizontal" action="/admin/goods/saveGoods.do" onsubmit="return validate()" method="post">
 						<div class="form-group">
 							<label class="col-md-2 control-label">美食名称</label>
 							<div class="col-md-3">
-								<input class="form-control" type="text" id="dishName"
-									   name="dishName" title="美食名称" placeholder="美食名称"
+								<input class="form-control" type="text" id="goodsName"
+									   name="goodsName" title="商品名称" placeholder="商品名称"
 									   maxlength="12">
-								<input name="dishId" id="dishId" type="hidden" value="0"/>
-								<input name="storeId" id="storeId" type="hidden" value="0"/>
+								<input name="goodsId" id="goodsId" type="hidden" value="0"/>
+								<input name="goodsKey" id="goodsKey" type="hidden" value="0"/>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-md-2 control-label">价格</label>
+							<label class="col-md-2 control-label">零售价</label>
 							<div class="col-md-3">
-								<input class="form-control" type="text" id="price" name="price"
-									   title="价格" placeholder="价格" maxlength="7">
+								<input class="form-control" type="text" id="retailPrice" name="retailPrice"
+									   title="零售价" placeholder="零售价" maxlength="7">
 							</div>
 							<div class="col-md-3">
-								元
+								分
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-md-2 control-label">标签</label>
-								<div class="col-md-9">
-									<select class="form-control" name="categoryId">
-										<option value="">无</option>
-									</select>
-								</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-2 control-label">规格</label>
+							<label class="col-md-2 control-label">批发价</label>
 							<div class="col-md-3">
-								<input class="form-control" type="text" id="spec" name="spec"
-									   title="规格" placeholder="规格" maxlength="16">
+								<input class="form-control" type="text" id="tradePrice" name="tradePrice"
+									   title="批发价" placeholder="批发价" maxlength="7">
 							</div>
 							<div class="col-md-3">
-								比如：400克/个
+								分
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-md-2 control-label">保质期</label>
-							<div class="col-md-9">
-								<select class="form-control" name="expiryTime">
-									<option value="">即食即用</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-2 control-label">特别推介</label>
-							<div class="col-md-9">
-								<select class="form-control" name="promoteTag">
-									<option value="">无</option>
-								</select>
-							</div>
-						</div>
-						<div class="form-group">
-							<label class="col-md-2 control-label">原价</label>
+							<label class="col-md-2 control-label">商品主图</label>
 							<div class="col-md-3">
-								<input class="form-control" type="text" id="originalPrice" name="originalPrice"
-									   title="原价" placeholder="原价" maxlength="16">
+							<input id="cardImg" name="cardImg" type="hidden" />
+							<input type="file" id="upfile">
+							<input type="button" id="upJQuery" value="上传" onclick="uploadCardImg()">
 							</div>
 							<div class="col-md-3">
-								比如：400克/个
+								<img id="cardImgPreview" width="80" src="" />
 							</div>
 						</div>
 						<div class="form-group">
@@ -127,42 +104,43 @@
 <%@ include file="/include/bottom-js.jsp"%>
 <script type="text/javascript">
 
-	// 修改在编辑功能下的title
-	function modifyTitle() {
-		var newTitle = '编辑美食';
-		$('#titleMessage').html(newTitle)
-		document.title = newTitle;
-	}
-
-	// 返回正在编辑的 dishId
-	function getDishId() {
-		var dishId = $.getUrlParam("dishId");
-		//var storeId = $.getUrlParam("storeId");
-		if (typeof dishId == 'undefined' || dishId == null || dishId == '') {
-			dishId = '0';
-		}
-		return dishId;
-	}
-
 	$(function() {
-		var dishId = getDishId();
-		//var storeId = $.getUrlParam("storeId");
-		if (dishId != '0') {
-			modifyTitle();
-		}
-		$('#dishId').val(dishId);
+		
+		$('#editGoods').ajaxForm({
+			complete : function(xhr) {
+				try {
+					eval('json=' + xhr.responseText);
+					if (json.success) {
+						MyDialog.alert(json.message, function() {
+							window.location.href =  "/admin/goods/list.xhtm";
+						});
+					}
+					else {
+						MyDialog.alert(json.message);
+					}
+
+				} catch (e) {
+				}
+			}
+		});
 
 	});
 
 	// 校验参数
 	function validate() {
 		var message = '';
-		var dishName = $.trim($('#dishName').val());
-		var price = $.trim($('#price').val());
-		if (dishName == '') {
-			message = '请输入美食名称。';
-		} else if (!$.isNumeric(price) || price > 9999.99) {
-			message = '请输入正确的价格（0.01~9999.99）。';
+		var goodsName = $.trim($('#goodsName').val());
+		var retailPrice = $.trim($('#retailPrice').val());
+		var tradePrice = $.trim($('#tradePrice').val());
+		var cardImg = $.trim($('#cardImg').val());
+		if (goodsName == '') {
+			message = '请输入商品名称。';
+		} else if (!$.isNumeric(retailPrice) || retailPrice > 999999 || retailPrice<1) {
+			message = '请输入零售价（1-999999）。';
+		}else if (!$.isNumeric(tradePrice) || tradePrice > 999999 || tradePrice<1) {
+			message = '请输入批发价（1-999999）。';
+		}else if (cardImg == '') {
+			message = '请上传商品主图';
 		}
 		if (message != '') {
 			MyDialog.alert(message);
@@ -170,33 +148,24 @@
 		return (message == '');
 	}
 
-	// 提交表单内容
-	function submitForm() {
-		if (!validate())
-			return;
-
-		var appIds = [];
-
-		if (appIds.length <= 0 || ids.length <= 0) {
-			MyDialog.alert("请选择菜单权限。");
-		}
-		else {
-			$.post('/admin/store/editDish.do', {
-
-			}, function (json) {
-
-				if (json.success) {
-					//MyDialog.alert(json.message, function() {
-					//	window.location.href = "/admin/account/listRole.xhtm";
-					//});
-					// clear form
-				}
-				else {
-					MyDialog.alert(json.message);
-				}
-			}, 'json');
-		}
+	
+	function uploadCardImg(storeId) {
+		var fd = new FormData();
+		fd.append("upload", 1);
+		fd.append("upfile", $("#upfile").get(0).files[0]);
+		$.ajax({
+			url: "/admin/goods/modifyTopicImage.do",
+			type: "POST",
+			processData: false,
+			contentType: false,
+			data: fd,
+			success: function(d) {
+				$("#cardImgPreview").attr("src", d.object);
+				$("#cardImg").val(d.object);
+			}
+		});
 	}
+	
 </script>
 </body>
 </html>

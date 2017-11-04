@@ -22,6 +22,9 @@
 				商品列表
 				<small></small>
 			</h1>
+			<ol class="breadcrumb">
+				<li><a href="/admin/goods/editGoods.xhtm"><i class="fa fa-dashboard"></i> 新增商品</a></li>
+			</ol>
 			<!--
 			<ol class="breadcrumb">
 				<li><a href="#"><i class="fa fa-dashboard"></i> 新增商家</a></li>
@@ -94,7 +97,8 @@
 															{{/if}}
 														</td>
 														<td>
-															<a target="_blank" href="/admin/store/listStoreOrder.xhtm?storeId={{value.storeId}}">查看订单</a>
+															<a target="_blank" href="/admin/goods/detail.xhtm?goodsKey={{value.goodsKey}}">查看详情</a>
+															<a target="_blank" href="/admin/goods/editGoods.xhtm?goodsKey={{value.goodsKey}}">编辑</a>
 														</td>
 													</tr>
 													{{/each}}

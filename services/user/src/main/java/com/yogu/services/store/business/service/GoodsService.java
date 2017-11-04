@@ -108,5 +108,16 @@ public interface GoodsService {
 	 */
 	List<Goods> listBykeys(Long uid, List<Long> goodsKeys);
 	
+	List<Goods> listByName(String goodsName, int pageIndex, int pageSize);
 	
+	void addGoods(Goods goods);
+	
+	/**
+	 * 修改菜品的上下架状态，即时生效，但对修改前已经下的订单不会产生影响。 只能修改自己店的数据，角色限制：店主、管理员（待定） 如果角色不对，返回没有权限的错误。
+	 * 
+	 * @Param uid 用户ID
+	 * @param dishId 菜品ID
+	 * @param status 需要修改的上下架状态。 1表示正常上架，2表示下架。
+	 */
+	public void setDishStatus(long goodsId, short status);
 }

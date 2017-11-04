@@ -297,34 +297,32 @@ public class MenuServiceImpl implements MenuService {
 	 */
 	private List<MenuPO> gainHasPermissionMenu(long accountId, List<MenuPO> menuList) {
 
-		if (adminAccountService.isSuperAdmin(accountId)) {
-			return menuList;
-		}
+		return menuList;
 
-		// 读取角色
-		List<AccountRoleRelation> accountRoleList = adminAccountService.listAccountRoles(accountId);
-		List<RoleMenuRelation> roleMenuList = new LinkedList<>();
-		// 读取每个角色的菜单ID
-		for (AccountRoleRelation arr : accountRoleList) {
-			roleMenuList.addAll(roleService.listRoleMenus(arr.getRoleId()));
-		}
-
-		Set<Integer> accountMenuIdSet = new HashSet<>(roleMenuList.size());
-		for (RoleMenuRelation rmr : roleMenuList) {
-			accountMenuIdSet.add(Integer.valueOf(rmr.getMenuId()));
-		}
-
-		// 判断哪个菜单有权限
-		List<MenuPO> list = new LinkedList<>();
-		StringBuilder buf = new StringBuilder(1024);
-		for (MenuPO menuPO : menuList) {
-			if (accountMenuIdSet.contains(Integer.valueOf(menuPO.getMenuId()))) {
-				list.add(menuPO);
-				if (buf.length() > 0) buf.append(" , ");
-				buf.append(menuPO.getMenuId()).append(": ").append(menuPO.getMenuName());
-			}
-		}
-		return list;
+//		// 读取角色
+//		List<AccountRoleRelation> accountRoleList = adminAccountService.listAccountRoles(accountId);
+//		List<RoleMenuRelation> roleMenuList = new LinkedList<>();
+//		// 读取每个角色的菜单ID
+//		for (AccountRoleRelation arr : accountRoleList) {
+//			roleMenuList.addAll(roleService.listRoleMenus(arr.getRoleId()));
+//		}
+//
+//		Set<Integer> accountMenuIdSet = new HashSet<>(roleMenuList.size());
+//		for (RoleMenuRelation rmr : roleMenuList) {
+//			accountMenuIdSet.add(Integer.valueOf(rmr.getMenuId()));
+//		}
+//
+//		// 判断哪个菜单有权限
+//		List<MenuPO> list = new LinkedList<>();
+//		StringBuilder buf = new StringBuilder(1024);
+//		for (MenuPO menuPO : menuList) {
+//			if (accountMenuIdSet.contains(Integer.valueOf(menuPO.getMenuId()))) {
+//				list.add(menuPO);
+//				if (buf.length() > 0) buf.append(" , ");
+//				buf.append(menuPO.getMenuId()).append(": ").append(menuPO.getMenuName());
+//			}
+//		}
+//		return list;
 	}
 
 	@Override
