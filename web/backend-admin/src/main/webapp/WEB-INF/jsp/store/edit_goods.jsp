@@ -82,7 +82,7 @@
 						<div class="form-group">
 							<div class="col-md-offset-2">
 								<button class="btn btn-primary"
-										type="button" id="submit" onclick="submitForm()">提交</button>
+										type="submit" id="submit" >提交</button>
 							</div>
 						</div>
 					</form>

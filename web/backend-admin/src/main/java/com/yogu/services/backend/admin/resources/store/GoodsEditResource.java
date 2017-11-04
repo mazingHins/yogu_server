@@ -128,7 +128,7 @@ public class GoodsEditResource {
 		// 1, 保存到oss
 		FileStoreFactory.createFileStore().storeImage(fileName, FileCategory.STORE, content);
 
-		return fileName;
+		return FileStoreFactory.createFileStore().getHttpUrl(fileName);
 	}
 	
 	private boolean isUploadNameOK(String name) {
