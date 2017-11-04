@@ -154,7 +154,7 @@
 		fd.append("upload", 1);
 		fd.append("upfile", $("#upfile").get(0).files[0]);
 		$.ajax({
-			url: "/admin/goods/modifyTopicImage.do",
+			url: "/admin/goods/modifyCardImage.do",
 			type: "POST",
 			processData: false,
 			contentType: false,
