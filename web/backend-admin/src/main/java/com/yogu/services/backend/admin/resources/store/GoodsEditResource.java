@@ -66,7 +66,6 @@ public class GoodsEditResource {
 	@ResponseBody
 	@RequestMapping(value = "saveGoods.do", method = RequestMethod.POST)
 	@MenuResource("保存商品")
-	@AdminLog
 	public RestResult<Integer> saveGoods(@Valid @ModelAttribute GoodsForm form) {
 		logger.info("admin#coupon#saveCoupon | 保存商品 start | adminId: {}, coupon: {}", AdminContext.getAccountId(),
 				JsonUtils.toJSONString(form));
@@ -83,7 +82,6 @@ public class GoodsEditResource {
 	 */
 	@RequestMapping(value = "modifyCardImage.do", method = RequestMethod.POST)
 	@ResponseBody
-	@AdminLog
 	@MenuResource("修改瀑布流图片")
 	public RestResult<String> modifyTopicImage(@RequestParam("upfile") MultipartFile newTopicImage) {
 		if (newTopicImage == null || !isUploadNameOK(newTopicImage.getOriginalFilename())) {

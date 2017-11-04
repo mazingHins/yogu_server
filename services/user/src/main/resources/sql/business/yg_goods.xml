@@ -64,9 +64,9 @@
 	</select>
 	
 	<select id="listByLikeName" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
-		SELECT * FROM yg_user.yg_goods WHERE 
+		SELECT * FROM yg_user.yg_goods 
 		<if test="goodsName != null">
-			goods_name like CONCAT('%',#{goodsName},'%') 
+			WHERE goods_name like CONCAT('%',#{goodsName},'%') 
 		</if>
 		limit #{offset},#{pageSize}
 	</select>
