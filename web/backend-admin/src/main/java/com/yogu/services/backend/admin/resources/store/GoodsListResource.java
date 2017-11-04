@@ -71,7 +71,7 @@ public class GoodsListResource {
 	
 	@ResponseBody
 	@MenuResource("查看商品详情")
-	@RequestMapping(value = "detail", method = RequestMethod.POST)
+	@RequestMapping(value = "detail")
 	public RestResult<Goods> detail(@RequestParam(value = "goodsKey") long goodsKey) {
 
 		logger.info("admin#goodsListResource#query | 查看商品详情 |  goodsKey: {}", goodsKey);

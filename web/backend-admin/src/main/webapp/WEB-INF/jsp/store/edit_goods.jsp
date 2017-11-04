@@ -106,6 +106,9 @@
 
 	$(function() {
 		
+		var goodsKey = $.getUrlParam("goodsKey");
+		loadGoods(goodsKey)// 编辑
+		
 		$('#editGoods').ajaxForm({
 			complete : function(xhr) {
 				try {
@@ -164,6 +167,39 @@
 				$("#cardImg").val(d.object);
 			}
 		});
+	}
+	
+	// 加载优惠券数据
+	function loadGoods(goodsKey) {
+		$.getJSON('/admin/goods/detail', {
+			'goodsKey' : goodsKey
+		}, function(json) {
+			if (json.success) {
+				fillForm(json.object);
+			} else {
+				BootstrapDialog.show({
+					title: '错误',
+					message: json.message,
+					buttons: [{
+						label: '确定',
+						action: function (dialog) {
+							dialog.close();
+							window.location.href = '/admin/coupon/list.xhtm';
+						}
+					}]
+				});
+			}
+		});
+	}
+	
+	function fillForm(goods){
+		$("#goodsId").val(goods.goodsId);
+		$("#goodsKey").val(goods.goodsKey);
+		$("#goodsName").val(goods.goodsName);
+		$("#retailPrice").val(goods.retailPrice);
+		$("#tradePrice").val(goods.tradePrice);
+		$("#cardImg").val(goods.cardImg);
+		$("#cardImgPreview").attr("src", goods.cardImg);
 	}
 	
 </script>
