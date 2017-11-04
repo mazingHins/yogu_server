@@ -68,7 +68,7 @@
 		<if test="goodsName != null">
 			goods_name like CONCAT('%',#{goodsName},'%') 
 		</if>
-		limit offset,#{pageSize}
+		limit #{offset},#{pageSize}
 	</select>
 	
 	<!-- 更新菜品的上下架状态 Felix 2015/8/27 -->

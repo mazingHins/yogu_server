@@ -43,7 +43,7 @@ public class GoodsAdminResource {
 	@Path("goods/query")
 	public RestResult<List<Goods>> query(@QueryParam("query") String query, @QueryParam("pageIndex") int pageIndex,
 			@QueryParam("pageSize") int pageSize) {
-		logger.debug("api#dish#query | 搜索美食列表 | query: {}, pageIndex: {}, pageSize: {}", query, pageIndex, pageSize);
+		logger.info("api#dish#query | 搜索美食列表 | query: {}, pageIndex: {}, pageSize: {}", query, pageIndex, pageSize);
 		
 		return new RestResult<>(goodsService.listByName(query, pageIndex, pageSize));
 	}
@@ -51,14 +51,14 @@ public class GoodsAdminResource {
 	@GET
 	@Path("goods/detail")
 	public RestResult<Goods> detail(@QueryParam("goodsKey") long goodsKey) {
-		logger.debug("api#goods#detail | 查看商品详情 | goodsKey: {}", goodsKey);
+		logger.info("api#goods#detail | 查看商品详情 | goodsKey: {}", goodsKey);
 		return new RestResult<>(goodsService.getByKey(goodsKey));
 	}
 	
 	@POST
 	@Path("goods/saveGoods。do")
 	public RestResult<Integer> saveGoods(@Valid @BeanParam  GoodsParam params) {
-		logger.debug("api#goods#saveGoods | 新增商品 | params: {}", JsonUtils.toJSONString(params));
+		logger.info("api#goods#saveGoods | 新增商品 | params: {}", JsonUtils.toJSONString(params));
 		
 		Goods goods = VOUtil.from(params, Goods.class);
 		goodsService.addGoods(goods);

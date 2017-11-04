@@ -6,6 +6,9 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.yogu.CommonConstants;
 import com.yogu.commons.cache.CacheExtendService;
 import com.yogu.commons.utils.PageUtils;
@@ -28,9 +31,12 @@ import com.yogu.services.store.business.entry.GoodsPO;
 import com.yogu.services.store.business.entry.GoodsTrackPO;
 import com.yogu.services.store.business.service.GoodsService;
 import com.yogu.services.store.business.service.StoreService;
+import com.yogu.services.store.resource.api.GoodsAdminResource;
 
 @Named
 public class GoodsServiceImpl implements GoodsService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(GoodsAdminResource.class);
 
 	@Inject
 	private GoodsDao goodsDao;
@@ -210,11 +216,15 @@ public class GoodsServiceImpl implements GoodsService {
 		// 1. 先获取goodsId
 		
 		long goodsId = goods.getGoodsId();
-		if(goodsId>0){// 执行修改
+		if (goodsId > 0) {// 执行修改
+			logger.info("service#addGoods | 新增商品 ");
 			processUpdateGoods(goods);
 			removeDishCache(goods.getGoodsKey());
-		}else{
+			logger.info("service#addGoods | 新增商品 success");
+		} else {
+			logger.info("service#addGoods | 修改商品 | goodsId: {}", goods.getGoodsId());
 			processSaveDishPO(goods);
+			logger.info("service#addGoods | 修改商品success | goodsId: {}", goods.getGoodsId());
 		}
 		
 	}
