@@ -52,7 +52,7 @@ public class GoodsListResource {
 	 */
 	@ResponseBody
 	@MenuResource("查询商品列表")
-	@RequestMapping(value = "query", method = RequestMethod.POST)
+	@RequestMapping(value = "query")
 	public RestResult<List<Goods>> query(@RequestParam(value = "keyword", required = false) String keyword, @RequestParam("page") int page,
 			@RequestParam("pageSize") int pageSize) {
 

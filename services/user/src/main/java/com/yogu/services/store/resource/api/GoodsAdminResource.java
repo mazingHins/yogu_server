@@ -67,7 +67,7 @@ public class GoodsAdminResource {
 	
 	@POST
 	@Path("goods/soldOut。do")
-	public RestResult<Integer> saveGoods(@FormParam("goodsId") long goodsId) {
+	public RestResult<Integer> soldOut(@FormParam("goodsId") long goodsId) {
 		logger.debug("api#goods#soldOut | 下架商品 | goodsId: {}", goodsId);
 		
 		goodsService.setDishStatus(goodsId, BooleanConstants.FALSE);

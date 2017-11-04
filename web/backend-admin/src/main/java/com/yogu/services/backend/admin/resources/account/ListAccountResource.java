@@ -31,7 +31,7 @@ import com.yogu.services.backend.admin.service.RoleService;
  * 管理员列表
  * @author linyi 2015/6/7.
  */
-@Menu(name="管理员列表", parent = "帐号管理", sequence = 400000)
+@Menu(name="管理员列表", parent = "帐号管理", sequence = 490000)
 @Controller
 @RequestMapping("/admin/account/")
 public class ListAccountResource {

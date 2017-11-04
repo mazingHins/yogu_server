@@ -21,7 +21,7 @@ import com.yogu.services.backend.admin.service.RoleService;
  * 角色管理
  * @author linyi 2015/6/10.
  */
-@Menu(name="角色列表", parent = "帐号管理", sequence = 500000)
+@Menu(name="角色列表", parent = "帐号管理", sequence = 590000)
 @Controller
 @RequestMapping("/admin/account/")
 public class ListRoleResource {
