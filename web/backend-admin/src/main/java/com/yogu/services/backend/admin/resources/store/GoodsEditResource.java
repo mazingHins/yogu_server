@@ -54,7 +54,7 @@ public class GoodsEditResource {
 	@RequestMapping("editGoods.xhtm")
 	@MenuResource("编辑优惠券主页")
 	public String index() {
-		return ("/coupon/edit_goods");
+		return ("/store/edit_goods");
 	}
 	
 	/**
