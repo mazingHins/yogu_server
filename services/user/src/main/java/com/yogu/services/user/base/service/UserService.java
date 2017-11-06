@@ -16,6 +16,16 @@ import com.yogu.services.user.base.entry.UserPO;
  * @author JFan 2015-07-13
  */
 public interface UserService {
+	
+	/**
+	 * 用户通过手机注册，如果成功，数据被保存到数据库和缓存，失败则抛出异常
+	 * 
+	 * @param user - 用户信息，不能为空
+	 * @param ip - 用户IP
+	 * @throws java.lang.IllegalArgumentException 参数错误时抛出异常
+	 * @return 返回用户ID
+	 */
+	long registerSale(User user, String ip);
 
 	/**
 	 * 用户通过手机注册，如果成功，数据被保存到数据库和缓存，失败则抛出异常

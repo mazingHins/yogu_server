@@ -3,6 +3,7 @@ package com.yogu.services.order.base.service;
 import java.util.List;
 
 import com.yogu.services.order.base.dto.Order;
+import com.yogu.services.order.resource.vo.order.AdminOrderVO;
 import com.yogu.services.order.resource.vo.order.UserOrderDetailVO;
 
 /**
@@ -71,5 +72,20 @@ public interface OrderService {
 	 * @return
 	 */
 	public UserOrderDetailVO userOrdeDetail(long uid, long orderNo);
+	
+	/**
+	 * 分页获取所有订单，admin使用<br>
+	 * 该方法只查询非米星付的订单，米星付和其他的订单分开查询和展示 2016/7/13 add by hins
+	 *
+	 * @author ben
+	 * @date 2015年11月26日 下午5:29:24
+	 * @param uid 下单的用户ID，可以为 0
+	 * @param storeId 餐厅的ID，可以为0，和uid可以同时生效
+	 * @param page
+	 * @param pageSize
+	 * @return
+	 * @mofified by ten 2015/12/17
+	 */
+	List<AdminOrderVO> listAllOrders(long uid, long storeId, int page, int pageSize);
 
 }

@@ -1,10 +1,7 @@
 package com.yogu.services.backend.admin.resources.order;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.mail.Store;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -21,8 +18,6 @@ import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.remote.order.OrderRemoteService;
-import com.yogu.remote.store.StoreRemoteService;
-import com.yogu.remote.user.dto.UserProfile;
 import com.yogu.remote.user.provider.UserRemoteService;
 import com.yogu.services.backend.admin.context.AdminContext;
 
@@ -44,9 +39,6 @@ public class OrderListResource {
 
     @Autowired
     private UserRemoteService userRemoteService;
-
-    @Autowired
-    private StoreRemoteService storeRemoteService;
 
     /**
      * 所有订单主页，xhtm 仅用于展示页面，ajax 调用 接口获取参数
@@ -99,98 +91,7 @@ public class OrderListResource {
     	RestResult<List<Map<String, Object>>> result = orderRemoteService.adminQueryOrders(uid,
                 orderNo, 0L, page, pageSize);
 
-        if (result.isSuccess()) {
-            readStoreInfo(result.getObject());
-        }
         logger.info("admin#store#query | 读取数据结果 | success: {}, time: {}", result.isSuccess(),
-                System.currentTimeMillis() - start);
-        return result;
-    }
-
-    /**
-     * 读取购买者的昵称、餐厅的名称
-     * @param list 订单列表，同 List&lt;Order&gt;
-     * @author ten 2016/1/26
-     */
-    private void readStoreInfo(List<Map<String, Object>> list) {
-    	if (list.isEmpty()) {
-			return;
-		}
-    	
-        long[] uids = new long[list.size()];
-        long[] storeIds = new long[list.size()];
-        int index = 0;
-        for (Map<String, Object> row : list) {
-            long uid = 0, storeId = 0;
-            if (row.containsKey("uid")) {
-                uid = ((Number) row.get("uid")).longValue();
-            }
-            if (row.containsKey("storeId")) {
-                storeId = ((Number) row.get("storeId")).longValue();
-            }
-            
-            // 将bigdecimal数字转字符串
-			row.put("orderNoStr", String.valueOf(row.get("orderNo").toString()));
-            
-            uids[index] = uid;
-            storeIds[index] = storeId;
-            index++;
-        }
-        Map<Long, UserProfile> userProfileMap = userRemoteService.getUserProfileByUids(uids);
-        List<Store> storeList = storeRemoteService.getStoreBySids(storeIds);
-      
-        for (Map<String, Object> row : list) {
-            String userNickname = "(读取昵称失败)";
-            String storeName = "(读取餐厅名失败)";
-            if (row.containsKey("uid")) {
-                Long uid = ((Number) row.get("uid")).longValue();
-                if (userProfileMap.containsKey(uid)) {
-                    UserProfile userProfile = userProfileMap.get(uid);
-                    userNickname = userProfile.getNickname() + " (ID/帐号: " + uid + " / " + userProfile.getPassport() + ")";
-                }
-            }
-            if (row.containsKey("storeId")) {
-                Long storeId = ((Number) row.get("storeId")).longValue();
-            }
-            row.put("userNickname", userNickname);
-        }
-    }
-
-    /**
-     * 查询符合条件的门店列表
-     * @param storeId storeId 不能为空
-     * @param page 第几页，最小是1
-     * @param pageSize 每页大小，最小是1
-     * @return 返回不为空的列表
-     */
-    @RequestMapping("queryByStoreId")
-    @ResponseBody
-    @MenuResource("所有订单-餐厅订单列表")
-    public RestResult<List<Map<String, Object>>> queryByStoreId(long storeId,
-                                                       int page, int pageSize) {
-
-        long adminId = AdminContext.getAccountId();
-        long start = System.currentTimeMillis();
-        logger.info("admin#order#queryByStoreId | 准备读取数据 | uid: {}, storeId: {},  pageIndex: {}, pageSize: {}",
-                adminId, storeId, page, pageSize);
-
-        validate( page, pageSize);
-        if (storeId < 1) {
-            return new RestResult<>(ResultCode.PARAMETER_ERROR, "storeId错误");
-        }
-
-        RestResult<List<Map<String, Object>>> result = orderRemoteService.adminQueryOrders(0,
-                0, storeId, page, pageSize);
-
-		if (result.isSuccess() && result.getObject() != null) {
-			for (Map<String, Object> row : result.getObject()) {
-				// 将bigdecimal数字转字符串
-				row.put("orderNoStr", String.valueOf(row.get("orderNo").toString()));
-
-			}
-		}
-        
-        logger.info("admin#store#queryByStoreId | 读取数据结果 | success: {}, time: {}", result.isSuccess(),
                 System.currentTimeMillis() - start);
         return result;
     }

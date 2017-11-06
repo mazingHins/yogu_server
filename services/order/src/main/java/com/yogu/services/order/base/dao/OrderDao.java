@@ -84,4 +84,18 @@ public interface OrderDao {
 	 */
 	public int payOrder(UpdateOrderPayPOJO po);
 	
+	/**
+	 *
+	 * 分页获取所有订单
+	 *
+	 * @author ben
+	 * @date 2015年11月25日 下午4:53:41
+	 * @param uid 下单的用户ID，可为0
+	 * @param storeId 餐厅ID，可以为0，和uid可以同时生效
+	 * @param offset 起始位置
+	 * @param pageSize 页长
+	 * @return 所有订单列表
+	 */
+	List<OrderPO> listAllOrders(long uid, long storeId, int offset, int pageSize);
+	
 }

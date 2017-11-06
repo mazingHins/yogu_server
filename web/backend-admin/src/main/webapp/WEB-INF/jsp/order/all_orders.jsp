@@ -1,3 +1,4 @@
+<%@page import="com.yogu.core.enums.pay.PayMode"%>
 <%@ page import="com.yogu.core.enums.pay.PayType" %>
 <%@ page import="com.yogu.core.enums.order.OrderIsSysConfirm" %>
 <%@ page import="com.yogu.core.enums.order.OrderStatus" %>
@@ -75,8 +76,7 @@
 											<th>订单号</th>
 											<th>价格</th>
 											<th>状态</th>
-											<th>下单渠道</th>
-											<th>支付类型</th>
+											<th>支付方式</th>
 											<th>联系人/地址</th>
 											<th>创建时间</th>
 											<th>操作</th>
@@ -86,12 +86,10 @@
 											{{each object as value i}}
 											<tr>
 												<td>
-													{{value.orderId}}<br/>
-													# {{value.serialNumber}}
+													{{value.orderId}}
 												</td>
 												<td>
-													<a target="_blank" href="/admin/order/orderDetail.xhtm?orderNo={{value.orderNoStr}}">{{value.orderNoStr}}</a><br/>
-													<i class="fa fa-map-marker"></i>: <a href="/admin/store/storeDetail.xhtm?storeId={{value.storeId}}">{{value.storeName}}</a>
+													<a target="_blank" href="/admin/order/orderDetail.xhtm?orderNo={{value.orderNoStr}}">{{value.orderNoStr}}</a><
 												</td>
 												<td>
 													{{if value.totalFee >= 1000000}}
@@ -111,15 +109,8 @@
 													未付款
 													{{/if}}
 													{{if value.status == <%=OrderStatus.PENDING_ACCEPT.getValue()%>}}
-														<span style="color:#0000ff;">待接单</span><br/>
-														{{if value.payType == <%=PayType.ONLINE.getValue()%>}}
-															在线支付
-														{{/if}}
-														{{if value.payType == <%=PayType.CASH.getValue()%>}}
-															现金支付
-														{{/if}}
+														<span style="color:#0000ff;">已支付</span><br/>
 													{{/if}}
-
 													{{if value.status == <%=OrderStatus.ACCEPT_ORDER.getValue()%>}}
 													<span style="color:#0000ff;">商家已接单</span>
 													{{/if}}
@@ -131,10 +122,6 @@
 													{{/if}}
 													{{if value.status == <%=OrderStatus.CONFIRM_RECEIPT_USER.getValue()%>}}
 													<span style="color:green;">买家确认收货</span>
-														{{if value.sysConfirm == <%=OrderIsSysConfirm.YES.getValue()%>}}
-														<!-- 订单是否自动签收, 1-不是, 2-是 -->
-														<br/>(<span style="color: green;">系统自动签收</span>)
-														{{/if}}
 													{{/if}}
 													{{if value.status == <%=OrderStatus.HAS_COMMENT.getValue()%>}}
 													<span style="color:green;">买家已评论</span>
@@ -157,51 +144,22 @@
 
 												</td>
 												<td>
-													{{value.orderChannel}}
-												</td>
-												<td>
-													{{if value.payType == <%=PayType.ONLINE.getValue()%>}}
-													<span style="color:#808080;">线上支付</span>
+													{{if value.payMode == <%=PayMode.ALIPAY.getValue()%>}}
+													<span style="color:#808080;">支付宝</span>
 													{{/if}}
-													{{if value.payType == <%=PayType.CASH.getValue()%>}}
-													<span style="color:#808080;">货到付款</span>
-													{{/if}}
-													{{if value.payType == <%=PayType.MAZING_PAY.getValue()%>}}
-													<span style="color:#808080;">米星付</span>
-													{{/if}}
-													{{if value.payType == <%=PayType.NONE.getValue()%>}}
-													<span style="color:#808080;">没选择</span>
+													{{if value.payMode == <%=PayMode.WECHAT.getValue()%>}}
+													<span style="color:#808080;">微信</span>
 													{{/if}}
 												</td>
 												<td>
 													<i class="fa fa-phone"></i>: {{value.phone}}<br/>
 													<i class="fa fa-user"></i>: {{value.contacts}}<br/>
 													<i class="fa fa-arrow-circle-right"></i>: {{value.address}}<br/>
-													<i class="fa fa-jpy"></i><i class="fa fa-user"></i>: <a href="/admin/user/queryUser.xhtm?uid={{value.uid}}" target="_blank">{{value.userNickname}}</a>
+													<i class="fa fa-jpy"></i><i class="fa fa-user"></i>: {{value.userNickname}}
 												</td>
 												<td style="font-size: 14px;">{{formatDateTime value.createTime}}</td>
 												<td>
-													{{if value.allowRefund == <%=BooleanConstants.TRUE%>}}
-													<a href="javascript:void(0)" onclick="cancel({{value.orderNoStr}}, this)">退款订单</a>
-													&nbsp;
-														<a href="javascript:void(0)" onclick="cancelSfExpress({{value.orderNoStr}}, this)">取消顺丰专送</a>
-													{{/if}}
-													{{if value.payType == <%=PayType.CASH.getValue()%>}}
-													<a href="javascript:void(0)" onclick="cancel({{value.orderNoStr}}, this)">取消订单</a>
-													{{/if}}
-													{{if value.payType == <%=PayType.ONLINE.getValue()%>}}
-													{{if value.status == <%=OrderStatus.NON_PAYMENT.getValue()%>}}
-													<a href="javascript:void(0)" onclick="cancel({{value.orderNoStr}}, this)">取消订单</a>
-													{{/if}}
-													{{/if}}
-													{{if value.payType == <%=PayType.MAZING_PAY.getValue()%>}}
-													{{if value.status == <%=OrderStatus.NON_PAYMENT.getValue()%>}}
-													<a href="javascript:void(0)" onclick="cancel({{value.orderNoStr}}, this)">取消订单</a>
-													{{/if}}
-													{{/if}}
-													{{if value.payType == <%=PayType.NONE.getValue()%>}}
-													<a href="javascript:void(0)" onclick="cancel({{value.orderNoStr}}, this)">取消订单</a>
-													{{/if}}
+													<a target="_blank" href="/admin/order/orderDetail.xhtm?orderNo={{value.orderNoStr}}">查看详情</a><
 												</td>
 											</tr>
 											{{/each}}

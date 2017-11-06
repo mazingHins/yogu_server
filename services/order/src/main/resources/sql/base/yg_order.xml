@@ -56,5 +56,16 @@
 		update_time=#{updateTime},order_begin_time=#{orderBeginTime}
 		where order_id=#{orderId} and status=#{oldStatus}
 	</update>
+	
+	<select id="listAllOrders" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+		SELECT * FROM yg_order.yg_order WHERE 1=1
+		<if test="uid > 0">
+			AND uid=#{uid}
+		</if>
+		<if test="storeId > 0">
+			AND store_id=#{storeId}
+		</if>
+		 ORDER BY create_time DESC LIMIT #{offset},#{pageSize}
+	</select>
 
 </mapper>

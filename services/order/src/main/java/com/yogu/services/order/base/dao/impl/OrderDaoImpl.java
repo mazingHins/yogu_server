@@ -81,5 +81,15 @@ public class OrderDaoImpl extends MyBatisDao implements OrderDao {
 		return super.update("com.yogu.services.order.base.dao.OrderDao.updatePayOrder", map);
 	}
 	
+	@Override
+	public List<OrderPO> listAllOrders(long uid, long storeId, int offset, int pageSize) {
+		Map<String, Object> map = new HashMap<>(6);
+		map.put("uid", uid);
+		map.put("storeId", storeId);
+		map.put("offset", offset);
+		map.put("pageSize", pageSize);
+		return super.list("com.mazing.services.order.base.dao.OrderDao.listAllOrders", map);
+	}
+
 
 }

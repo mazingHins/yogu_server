@@ -16,7 +16,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.yogu.CommonConstants;
 import com.yogu.commons.utils.HttpClientUtils;
 import com.yogu.commons.utils.JsonUtils;
+import com.yogu.commons.utils.LogUtil;
 import com.yogu.core.web.RestResult;
+import com.yogu.core.web.ResultCode;
+import com.yogu.core.web.exception.ServiceException;
 import com.yogu.remote.user.dto.UserAddress;
 import com.yogu.remote.user.dto.UserAndAddress;
 import com.yogu.remote.user.dto.UserProfile;
@@ -118,6 +121,34 @@ public class UserRemoteService {
 	}
 	
 	/**
+	 * 根据passport读取用户帐号的详细信息，包括头像、昵称、帐号状态、积分等等<br/>
+	 * <strong>注：本接口由后台管理系统使用</strong>
+	 * 
+	 * @param countryCode
+	 *            国家代码
+	 * @param passport
+	 *            帐号
+	 * @return 成功返回用户帐号的详细信息
+	 */
+	public UserProfile getUserProfileByPassport(String countryCode, String passport) {
+		Map<String, String> map = new HashMap<>(4);
+		map.put("countryCode", StringUtils.trimToEmpty(countryCode));
+		map.put("passport", StringUtils.trimToEmpty(passport));
+		try {
+			String json = HttpClientUtils.doGet(host + "/api/v1/user/profile", map);
+
+			RestResult<UserProfile> result = JsonUtils.parseObject(json,
+					new TypeReference<RestResult<UserProfile>>() {});
+			return result.getObject();
+		} catch (Exception e) {
+			logger.error("user#remote#adminGetUserProfileByPassport | 读取用户帐号的详细信息错误 | countryCode: {}, passport: {}",
+					countryCode, "***", e);
+			throw new ServiceException(ResultCode.PARAMETER_ERROR, "用户不存在");
+		}
+
+	}
+	
+	/**
 	 * 根据用户id、地址id，获取用户和地址信息<br>
 	 * 返回的结果可能地址、用户其中一个为null
 	 * @param uid - 用户id
@@ -202,6 +233,77 @@ public class UserRemoteService {
 			logger.error("user#remote#getUserProfileByUids | Error | uid: {}, message: {}", uid, e.getMessage(), e);
 		}
 		return map;
+	}
+	
+	/**
+	 * 管理员创建一个用户帐号
+	 * 
+	 * @param adminId
+	 *            管理员id
+	 * @param countryCode
+	 *            国家代码，不能为空
+	 * @param passport
+	 *            帐号，比如手机号码
+	 * @param profilePic 
+	 *            用户头像，不能为空
+	 * @param nickname
+	 *            昵称，不能为空
+	 * @param password
+	 *            密码，不能为空
+	 * @return 成功返回用户的 uid
+	 * @author ten 2015/10/5
+	 */
+	public RestResult<Long> adminCreateUser(long adminId, String countryCode, String passport, String profilePic, String nickname,
+			String password, String ip) {
+		Map<String, String> map = new HashMap<>(4);
+		map.put("countryCode", countryCode);
+		map.put("nickname", nickname);
+		map.put("passport", passport);
+		map.put("profilePic", profilePic);
+		map.put("password", password);
+		map.put("adminId", adminId + "");
+		map.put("ip", ip);
+		try {
+			String json = HttpClientUtils.doPost(host + "/api/user/create.do", map);
+
+			RestResult<Long> result = JsonUtils.parseObject(json, new TypeReference<RestResult<Long>>() {
+			});
+			return result;
+		} catch (Exception e) {
+			logger.error(
+					"user#remote#adminCreateUser | 管理员创建帐号错误 | adminId:{}, countryCode: {}, passport: {}, nickname: {}",
+					adminId, countryCode, LogUtil.hidePassport(passport), nickname, e);
+			return new RestResult<>(ResultCode.FAILURE, e.getMessage());
+		}
+	}
+	
+	/**
+	 * 管理员修改用户的密码
+	 * 
+	 * @param adminId
+	 *            管理员id
+	 * @param uid
+	 *            用户id
+	 * @param password
+	 *            密码，不能为空
+	 * @return 成功返回用户的 uid
+	 * @author ten 2015/10/5
+	 */
+	public RestResult<Object> adminChangePassword(long adminId, long uid, String password) {
+		Map<String, String> map = new HashMap<>(4);
+		map.put("uid", uid + "");
+		map.put("password", password);
+		map.put("adminId", adminId + "");
+		try {
+			String json = HttpClientUtils.doPost(host + "/api/user/changePassword.do", map);
+
+			RestResult<Object> result = JsonUtils.parseObject(json, new TypeReference<RestResult<Object>>() {
+			});
+			return result;
+		} catch (Exception e) {
+			logger.error("user#remote#adminChangePassword | 管理员修改用户密码错误 | adminId: {}, uid: {}", adminId, uid, e);
+			return new RestResult<>(ResultCode.FAILURE, e.getMessage());
+		}
 	}
 	
 

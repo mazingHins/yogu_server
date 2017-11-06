@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -23,6 +24,7 @@ import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.VOUtil;
 import com.yogu.core.base.BaseParams;
 import com.yogu.core.base.Point;
+import com.yogu.core.enums.BooleanConstants;
 import com.yogu.core.enums.pay.PayMode;
 import com.yogu.core.enums.user.UserType;
 import com.yogu.core.utils.SmsUtil;
@@ -506,7 +508,6 @@ public class UserServiceImpl implements UserService {
 
 		logger.info("account#userservice#register | success | uid: {}, passport: {}", uid, hideMobile);
 
-		logger.info("Sending mail ... TODO ...");
 		return uid;
 	}
 	
@@ -531,6 +532,135 @@ public class UserServiceImpl implements UserService {
 		// web 登录 2016/3/11 by ten
 		return doLogin(countryCode, passport, password, null, null, ip, null, "webLogin");
 	}
+
+	@Override
+	public long registerSale(User user, String ip) {
+		String hideMobile = SmsUtil.hideMobile(user.getPassport());
+		String rip = (StringUtils.isNotBlank(ip) ? ip : "");
+
+		// 加个redis锁，防止并发提交
+		String key = "USER_REG:" + user.getCountryCode() + "_" + user.getPassport();
+		RedisLock lock = new RedisLock(redis, key, 60);
+		// 拿不到锁，直接终止
+		if (!(lock.lock())) {
+			logger.error("account#userservice#register | 重复提交注册请求，被拒绝 | passport: {} ", hideMobile);
+			throw new ServiceException(UserErrorCode.USER_EXISTED, "请不要重复提交请求。");
+		}
+
+		// 1. 检查参数是否正确
+		validateUser(user);
+
+		UserPO current = dao.getByPassport(user.getCountryCode(), user.getPassport());
+		if (current != null) {
+			// 兼容重复提交注册信息的情况,如果2分钟内重复提交,只要密码一致则接受（直接返回uid）
+			Date userRegTime = current.getCreateTime();
+			if (null != userRegTime) {
+				// 当前时间与用户注册时间的时差
+				long timeDifference = System.currentTimeMillis() - userRegTime.getTime();
+				timeDifference = Math.abs(timeDifference);
+
+				if (timeDifference <= (2 * 60 * 1000)) {// 2分钟（先固定写在这吧！）
+					// 检测密码与DB中的密码是否一致（不一致，其内部会抛异常）
+					// 同时检测了用户是否被冻结
+					checkAccount(current.getPassword(), current.getStatus(), user.getPassword());
+					return current.getUid();
+				}
+			}
+
+			logger.error("account#userservice#register | Account is already exists | passport: {} ", hideMobile);
+			throw new ServiceException(UserErrorCode.USER_EXISTED, "帐号已经存在，请登录。");
+		}
+		
+		// 2. 获取uid
+		long uid = idGenRemoteService.getNextUserId();
+
+		// 3. 加密密码
+		String encryptedPassword = PasswordHelper.encrypt(user.getPassword());
+
+		// 4. 保存
+		UserPO po = VOUtil.from(user, UserPO.class);
+		po.setCreateTime(new Date());
+		po.setSource(AccountConstants.SOURCE_APP_REG);
+		po.setUid(uid);
+		if (user.getPassport().indexOf("@") >= 0) {
+			// 邮箱要激活
+			po.setStatus(AccountConstants.STATUS_WAITING_ACTIVED);
+		} else {
+			po.setStatus(AccountConstants.STATUS_NORMAL);
+		}
+		po.setPassword(encryptedPassword);
+		dao.save(po);
+
+		// 保存 profile
+		UserProfilePO profilePO = new UserProfilePO();
+		String cityCode = StringUtils.isNotBlank(user.getCityCode()) ? user.getCityCode() : "";
+		String lang = SecurityContext.getAppLanguage().getCode();
+		profilePO.setUid(uid);
+		profilePO.setCountryCode(po.getCountryCode());
+		profilePO.setNickname(user.getNickname());
+		profilePO.setCreateTime(po.getCreateTime());
+		profilePO.setLastUpdateTime(po.getCreateTime());
+		profilePO.setPassport(user.getPassport());
+		profilePO.setProfilePic(user.getProfilePic());// 兼容管理后台创建用户要上传头像，add by june 2017-01-13
+		profilePO.setRegisterIp(rip);
+		profilePO.setUserType(UserType.MIDDLE);
+		profilePO.setInviteUid(0);
+		userProfileDao.save(profilePO);
+
+		// 保存nickname
+		UserNicknamePO nicknamePO = new UserNicknamePO();
+		nicknamePO.setUid(uid);
+		nicknamePO.setRegisterIp(rip);
+		nicknamePO.setRegisterLang(lang);
+		nicknamePO.setRegisterCityCode(cityCode);
+		nicknamePO.setPassport(user.getPassport());
+		nicknamePO.setNickname(user.getNickname());
+		nicknamePO.setCreateTime(po.getCreateTime());
+		nicknamePO.setCountryCode(po.getCountryCode());
+		userNicknameDao.save(nicknamePO);
+		
+		UUID.randomUUID().toString();
+		
+		
+		UserInvitePO invitePo = new UserInvitePO();
+		invitePo.setUid(uid);
+		invitePo.setInviteCode(generateShortUuid());
+		invitePo.setStatus(BooleanConstants.TRUE);
+		invitePo.setCreateTime(new Date());
+		userInviteDao.save(invitePo);
+
+		// 6 Felix 新注册用户添加setting记录
+		logger.info("account#userservice#register | create user setting info");
+		UserSettingPO setting = new UserSettingPO();
+		setting.setUid(uid);
+		setting.setIsPush(UserConstants.ALLOW_PUSH);
+		setting.setCreateTime(new Date());
+		userSettingDao.save(setting);
+
+		logger.info("account#userservice#register | success | uid: {}, passport: {}", uid, hideMobile);
+
+		logger.info("Sending mail ... TODO ...");
+		return uid;
+	}
+	
+	private static String[] chars = new String[] { "a", "b", "c", "d", "e", "f",  
+            "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s",  
+            "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5",  
+            "6", "7", "8", "9", "A", "B", "C", "D", "E", "F", "G", "H", "I",  
+            "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V",  
+            "W", "X", "Y", "Z" };  
+	
+	private static String generateShortUuid() {  
+	    StringBuffer shortBuffer = new StringBuffer();  
+	    String uuid = UUID.randomUUID().toString().replace("-", "");  
+	    for (int i = 0; i < 8; i++) {  
+	        String str = uuid.substring(i * 4, i * 4 + 4);  
+	        int x = Integer.parseInt(str, 16);  
+	        shortBuffer.append(chars[x % 0x3E]);  
+	    }  
+	    return shortBuffer.toString();  
+	  
+	}  
 
 
 }

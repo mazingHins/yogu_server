@@ -22,7 +22,9 @@ import org.slf4j.LoggerFactory;
 
 import com.yogu.commons.utils.LogUtil;
 import com.yogu.commons.utils.ThreadLocalContext;
+import com.yogu.commons.validation.constraints.Length;
 import com.yogu.commons.validation.constraints.NotBlank;
+import com.yogu.commons.validation.constraints.NotEmpty;
 import com.yogu.core.base.BaseParams;
 import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.RestResult;
@@ -161,6 +163,69 @@ public class LocalUserApiResource {
 
 		logger.info("user#api#webLogin | web登录{} | code: {}, message: {}", (code == ResultCode.SUCCESS ? "成功" : "失败"), code, message);
 		return new RestResult<>(code, message, map);
+	}
+	
+	/**
+	 * 创建一个用户帐号
+	 * 
+	 * @param adminId 管理员ID
+	 * @param countryCode 国家代码，不能为空
+	 * @param passport 帐号，比如手机号码
+	 * @param profilePic 用户头像
+	 * @param nickname 昵称，不能为空
+	 * @param password 密码，不能为空
+	 * @return 成功返回用户的 uid
+	 * @author ten 2015/10/5
+	 */
+	@POST
+	@Path("user/create.do")
+	public RestResult<Long> createUser(
+			@FormParam("adminId") long adminId,
+			@FormParam("ip") String ip, // 新增参数IP
+			@FormParam("countryCode") @NotBlank(message = "国家代码不能为空") String countryCode,
+			@FormParam("passport") @NotBlank(message = "帐号不能为空") @Length(trim = true, min = 4, max = 20, message = "帐号长度为4~20个字符") String passport,
+			@FormParam("profilePic") String profilePic,// 新增参数头像， add by june 2017-01-13
+			@FormParam("nickname") @NotBlank(message = "昵称不能为空") @Length(trim = true, min = 2, max = 30, message = "昵称长度为2~30个字符") String nickname,
+			@FormParam("password") @NotEmpty(message = "密码不能为空") @Length(trim = false, min = 8, max = 16, message = "密码长度为8~16个字符") String password) {
+		logger.info("api#user#createUser | 管理员创建帐号 start | adminId:{}, nickname: {}, countryCode:{}, passport: {}", adminId, nickname,
+				countryCode, LogUtil.hidePassport(passport));
+		User user = new User();
+		user.setCountryCode(countryCode.trim());
+		user.setPassport(passport.trim());
+		user.setProfilePic(profilePic == null ? "" : profilePic.trim());
+		user.setNickname(nickname.trim());
+		user.setPassword(password);
+		long uid = userService.registerSale(user, ip);
+		logger.info("api#user#createUser | 管理员创建帐号成功 | adminId: {}, countryCode:{}, passport: {}, profilePic: {}, nickname: {}, uid: {}", adminId,
+				countryCode, LogUtil.hidePassport(passport), profilePic, nickname, uid);
+		return new RestResult<>(uid);
+	}
+	
+	/**
+	 * 管理员对用户帐号充值密码
+	 * 
+	 * @param adminId 管理员ID
+	 * @param uid 用户ID
+	 * @param password 新的密码
+	 * @return true=成功
+	 * @author ten 2015/20/22
+	 */
+	@POST
+	@Path("user/changePassword.do")
+	public RestResult<Object> changePassword(@FormParam("adminId") long adminId, @FormParam("uid") long uid,
+			@FormParam("password") String password) {
+
+		logger.error("api#user#changPassword | 管理员修改用户密码start | adminId:{}, uid: {}", adminId, uid);
+		UserProfile user = userService.getUserProfile(uid);
+		if (user == null) {
+			logger.error("api#user#changPassword | 管理员修改用户密码失败，帐号不存在 | uid: {}", uid);
+			return new RestResult<>(ResultCode.RECORD_NOT_EXIST, "用户帐号不存在");
+		}
+
+		userService.adminResetPassword(adminId, password, user.getPassport(), user.getCountryCode());
+
+		logger.info("api#user#changPassword | 管理员修改用户密码成功 | adminId:{}, uid: {}", adminId, uid);
+		return new RestResult<>(ResultCode.SUCCESS, "修改密码成功");
 	}
 
 }

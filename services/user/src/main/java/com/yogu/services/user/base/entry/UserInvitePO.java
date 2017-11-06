@@ -15,7 +15,6 @@ public class UserInvitePO implements Serializable {
 	/** 用户id */
 	private long uid;
 
-	/** 国家区号，比如中国+86 */
 	private String inviteCode;
 
 	/** 状态:1-OK;2-封号 */

@@ -1,5 +1,6 @@
 package com.yogu.services.order.base.service.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -25,6 +26,7 @@ import com.yogu.services.order.base.dao.OrderDao;
 import com.yogu.services.order.base.dto.Order;
 import com.yogu.services.order.base.entry.OrderPO;
 import com.yogu.services.order.base.service.OrderService;
+import com.yogu.services.order.resource.vo.order.AdminOrderVO;
 import com.yogu.services.order.resource.vo.order.UserOrderDetailVO;
 
 /**
@@ -145,6 +147,23 @@ public class OrderServiceImpl implements OrderService {
 		
 		
 		return VOUtil.from(order, UserOrderDetailVO.class);
+	}
+	
+	@Override
+	public List<AdminOrderVO> listAllOrders(long uid, long storeId, int page, int pageSize) {
+		int offset = PageUtils.offset(page, pageSize);
+		List<OrderPO> list = orderDao.listAllOrders(uid, storeId, offset, pageSize);
+		if (list.isEmpty()) {
+			return Collections.emptyList();
+		}
+
+		List<AdminOrderVO> result = new ArrayList<>(list.size());
+		
+		for (OrderPO po : list) {
+			AdminOrderVO vo = VOUtil.from(po, AdminOrderVO.class);
+			result.add(vo);
+		}
+		return result;
 	}
 
 
