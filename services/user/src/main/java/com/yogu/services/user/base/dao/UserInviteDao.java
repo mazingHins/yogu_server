@@ -20,7 +20,7 @@ public interface UserInviteDao {
 	 * 
 	 * @return 更新的行数
 	 */
-	public int save(UserInvitePO po);
+	public void save(UserInvitePO po);
 
 	/**
 	 * 根据通行证读取记录
