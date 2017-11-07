@@ -214,9 +214,6 @@
 <!-- bottom js -->
 <%@ include file="/include/bottom-js.jsp"%>
 <script type="text/javascript">
-	// 图片地址
-	var imageDomain = '';
-	
 	// 修改管理员密码
 	// uid: 用户的id
 	function changeUserPassword(uid) {
@@ -267,12 +264,6 @@
 
 	// 用模板显示用户的信息
 	function render(value) {
-		// 图片域名
-		imageDomain = value.imgDomain;
-		if (imageDomain.substring(imageDomain.length - 1) != '/') {
-			imageDomain = imageDomain + '/';
-		}
-
 		var htmlTxt = template('userTemplate', value);
 		$('#userInfo').html(htmlTxt);
 	}
@@ -299,11 +290,6 @@
 	}
 
 	$(function() {
-		// 模版函数：输出图片的完整地址
-		template.helper('renderImageUrl', function (uri) {
-			return imageDomain + uri;
-		});
-
 		$('#createUserForm').ajaxForm({
 			complete : function(xhr) {
 				try {
