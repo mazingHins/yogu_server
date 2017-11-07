@@ -534,6 +534,7 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	@Transactional(propagation = Propagation.REQUIRED)
 	public long registerSale(User user, String ip) {
 		String hideMobile = SmsUtil.hideMobile(user.getPassport());
 		String rip = (StringUtils.isNotBlank(ip) ? ip : "");
