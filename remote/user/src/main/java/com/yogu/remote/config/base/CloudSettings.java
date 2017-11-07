@@ -56,7 +56,7 @@ public class CloudSettings {
      * @return
      */
     public static String getFileStoreBucketPublicUrl(String id) {
-        String key = cloud + "_bucket_" + id + "_url";
+        String key = cloud + "_bucket_" + "_url";
         return ConfigRemoteService.getConfig(ConfigGroupConstants.CLOUD, key);
     }
 
