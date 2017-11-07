@@ -5,7 +5,7 @@
 
 	<!-- 新增 -->
 	<insert id="save" parameterType="com.yogu.services.user.base.entry.UserInvitePO" useGeneratedKeys="false" >
-		insert into yg_user.yg_user_invite (uid,invite_code,status,create_time) values (#{entity.uid},#{entity.inviteCode},#{entity.status},#{entity.createTime})
+		insert into yg_user.yg_user_invite (uid,invite_code,status,create_time) values (#{uid},#{inviteCode},#{status},#{createTime})
 	</insert>
 
 	<!-- 根据主键读取记录（主键可能有多个） -->
