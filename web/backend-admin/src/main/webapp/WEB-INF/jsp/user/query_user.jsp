@@ -29,7 +29,6 @@
           <ul id="userTab" class="nav nav-tabs">
             <li class="active"> <a href="#queryUser" data-toggle="tab"> 用户查询 </a> </li>
             <li><a href="#createUser" data-toggle="tab">创建帐号</a></li>
-            <li><a href="#logQuery" data-toggle="tab">日志查询</a></li>
             <li><a href="#regQuery" data-toggle="tab">注册查询</a></li>
           </ul>
           <div id="userTabContent" class="tab-content"> 
@@ -87,7 +86,7 @@
               <div class="box box-solid">
                 <div class="box-header">
                   <div class="col-sm-8">
-                    <p class="text-left">此功能主要用于，米星帮商家创建帐号。</p>
+                    <p class="text-left">此功能主要用于，帮商家创建帐号。</p>
                   </div>
                 </div>
                 <!-- /.box-header -->
@@ -142,91 +141,6 @@
               <!-- /.box --> 
             </div>
             <!-- tab end 创建帐号 --> 
-            
-            <!-- tab start 日志查询 -->
-            <div class="tab-pane fade in" id="logQuery">
-              <div class="box box-solid">
-                <div class="box-header">
-                  <div class="col-sm-1">
-                    <select class="form-control" name="logCountryCode" id="logCountryCode">
-                      <option value="86" selected>中国</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-2">
-                    <input type="text" value="" placeholder="日期yyyy-MM-dd" class="form-control"/>
-                  </div>
-                  <div class="col-sm-2">
-                    <div class="input-group input-group-sm">
-                      <input type="text" id="logPassport" name="logPassport" maxlength="30" class="form-control" placeholder="请输入用户帐号">
-                      <span class="input-group-btn">
-                      <button type="button" class="btn btn-info btn-flat" onclick="searchLog()">Go!</button>
-                      </span> </div>
-                  </div>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <table id="logTable" class="table table-bordered table-hover">
-                        <thead>
-                          <tr>
-                            <th>ID</th>
-                            <th>时间</th>
-                            <th>内容</th>
-                          </tr>
-                        </thead>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.box-body --> 
-              </div>
-              <!-- /.box --> 
-            </div>
-            <!-- tab end 日志查询 --> 
-            
-            <!-- tab start 新注册用户查询 -->
-            <div class="tab-pane fade in" id="regQuery">
-              <div class="box box-solid">
-                <div class="box-header">
-                  <div class="col-sm-1">
-                    <select class="form-control" name="regCountryCode" id="regCountryCode">
-                      <option value="86" selected>中国</option>
-                    </select>
-                  </div>
-                  <div class="col-sm-2">
-                    <input type="text" name="regDate" id="regDate" value="" placeholder="日期yyyy-MM-dd" class="form-control"/>
-                  </div>
-                  <div class="col-sm-2">
-                    <div class="input-group input-group-sm"> <span class="input-group-btn">
-                      <button type="button" class="btn btn-info btn-flat" onclick="searchReg()">GoNew!</button>
-                      </span> </div>
-                  </div>
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <table id="logTable" class="table table-bordered table-hover" style="word-break:break-all; word-wrap:break-all;">
-                        <thead>
-                          <tr>
-                            <th>注册总数</th>
-                            <th>手机串</th>
-                            <th></th>
-                          </tr>
-                        </thead>
-                        <tbody id="phoneStr">
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.box-body --> 
-              </div>
-              <!-- /.box --> 
-            </div>
-            <!-- tab end 日志查询 --> 
-            
           </div>
           <!-- /.tabContent - --> 
         </div>
@@ -251,7 +165,7 @@
 		<td>{{uid}}</td>
 		<td rowspan="8">
 			{{if profilePic != null && profilePic != ''}}
-			<img width="200px" src="{{renderImageUrl profilePic}}"/> <br/>
+			<img width="200px" src="{{profilePic}}"/> <br/>
 			{{/if}}
 		</td>
 	</tr>
@@ -296,13 +210,7 @@
 		<td><button type="button" class="btn btn-info btn-flat" onclick="changeUserPassword({{uid}})">修改密码</button></td>
 	</tr>
 </script> 
-<script id="regPhoneTemplate" type="text/html">
-	<tr>
-		<td>{{total}}</td>
-		<td>{{phoneStr}}</td>
-		<td></td>
-	</tr>
-</script> 
+
 <!-- bottom js -->
 <%@ include file="/include/bottom-js.jsp"%>
 <script type="text/javascript">
@@ -326,26 +234,6 @@
 				}, 'json');
 			}
 		}
-	}
-
-	// 查询用户提现帐号
-	// 2015/12/13 ten
-	function showWithdrawAccount(uid) {
-		$.getJSON('/admin/user/getUserAccount', {'uid': uid}, function (json) {
-			if (json.success) {
-				var message = '';
-				if (json.object != null) {
-					message = '用户已经绑定了支付宝帐号：<br/>姓名：' + json.object.accountName + '<br/>帐号：' + json.object.accountNo;
-				}
-				else {
-					message = '用户还没绑定支付宝帐号';
-				}
-				MyDialog.alert(message);
-			}
-			else {
-				MyDialog.alert('查询出错：' + json.message);
-			}
-		});
 	}
 
 	// 查询帐号
@@ -389,31 +277,6 @@
 		$('#userInfo').html(htmlTxt);
 	}
 
-	// 修改帐号状态：封号
-	function ban(uid) {
-		$.getJSON("/admin/user/ban", {'uid':uid}, function(json) {
-			MyDialog.alert(json.message);
-			// reload 用户信息
-			search();
-		});
-	}
-
-	// 修改帐号状态：解封
-	function unban(uid) {
-		$.getJSON("/admin/user/unban", {'uid':uid}, function(json) {
-			MyDialog.alert(json.message);
-			// reload 用户信息
-			search();
-		});
-	}
-
-	// 查询用户日志
-	function searchLog() {
-		MyDialog.alert('此功能未实现');
-	}
-	
-
-
 	// 检查URL里有没有uid的参数，如果有，进行UID的查询
 	function searchByUid() {
 		var uid = $.getUrlParam("uid");
@@ -429,7 +292,7 @@
 	
 	function updateProfilePic(){
 		uploadFile($('#profilePicFile'), function(data){
-			var url = IMAGE_DOMAIN + data;
+			var url = data;
 			$('#profilePicPreview').attr('src', url);
 			$('#profilePicInput').val(data);
 		});
