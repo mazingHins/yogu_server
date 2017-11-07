@@ -4,7 +4,7 @@
 <mapper namespace="com.yogu.services.user.base.dao.UserInviteDao">
 
 	<!-- 新增 -->
-	<insert id="insert" parameterType="Map" useGeneratedKeys="false" >
+	<insert id="save" parameterType="Map" useGeneratedKeys="false" >
 		insert into yg_user.yg_user_invite (uid,invite_code,status,create_time) values (#{entity.uid},#{entity.inviteCode},#{entity.status},#{entity.createTime})
 	</insert>
 
