@@ -60,9 +60,7 @@
 									<thead>
 										<tr>
 											<th>ID</th>
-											<th>美食名称</th>
-											<th>美食规格</th>
-											<th>规格备注</th>
+											<th>商品名称</th>
 											<th>购买数量</th>
 											<th>单价（元）</th>
 											<th>总价（元）</th>
@@ -74,27 +72,6 @@
 								</table>
 							</div>
 							<!-- tab end -->
-
-							<!-- tab start -->
-							<div class="tab-pane fade" style="background-color: #fff;"
-								id="orderTrack">
-								<table id="orderTrackTable"
-									class="table table-bordered table-hover">
-									<thead>
-										<tr>
-											<th>轨迹ID</th>
-											<th>操作时间</th>
-											<th>操作内容</th>
-											<th>操作人员</th>
-										</tr>
-									</thead>
-									<tbody id="orderTrackInfo">
-
-									</tbody>
-								</table>
-							</div>
-							<!-- tab end -->
-
 
 						</div>
 
@@ -192,47 +169,15 @@
 		</td>
 	</tr>
 	<tr>
-		<td>支付类型</td>
-		<td>
-			{{if payType == <%=PayType.ONLINE.getValue()%>}}线上支付{{/if}}
-			{{if payType == <%=PayType.CASH.getValue()%>}}货到付款{{/if}}
-			{{if payType == <%=PayType.MAZING_PAY.getValue()%>}}米星付{{/if}}
-			{{if payType == <%=PayType.NONE.getValue()%>}}没选择{{/if}}
-		</td>
-	</tr>
-	<tr>
 		<td>支付方式</td>
 		<td>
-			{{if payType == <%=PayType.ONLINE.getValue()%>}}
-				{{if payMode == <%=PayMode.ALIPAY.getValue()%>}}
-				支付宝
-				{{/if}}
-				{{if payMode == <%=PayMode.WECHAT.getValue()%>}}
-				微信
-				{{/if}}
+			{{if payMode == <%=PayMode.ALIPAY.getValue()%>}}
+			支付宝
 			{{/if}}
-			{{if payType == <%=PayType.MAZING_PAY.getValue()%>}}
-				{{if payMode == <%=PayMode.ALIPAY.getValue()%>}}
-				支付宝
-				{{/if}}
-				{{if payMode == <%=PayMode.WECHAT.getValue()%>}}
-				微信
-				{{/if}}
-			{{/if}}
-			{{if payType == <%=PayType.CASH.getValue()%>}}
-				现金支付
-			{{/if}}
-			{{if payType == <%=PayType.NONE.getValue()%>}}
-			<strong>未支付</strong>
-			{{/if}}
-			{{if payType != <%=PayType.NONE.getValue()%>}}
-			（付钱的人：{{userNickname}}）
+			{{if payMode == <%=PayMode.WECHAT.getValue()%>}}
+			微信
 			{{/if}}
 		</td>
-	</tr>
-	<tr>
-		<td>下单渠道</td>
-		<td>{{orderChannel}}</td>
 	</tr>
 	<tr>
 		<td>餐厅</td>
@@ -262,28 +207,12 @@
 	</tr>
 	<tr>
 		<td>备注</td>
-		<td>备注：{{remark}} &nbsp; &nbsp; ，运费说明：{{deliveryRemark}}</td>
-	</tr>
-	<tr>
-		<td>取消订单/商家拒单原因</td>
-		<td><span style="color:red;">{{rejectRemark}}</span></td>
+		<td>备注：{{remark}}</td>
 	</tr>
 	<tr>
 		<td>创建时间</td>
 		<td>{{formatDateTime createTime}}</td>
 	</tr>
-	<tr>
-		<td>订单开始时间</td>
-		<td>
-			{{if orderBeginTime > 0}}
-				{{formatDateTime orderBeginTime}}
-			{{/if}}
-			{{if orderBeginTime <= 0}}
-				{{formatDateTime createTime}}
-			{{/if}}
-		</td>
-	</tr>
-
 	<tr>
 		<td>预计送达时间</td>
 		<td>
@@ -298,8 +227,6 @@
 			{{if userConfirmTime <= 0}}
 			    未确认收货
 			{{/if}}
-				<!-- 订单是否自动签收, 1-不是, 2-是 -->
-				（<span style="color: green;">系统自动签收</span>）
 		</td>
 	</tr>
 	<tr>
@@ -318,30 +245,14 @@
 	<script id="dishInfoTemplate" type="text/html">
 		{{each orderDetails as value i}}
 		<tr>
-			<td>{{value.objectId}}</td>
-			<td>{{value.dishName}}</td>
-			<td>{{value.specName}}</td>
-			<td>{{value.supplements}}</td>
+			<td>{{value.goodsId}}</td>
+			<td>{{value.goodsName}}</td>
 			<td>{{value.number}}</td>
 			<td>{{cent2yuan value.unitFee}}</td>
 			<td>{{cent2yuan value.totalFee}}</td>
 		</tr>
 		{{/each}}
 	</script>
-
-<!-- 订单轨迹的模版 -->
-<script id="orderTrackTemplate" type="text/html">
-											{{each orderTrackList as value i}}
-											<tr>
-												<td>{{value.trackId}}</td>
-												<td>{{formatDateTime value.createTime}}</td>
-												<td>{{value.content}}</td>
-												<td>{{value.oper}}</td>
-											</tr>
-											{{/each}}
-</script>
-
-
 
 	<!-- bottom js -->
 	<%@ include file="/include/bottom-js.jsp"%>
@@ -383,12 +294,9 @@
 			// 使用模版显示门店信息
 			var htmlTxt = template('baseInfoTemplate', order);
 			$('#baseInfo').html(htmlTxt);
-			htmlTxt = template('orderTrackTemplate', value);
-			$('#orderTrackInfo').html(htmlTxt);
 			htmlTxt = template('dishInfoTemplate', value);
 			$('#dishInfo').html(htmlTxt);
 		}
-
 
 
 		$(function() {

@@ -38,5 +38,9 @@ public interface UserProfileService {
 	 * @param nickname 新的昵称
 	 */
 	public void updateNickname(long uid, String nickname);
+	
+	public String getNicknameByUid(long uid);
+	
+	public String getInviteCodeByUid(long uid);
 
 }

@@ -23,6 +23,7 @@ import com.yogu.core.web.exception.ServiceException;
 import com.yogu.remote.user.dto.UserAddress;
 import com.yogu.remote.user.dto.UserAndAddress;
 import com.yogu.remote.user.dto.UserProfile;
+import com.yogu.remote.user.vo.UserProfileVO;
 
 
 /**
@@ -130,16 +131,16 @@ public class UserRemoteService {
 	 *            帐号
 	 * @return 成功返回用户帐号的详细信息
 	 */
-	public UserProfile getUserProfileByPassport(String countryCode, String passport) {
+	public RestResult<UserProfileVO> getUserProfileByPassport(String countryCode, String passport) {
 		Map<String, String> map = new HashMap<>(4);
 		map.put("countryCode", StringUtils.trimToEmpty(countryCode));
 		map.put("passport", StringUtils.trimToEmpty(passport));
 		try {
-			String json = HttpClientUtils.doGet(host + "/api/v1/user/profile", map);
+			String json = HttpClientUtils.doGet(host + "/api/user/profile", map);
 
-			RestResult<UserProfile> result = JsonUtils.parseObject(json,
-					new TypeReference<RestResult<UserProfile>>() {});
-			return result.getObject();
+			RestResult<UserProfileVO> result = JsonUtils.parseObject(json,
+					new TypeReference<RestResult<UserProfileVO>>() {});
+			return result;
 		} catch (Exception e) {
 			logger.error("user#remote#adminGetUserProfileByPassport | 读取用户帐号的详细信息错误 | countryCode: {}, passport: {}",
 					countryCode, "***", e);
@@ -306,5 +307,20 @@ public class UserRemoteService {
 		}
 	}
 	
+	
+	public RestResult<UserProfileVO> adminGetUser(long uid) {
+		Map<String, String> map = new HashMap<>(4);
+		map.put("uid", uid + "");
+		try {
+			String json = HttpClientUtils.doGet(host + "/api/user/admin/getUser", map);
+
+			RestResult<UserProfileVO> result = JsonUtils.parseObject(json, new TypeReference<RestResult<UserProfileVO>>() {
+			});
+			return result;
+		} catch (Exception e) {
+			logger.error("user#remote#adminChangePassword | 管理员修改用户密码错误 |  uid: {}", uid, e);
+			return new RestResult<>(ResultCode.FAILURE, e.getMessage());
+		}
+	}
 
 }

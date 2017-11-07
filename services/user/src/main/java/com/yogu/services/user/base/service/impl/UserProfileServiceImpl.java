@@ -20,9 +20,11 @@ import com.yogu.language.UserMessages;
 import com.yogu.remote.config.fs.service.FileStoreService;
 import com.yogu.remote.user.dto.UserProfile;
 import com.yogu.remote.user.dto.UserSetting;
+import com.yogu.services.user.base.dao.UserInviteDao;
 import com.yogu.services.user.base.dao.UserNicknameDao;
 import com.yogu.services.user.base.dao.UserProfileDao;
 import com.yogu.services.user.base.dao.UserSettingDao;
+import com.yogu.services.user.base.entry.UserInvitePO;
 import com.yogu.services.user.base.entry.UserNicknamePO;
 import com.yogu.services.user.base.entry.UserProfilePO;
 import com.yogu.services.user.base.entry.UserSettingPO;
@@ -46,6 +48,9 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	@Inject
 	private UserNicknameDao userNicknameDao;
+	
+	@Inject
+	private UserInviteDao userInviteDao;
 
 	@Inject
 	private FileStoreService fileStoreService;
@@ -128,6 +133,26 @@ public class UserProfileServiceImpl implements UserProfileService {
 			logger.error("user#service#updateNickname | 数据库更新用户昵称失败 | uid: {}, nickname: '{}'", uid, nickname);
 			throw new ServiceException(ResultCode.UNKNOWN_ERROR, UserMessages.USER_UPDATE_NICKNAME_ERROR());
 		}
+	}
+
+	@Override
+	public String getNicknameByUid(long uid) {
+		UserNicknamePO user = userNicknameDao.getById(uid);
+		if (null == user) {
+			return null;
+		}
+
+		return user.getNickname();
+	}
+
+	@Override
+	public String getInviteCodeByUid(long uid) {
+		UserInvitePO user = userInviteDao.getByUid(uid);
+		if (null == user) {
+			return null;
+		}
+
+		return user.getInviteCode();
 	}
 
 

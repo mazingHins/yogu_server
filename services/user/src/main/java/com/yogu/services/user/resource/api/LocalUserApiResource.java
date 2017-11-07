@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import com.yogu.commons.utils.LogUtil;
 import com.yogu.commons.utils.ThreadLocalContext;
+import com.yogu.commons.utils.VOUtil;
 import com.yogu.commons.validation.constraints.Length;
 import com.yogu.commons.validation.constraints.NotBlank;
 import com.yogu.commons.validation.constraints.NotEmpty;
@@ -34,6 +35,8 @@ import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.UserMessages;
 import com.yogu.remote.user.dto.User;
 import com.yogu.remote.user.dto.UserProfile;
+import com.yogu.remote.user.vo.UserProfileVO;
+import com.yogu.services.user.base.service.UserProfileService;
 import com.yogu.services.user.base.service.UserService;
 import com.yogu.services.user.resource.vo.UserProfileInsideVO;
 import com.yogu.web.UserToken;
@@ -54,6 +57,9 @@ public class LocalUserApiResource {
 
 	@Inject
 	private UserService userService;
+	
+	@Inject
+	private UserProfileService userProfileService;
 
 	/**
 	 * @Description: 根据userId获取UserProfile信息
@@ -107,6 +113,49 @@ public class LocalUserApiResource {
 		return new RestResult<>(result);
 	}
 	
+	@GET
+	@Path("user/admin/getUser")
+	public RestResult<UserProfileVO> adminGetUser(@QueryParam("uid")  long uid) {
+
+		logger.info("api#user#getUserProfileUid | adminGetUser | uid: {}", uid);
+
+		UserProfile user = userService.getUserProfile(uid);
+		if (user == null) {
+			return new RestResult<>(ResultCode.RECORD_NOT_EXIST, "not found.");
+		}
+		
+		UserProfileVO result = VOUtil.from(user, UserProfileVO.class);
+		result.setNickname(userProfileService.getNicknameByUid(uid));
+		result.setInviteCode(userProfileService.getNicknameByUid(uid));
+		return new RestResult<>(result);
+	}
+	
+	@GET
+	@Path("user/profile")
+	public RestResult<UserProfileVO> adminGetUserByPassport(@QueryParam("countryCode") @NotBlank(message = "国家代码不能为空") String countryCode,
+			@QueryParam("passport") @NotBlank(message = "帐号不能为空") String passport) {
+
+		logger.info("api#user#getUid | 读取UID和昵称 | countryCode: {}, passport: {}", countryCode, passport);
+		ParameterUtil.assertNotBlank(countryCode, "countryCode is null");
+		ParameterUtil.assertNotBlank(passport, "passport is null");
+
+		User user = userService.getUser(countryCode, passport);
+		if (user == null) {
+			logger.error("api#user#getUid | user not exist | passport: {}", LogUtil.hidePassport(passport));
+			return new RestResult<>(ResultCode.RECORD_NOT_EXIST, UserMessages.USER_GET_USER_PROFILE_ERROR());
+		}
+		UserProfile profile = userService.getUserProfile(user.getUid());
+		if (profile == null) {
+			logger.error("api#user#getUid | userProfile not exist | passport: {}", LogUtil.hidePassport(passport));
+			return new RestResult<>(ResultCode.RECORD_NOT_EXIST, UserMessages.USER_GET_USER_PROFILE_ERROR());
+		}
+		
+		UserProfileVO result = VOUtil.from(user, UserProfileVO.class);
+		result.setNickname(userProfileService.getNicknameByUid(user.getUid()));
+		result.setInviteCode(userProfileService.getNicknameByUid(user.getUid()));
+		return new RestResult<>(result);
+	}
+	
 	/**
 	 * @Description: 根据userId获取UserProfile信息(可多个userId)
 	 * @author Hins
@@ -117,7 +166,7 @@ public class LocalUserApiResource {
 	 */
 	@GET
 	@Path("v1/user/list")
-	public RestResult<List<UserProfile>> getUserProfileUids(@QueryParam("uids") String uids) {
+	public RestResult<List<UserProfile>> listUserProfileUids(@QueryParam("uids") String uids) {
 		logger.info("api#user#getUserProfileUids |get user information  | uids: {}", uids);
 		ParameterUtil.assertNotBlank(uids, "参数为空");
 		List<UserProfile> result = userService.listUserProfile(ParameterUtil.str2longs(uids));

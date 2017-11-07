@@ -199,7 +199,7 @@
                   </div>
                   <div class="col-sm-2">
                     <div class="input-group input-group-sm"> <span class="input-group-btn">
-                      <button type="button" class="btn btn-info btn-flat" onclick="searchReg()">Go!</button>
+                      <button type="button" class="btn btn-info btn-flat" onclick="searchReg()">GoNew!</button>
                       </span> </div>
                   </div>
                 </div>
@@ -264,10 +264,6 @@
 		<td>{{passport}}</td>
 	</tr>
 	<tr>
-		<td>Table</td>
-		<td>UserTable: {{userTable}} &nbsp; ProfileTable: {{profileTable}}</td>
-	</tr>
-	<tr>
 		<td>创建时间</td>
 		<td>{{formatDateTime createTime}} &nbsp; &nbsp; &nbsp; 城市：{{cityCode}} &nbsp; &nbsp; &nbsp; 注册IP：{{registerIp}}</td>
 	</tr>
@@ -278,8 +274,10 @@
 		</td>
 	</tr>
 	<tr>
-		<td>IMID</td>
-		<td>{{imId}}</td>
+		<td>推广码</td>
+		<td>
+			{{inviteCode}}
+		</td>
 	</tr>
 	<tr>
 		<td>状态</td>
@@ -293,50 +291,9 @@
 		</td>
 	</tr>
 	<tr>
-		<td>&nbsp;</td>
-		<td>
-			{{if status == 1}}
-			<button onclick="ban({{uid}})">封号</button>
-			{{/if}}
-			{{if status == 2}}
-			<button onclick="unban({{uid}})">解封</button>
-			{{/if}}
-			&nbsp;
-			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-			<a href="/admin/store/list.xhtm?uid={{uid}}">查看用户的餐厅</a>
-			&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-			<a href="javascript:void(0)" onclick="showWithdrawAccount({{uid}})">查看用户提现帐号</a>
-		</td>
-		<td>&nbsp;</td>
-	</tr>
-	<tr>
 		<td class="text-right">修改密码</td>
 		<td><input class="form-control" type="password" id="newPassword" name="newPassword" maxlength="30"/></td>
 		<td><button type="button" class="btn btn-info btn-flat" onclick="changeUserPassword({{uid}})">修改密码</button></td>
-	</tr>
-	<tr>
-		<td>在哪个餐厅任职</td>
-		<td>
-			<table class="table table-bordered table-hover">
-				<thead>
-				<tr>
-					<th>餐厅ID</th>
-					<th>餐厅名</th>
-					<th>角色</th>
-				</tr>
-				</thead>
-				<tbody>
-				{{each staffRoles as staff i}}
-				<tr>
-					<td>{{staff.storeId}}</td>
-					<td><a target="_blank" href="/admin/store/storeDetail.xhtm?storeId={{staff.storeId}}">{{staff.storeName}}</a></td>
-					<td>{{staff.roleName}}</td>
-				</tr>
-				{{/each}}
-				</tbody>
-			</table>
-		</td>
-		<td>&nbsp;</td>
 	</tr>
 </script> 
 <script id="regPhoneTemplate" type="text/html">
@@ -352,27 +309,6 @@
 	// 图片地址
 	var imageDomain = '';
 	
-	function searchReg() {
-		var countryCode = $('#regCountryCode').val();
-		var regDate = $.trim($('#regDate').val());
-		if (regDate == '') {
-				MyDialog.alert('请输入查询日期， 格式如  2016-07-22');
-		}
-		else {
-			$.getJSON('/admin/user/queryNewRegUser', {'countryCode': countryCode, 'regDate': regDate}, function (json) {
-				if (json.success) {
-					var htmlTxt = template('regPhoneTemplate', json.object);
-					$('#phoneStr').html(htmlTxt);
-				}
-				else {
-					MyDialog.alert(json.message);
-				}
-			});
-		}
-		
-		
-	}
-
 	// 修改管理员密码
 	// uid: 用户的id
 	function changeUserPassword(uid) {

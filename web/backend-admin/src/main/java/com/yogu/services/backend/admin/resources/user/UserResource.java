@@ -22,8 +22,8 @@ import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
-import com.yogu.remote.user.dto.UserProfile;
 import com.yogu.remote.user.provider.UserRemoteService;
+import com.yogu.remote.user.vo.UserProfileVO;
 import com.yogu.services.backend.admin.annotation.log.AdminLog;
 import com.yogu.services.backend.admin.context.AdminContext;
 
@@ -65,20 +65,20 @@ public class UserResource {
 	@RequestMapping("queryUser")
 	@MenuResource("查询用户帐号")
 	@ResponseBody
-	public RestResult<UserProfile> queryUser(String countryCode, String passport, long uid, HttpServletRequest request) {
+	public RestResult<UserProfileVO> queryUser(String countryCode, String passport, long uid, HttpServletRequest request) {
 
 		logger.info("admin#user#queryUser | 管理员查询帐号 | adminId: {}, countryCode: {}, passport: {}, uid: {}", AdminContext.getAccountId(),
 				countryCode, LogUtil.hidePassport(passport), uid);
-		UserProfile user = null;
+		RestResult<UserProfileVO> user = null;
 		if (uid > 0) {
-			user = userRemoteService.getUserProfileByUid(uid);
+			user = userRemoteService.adminGetUser(uid);
 		} else {
 			ParameterUtil.assertNotBlank(countryCode, "国家代码不能为空");
 			ParameterUtil.assertNotBlank(passport, "帐号不能为空");
 			user = userRemoteService.getUserProfileByPassport(countryCode.trim(), passport.trim());
 		}
 
-		return new RestResult<UserProfile>(user);
+		return user;
 	}
 
 	/**
