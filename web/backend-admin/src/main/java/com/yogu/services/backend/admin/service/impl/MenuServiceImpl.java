@@ -123,6 +123,7 @@ public class MenuServiceImpl implements MenuService {
 		if (children == null || children.isEmpty()) {
 			// 没有下一层菜单了，这是资源
 //			saveMenuResource(appId, item, parent);
+			saveMenu(appId, item, parent);
 		}
 		else {
 			if (!item.isRoot()) {
