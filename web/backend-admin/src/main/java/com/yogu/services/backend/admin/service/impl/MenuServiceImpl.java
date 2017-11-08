@@ -224,8 +224,8 @@ public class MenuServiceImpl implements MenuService {
 		UrlResourcePO res = urlResourceDao.getByAppIdAndUri(appId, item.getUrl());
 		MenuPO menu = menuDao.getByAppIdAndMenuName(appId, parentMenu.getName());
 		if (menu == null) {
-			logger.error("资源所属的菜单在数据库里不存在， item: {}, parent: {}", JsonUtils.toJSONString(item), JsonUtils.toJSONString(parentMenu));
-			throw new IllegalArgumentException("资源所属的菜单在数据库里不存在, item=" + item.toString() + ", parent=" + parentMenu.toString());
+			logger.error("资源所属的菜单在数据库里不存在， item: {}, parent: {}", item.getId(), parentMenu.getId());
+			throw new IllegalArgumentException("资源所属的菜单在数据库里不存在");
 		}
 
 		if (res == null) {
