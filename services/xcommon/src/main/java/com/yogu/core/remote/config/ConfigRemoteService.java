@@ -137,6 +137,7 @@ public class ConfigRemoteService implements ServerMsgNotice {
 	 */
 	public static String getConfig(String groupCode, String configKey) {
 		Map<String, String> map = getConfigMap(groupCode);
+		logger.info("config map : {}", JsonUtils.toJSONString(map));
 		return (null == map ? null : map.get(configKey));
 	}
 	
