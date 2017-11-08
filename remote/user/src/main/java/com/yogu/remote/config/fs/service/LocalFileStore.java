@@ -49,12 +49,13 @@ public class LocalFileStore extends AbstractFileStore {
 
     @Override
     public String getHttpUrl(String filename) {
-        String[] arr = filename.split(FileStoreConstant.DELIMITER);
-        if (arr.length > 3) {
+//        String[] arr = filename.split(FileStoreConstant.DELIMITER);
+//        if (arr.length > 3) {
             // arr[2] = Bucket.id
-            String url = "http://image.mazing.com/" + arr[2] + "/" + filename;
+    		logger.info("local file {}", filename);
+            String url = "http://img.yogubc.com/" + filename;
             return url;
-        }
-        return filename;
+//        }
+//        return filename;
     }
 }

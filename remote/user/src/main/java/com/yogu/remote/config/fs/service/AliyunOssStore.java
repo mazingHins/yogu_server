@@ -130,6 +130,7 @@ public class AliyunOssStore extends AbstractFileStore {
             // arr[2] = Bucket.id
 //            String url = CloudSettings.getFileStoreBucketPublicUrl(arr[2]);
         String url = CloudSettings.getFileStoreBucketPublicUrl(arr[0]);
+        logger.info("img url : {}", url);
             if (url != null) {
                 if (url.endsWith("/")) {
                     url = url + filename;
