@@ -122,7 +122,7 @@ public class MenuServiceImpl implements MenuService {
 		List<MenuItem> children = item.getChildren();
 		if (children == null || children.isEmpty()) {
 			// 没有下一层菜单了，这是资源
-			saveMenuResource(appId, item, parent);
+//			saveMenuResource(appId, item, parent);
 		}
 		else {
 			if (!item.isRoot()) {
@@ -221,47 +221,13 @@ public class MenuServiceImpl implements MenuService {
 		if (parentMenu == null) {
 			throw new IllegalArgumentException("资源所属的菜单为空, item=" + item.toString());
 		}
-		UrlResourcePO res = urlResourceDao.getByAppIdAndUri(appId, item.getUrl());
+//		UrlResourcePO res = urlResourceDao.getByAppIdAndUri(appId, item.getUrl());
 		MenuPO menu = menuDao.getByAppIdAndMenuName(appId, parentMenu.getName());
 		if (menu == null) {
 			logger.error("资源所属的菜单在数据库里不存在， item: {}, parent: {}", item.getId(), parentMenu.getId());
 			throw new IllegalArgumentException("资源所属的菜单在数据库里不存在");
 		}
 
-		if (res == null) {
-			// 新增资源
-			res = new UrlResourcePO();
-			res.setResId(generateIdForName(false, item.getName(), item.getUrl()));
-			res.setParentResId(0); // 暂时没有 parentResId
-			res.setCreateTime(new Date());
-			res.setLastModify(res.getCreateTime());
-			res.setAppId(appId);
-			res.setName(item.getName());
-			res.setOperator(AdminContext.getAccountId());
-			res.setSequence(0);
-			res.setUri(item.getUrl());
-			urlResourceDao.save(res);
-			res = urlResourceDao.getByAppIdAndUri(appId, item.getUrl());
-		}
-		else {
-			// 更新资源
-			res.setParentResId(0); // 暂时没有 parentResId
-			res.setName(item.getName());
-			res.setOperator(AdminContext.getAccountId());
-			res.setLastModify(new Date());
-			// 注：这里不能更新uri，如果是新的uri，应该是新的记录
-			// name,parent_res_id,operator,type,sequence=,last_modify
-			urlResourceDao.updateRes(res);
-		}
-
-		// 保存菜单和资源的关系
-		MenuResourcesRelationPO relation = menuResourcesRelationDao.getMenuResource(menu.getMenuId(), res.getResId());
-		if (relation == null) {
-			relation = new MenuResourcesRelationPO();
-			relation.setMenuId(menu.getMenuId());
-			relation.setResId(res.getResId());
-			menuResourcesRelationDao.save(relation);
-		}
 	}
 
 	@Override
@@ -285,7 +251,7 @@ public class MenuServiceImpl implements MenuService {
 		MenuItem root = new MenuItem("root", "", true);
 		if (menuList.size() > 0) {
 			buildTreeMap(appId, root, menuList);
-			loadMenuResource(appId, root);
+//			loadMenuResource(appId, root);
 		}
 		return root;
 	}
