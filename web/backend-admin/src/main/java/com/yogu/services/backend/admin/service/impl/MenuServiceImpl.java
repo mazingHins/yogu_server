@@ -1,6 +1,7 @@
 package com.yogu.services.backend.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.VOUtil;
 import com.yogu.commons.utils.encrypt.EncryptUtil;
 import com.yogu.commons.utils.resource.MenuItem;
@@ -223,6 +224,7 @@ public class MenuServiceImpl implements MenuService {
 		UrlResourcePO res = urlResourceDao.getByAppIdAndUri(appId, item.getUrl());
 		MenuPO menu = menuDao.getByAppIdAndMenuName(appId, parentMenu.getName());
 		if (menu == null) {
+			logger.error("资源所属的菜单在数据库里不存在， item: {}, parent: {}", JsonUtils.toJSONString(item), JsonUtils.toJSONString(parentMenu));
 			throw new IllegalArgumentException("资源所属的菜单在数据库里不存在, item=" + item.toString() + ", parent=" + parentMenu.toString());
 		}
 
