@@ -29,7 +29,6 @@
           <ul id="userTab" class="nav nav-tabs">
             <li class="active"> <a href="#queryUser" data-toggle="tab"> 用户查询 </a> </li>
             <li><a href="#createUser" data-toggle="tab">创建帐号</a></li>
-            <li><a href="#regQuery" data-toggle="tab">注册查询</a></li>
           </ul>
           <div id="userTabContent" class="tab-content"> 
             <!-- tab start 用户查询 -->

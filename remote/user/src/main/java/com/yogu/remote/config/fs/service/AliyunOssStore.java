@@ -126,9 +126,10 @@ public class AliyunOssStore extends AbstractFileStore {
     @Override
     public String getHttpUrl(String filename) {
         String[] arr = filename.split(FileStoreConstant.DELIMITER);
-        if (arr.length > 3) {
+//        if (arr.length > 3) {
             // arr[2] = Bucket.id
-            String url = CloudSettings.getFileStoreBucketPublicUrl(arr[2]);
+//            String url = CloudSettings.getFileStoreBucketPublicUrl(arr[2]);
+        String url = CloudSettings.getFileStoreBucketPublicUrl(arr[0]);
             if (url != null) {
                 if (url.endsWith("/")) {
                     url = url + filename;
@@ -138,7 +139,7 @@ public class AliyunOssStore extends AbstractFileStore {
                 }
                 return url;
             }
-        }
+//        }
         return filename;
     }
 
