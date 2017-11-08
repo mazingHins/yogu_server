@@ -1,5 +1,8 @@
 package com.yogu.remote.config.base;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.yogu.cfg.GlobalSetting;
 import com.yogu.core.remote.config.ConfigGroupConstants;
 import com.yogu.core.remote.config.ConfigRemoteService;
@@ -10,6 +13,9 @@ import com.yogu.core.remote.config.ConfigRemoteService;
  * @author linyi 2015/5/30.
  */
 public class CloudSettings {
+	
+	private static Logger logger = LoggerFactory.getLogger(CloudSettings.class);
+
 
 	private static final String cloud = GlobalSetting.getCloud();
 
@@ -57,6 +63,7 @@ public class CloudSettings {
      */
     public static String getFileStoreBucketPublicUrl(String id) {
         String key = cloud + "_bucket_" + "url";
+        logger.info("getFileStoreBucketPublicUrl key: {}", key);
         return ConfigRemoteService.getConfig(ConfigGroupConstants.CLOUD, key);
     }
 
