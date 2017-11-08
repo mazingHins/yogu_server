@@ -32,7 +32,7 @@ import com.yogu.services.backend.admin.service.AdminAccountService;
  */
 @Controller
 @RequestMapping("admin/account")
-@Menu(name="增加/修改管理员", parent = "帐号管理", sequence = 390000)
+@Menu(name="增加/修改管理员", parent = "帐号管理", sequence = 1400000)
 public class EditAccountResource {
 
     private static final Logger logger = LoggerFactory.getLogger(EditAccountResource.class);

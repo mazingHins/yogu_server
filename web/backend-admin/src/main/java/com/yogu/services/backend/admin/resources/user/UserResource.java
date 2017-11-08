@@ -33,7 +33,7 @@ import com.yogu.services.backend.admin.context.AdminContext;
  * 
  * @author ten 2015/9/17.
  */
-@Menu(name = "用户管理", sequence = 900000)
+@Menu(name = "用户管理", sequence = 4000000)
 @Controller
 @RequestMapping("/admin/user/")
 public class UserResource {

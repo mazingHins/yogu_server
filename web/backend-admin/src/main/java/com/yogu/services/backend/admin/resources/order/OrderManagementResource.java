@@ -10,6 +10,6 @@ import com.yogu.commons.utils.resource.Menu;
  * @author ten 2015/9/25
  */
 @Controller
-@Menu(name = "订单管理", parent = "", sequence = 310000)
+@Menu(name = "订单管理", parent = "", sequence = 2000000)
 public class OrderManagementResource {
 }

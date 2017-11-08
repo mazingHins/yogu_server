@@ -24,7 +24,7 @@ import com.yogu.services.store.Goods;
 
 @Controller
 @RequestMapping("/admin/goods/")
-@Menu(name = "商品列表", parent = "商家管理", sequence = 500000)
+@Menu(name = "商品列表", parent = "商家管理", sequence = 3100000)
 public class GoodsListResource {
 	
 	private static final Logger logger = LoggerFactory.getLogger(GoodsListResource.class);

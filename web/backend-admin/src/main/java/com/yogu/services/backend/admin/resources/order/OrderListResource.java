@@ -28,7 +28,7 @@ import com.yogu.services.backend.admin.context.AdminContext;
  */
 @Controller
 @RequestMapping("/admin/order/")
-@Menu(name="所有订单", parent = "订单管理", sequence = 610000)
+@Menu(name="所有订单", parent = "订单管理", sequence = 2100000)
 public class OrderListResource {
 
 

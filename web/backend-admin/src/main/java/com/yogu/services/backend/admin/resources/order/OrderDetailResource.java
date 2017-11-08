@@ -33,7 +33,7 @@ import com.yogu.services.store.Goods;
  * 订单详情
  * @author ben
  */
-@Menu(name="订单详情", parent = "订单管理", sequence = 500000)
+@Menu(name="订单详情", parent = "订单管理", sequence = 2200000)
 @Controller
 @RequestMapping("/admin/order/")
 public class OrderDetailResource {

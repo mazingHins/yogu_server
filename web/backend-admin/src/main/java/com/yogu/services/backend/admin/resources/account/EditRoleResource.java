@@ -42,7 +42,7 @@ import com.yogu.services.backend.admin.service.RoleService;
  */
 @Controller
 @RequestMapping("/admin/account/")
-@Menu(name="增加/修改角色", parent = "帐号管理", sequence = 490000)
+@Menu(name="增加/修改角色", parent = "帐号管理", sequence = 1300000)
 public class EditRoleResource {
 
     private static final Logger logger = LoggerFactory.getLogger(EditRoleResource.class);

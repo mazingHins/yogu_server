@@ -39,7 +39,7 @@ import com.yogu.services.store.Goods;
 
 @Controller
 @RequestMapping("/admin/goods/")
-@Menu(name = "新增/编辑商品", parent = "商家管理", sequence = 600000)
+@Menu(name = "新增/编辑商品", parent = "商家管理", sequence = 3200000)
 public class GoodsEditResource {
 	
 	private static final Logger logger = LoggerFactory.getLogger(GoodsEditResource.class);
