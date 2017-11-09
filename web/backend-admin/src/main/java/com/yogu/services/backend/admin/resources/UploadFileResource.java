@@ -86,34 +86,40 @@ public class UploadFileResource {
 	
 	@ResponseBody
 	@RequestMapping("uploadMultPic.do")
-	public RestResult<String> uploadMultPic(HttpServletRequest request, @RequestParam MultipartFile file) {
+	public RestResult<String> uploadMultPic(HttpServletRequest request, @RequestParam MultipartFile[] uploads) {
 		long adminId = AdminContext.getAccountId();
 		String typeStr = request.getParameter("type");
+		
+		for(MultipartFile file : uploads){   
+            if(file.isEmpty()){   
+            	continue;
+            }
+            
+         // 获取文件名
+    		String fileName = file.getOriginalFilename();
 
-		// 获取文件名
-		String fileName = file.getOriginalFilename();
+    		// 读取内容
+    		byte[] pic = null;
+    		try {
+    			pic = file.getBytes();
+    		} catch (IOException e) {
+    			throw new ServiceException(ResultCode.UNKNOWN_ERROR, "读取图片数据失败：" + e.getMessage());
+    		}
 
-		// 读取内容
-		byte[] pic = null;
-		try {
-			pic = file.getBytes();
-		} catch (IOException e) {
-			throw new ServiceException(ResultCode.UNKNOWN_ERROR, "读取图片数据失败：" + e.getMessage());
-		}
+    		// check
+    		if (StringUtils.isBlank(fileName) || ArrayUtils.isEmpty(pic))
+    			throw new ServiceException(ResultCode.PARAMETER_ERROR, "请上传正确的图片.");
+    		logger.info("admin#upload#pic | 上传图片 | adminId: {}, fileName: '{}', fileSize: {}", adminId, fileName, pic.length);
 
-		// check
-		if (StringUtils.isBlank(fileName) || ArrayUtils.isEmpty(pic))
-			throw new ServiceException(ResultCode.PARAMETER_ERROR, "请上传正确的图片.");
-		logger.info("admin#upload#pic | 上传图片 | adminId: {}, fileName: '{}', fileSize: {}", adminId, fileName,
-				pic.length);
+    		FileCategory type = null;
+    			type = FileCategory.giveBackendCategory(typeStr);
 
-		FileCategory type = null;
-		type = FileCategory.giveBackendCategory(typeStr);
-
-		// 暂时只有首页用到了 后台上传图片功能，如果有其他地方用到，请留意存储目录（这里是index）
-		// 保存门店图片
-		String imgPath = fileStoreService.saveBackendImage(adminId, type, fileName, pic);
-		return new RestResult<>(imgPath);
+    		// 暂时只有首页用到了 后台上传图片功能，如果有其他地方用到，请留意存储目录（这里是index）
+    		// 保存门店图片
+    		String imgPath = fileStoreService.saveBackendImage(adminId, type, fileName, pic);
+    		return new RestResult<>(imgPath);
+        }
+		return new RestResult<>(StringUtils.EMPTY);
 	}
 
 }

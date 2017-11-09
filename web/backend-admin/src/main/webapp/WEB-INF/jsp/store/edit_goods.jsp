@@ -171,8 +171,15 @@
 
 	    //导入文件上传完成之后的事件
 	    $("#txt_file").on("fileuploaded", function (event, data, previewId, index) {
-	        var data = data.response.data;
-	        console.log(data);
+	        var obj = data.response.object;
+	        console.log(obj);
+	        var content = $("#content").val();
+	        if(content == null || content = ''){
+	        	content = obj;
+	        }else{
+	        	content = content + "," + obj;
+	        }
+	        $("#content").val(content);
 	    });
 	}
 	    return oFile;
