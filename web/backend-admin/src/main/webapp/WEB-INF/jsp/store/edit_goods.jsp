@@ -174,7 +174,7 @@
 	        var obj = data.response.object;
 	        console.log(obj);
 	        var content = $("#content").val();
-	        if(content == null || content = ''){
+	        if(content == null || content == ''){
 	        	content = obj;
 	        }else{
 	        	content = content + "," + obj;
