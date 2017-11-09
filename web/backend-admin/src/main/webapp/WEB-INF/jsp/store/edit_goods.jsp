@@ -220,6 +220,11 @@
 	
 	// 加载优惠券数据
 	function loadGoods(goodsKey) {
+		if(goodsKey == null || goodsKey == ''){
+			return;
+		}
+		
+		
 		$.getJSON('/admin/goods/detail', {
 			'goodsKey' : goodsKey
 		}, function(json) {
@@ -233,7 +238,7 @@
 						label: '确定',
 						action: function (dialog) {
 							dialog.close();
-							window.location.href = '/admin/coupon/list.xhtm';
+							window.location.href = '/admin/goods/list.xhtm';
 						}
 					}]
 				});
