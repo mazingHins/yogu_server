@@ -86,11 +86,13 @@ public class UploadFileResource {
 	
 	@ResponseBody
 	@RequestMapping("uploadMultPic.do")
-	public RestResult<String> uploadMultPic(HttpServletRequest request, @RequestParam MultipartFile[] uploads) {
+	public RestResult<String> uploadMultPic(HttpServletRequest request, @RequestParam MultipartFile[] contentFile) {
 		long adminId = AdminContext.getAccountId();
 		String typeStr = request.getParameter("type");
 		
-		for(MultipartFile file : uploads){   
+		for(MultipartFile file : contentFile){  
+			logger.info("admin#upload#pic | 上传图片 | adminId: {}, fileSize: {}", adminId, contentFile.length);
+
             if(file.isEmpty()){   
             	continue;
             }
