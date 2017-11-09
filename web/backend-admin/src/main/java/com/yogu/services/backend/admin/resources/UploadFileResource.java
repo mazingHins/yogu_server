@@ -43,6 +43,8 @@ public class UploadFileResource {
 
 	@Inject
 	private FileStoreService fileStoreService;
+	
+	private static final String[] TYPE = new String[]{"image/png", "image/jpg", "image/jpeg"};
 
 	/**
 	 * 上传图片，并得到存储的相对路径<br>
@@ -88,7 +90,6 @@ public class UploadFileResource {
 	@RequestMapping("uploadMultPic.do")
 	public RestResult<String> uploadMultPic(HttpServletRequest request, @RequestParam MultipartFile[] contentFile) {
 		long adminId = AdminContext.getAccountId();
-		String typeStr = request.getParameter("type");
 		
 		for(MultipartFile file : contentFile){  
 			logger.info("admin#upload#pic | 上传图片 | adminId: {}, fileSize: {}", adminId, contentFile.length);
@@ -97,7 +98,7 @@ public class UploadFileResource {
             	continue;
             }
             
-         // 获取文件名
+            // 获取文件名
     		String fileName = file.getOriginalFilename();
 
     		// 读取内容
@@ -113,8 +114,15 @@ public class UploadFileResource {
     			throw new ServiceException(ResultCode.PARAMETER_ERROR, "请上传正确的图片.");
     		logger.info("admin#upload#pic | 上传图片 | adminId: {}, fileName: '{}', fileSize: {}", adminId, fileName, pic.length);
 
+    		String[] array = fileName.split(".");
     		FileCategory type = null;
-    			type = FileCategory.giveBackendCategory(typeStr);
+			if (array[1].equals("jpg")) {
+				type = FileCategory.giveBackendCategory(TYPE[1]);
+			} else if (array[1].equals("png")) {
+				type = FileCategory.giveBackendCategory(TYPE[0]);
+			} else if (array[1].equals("jpeg")) {
+				type = FileCategory.giveBackendCategory(TYPE[2]);
+			}
 
     		// 暂时只有首页用到了 后台上传图片功能，如果有其他地方用到，请留意存储目录（这里是index）
     		// 保存门店图片
