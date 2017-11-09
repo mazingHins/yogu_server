@@ -83,7 +83,7 @@
 							<label class="col-md-2 control-label">商品介绍</label>
 							<div class="col-md-3">
 							<input id="content" name="content" type="hidden" />
-							<input type="file" name="content_file" id="content_file" multiple class="file-loading" />
+							<input type="file" name="contentFile" id="contentFile" multiple class="file-loading" />
 							</div>
 							<div class="col-md-3" id="contentImg">
 								
@@ -123,7 +123,7 @@
 		$(function () {
 		    //0.初始化fileinput
 		    var oFileInput = new FileInput();
-		    oFileInput.Init("content_file", "/admin/system/uploadMultPic.do");
+		    oFileInput.Init("contentFile", "/admin/system/uploadMultPic.do");
 		});
 		
 		$('#editGoods').ajaxForm({
@@ -170,7 +170,7 @@
 	    });
 
 	    //导入文件上传完成之后的事件
-	    $("#content_file").on("fileuploaded", function (event, data, previewId, index) {
+	    $("#contentFile").on("fileuploaded", function (event, data, previewId, index) {
 	        var obj = data.response.object;
 	        console.log(obj);
 	        var content = $("#content").val();
