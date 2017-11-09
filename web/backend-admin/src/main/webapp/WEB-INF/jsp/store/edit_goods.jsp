@@ -123,7 +123,7 @@
 		$(function () {
 		    //0.初始化fileinput
 		    var oFileInput = new FileInput();
-		    oFileInput.Init("txt_file", "/admin/system/uploadMultPic.do");
+		    oFileInput.Init("txt_file", "/admin/system/uploadPic.do");
 		});
 		
 		$('#editGoods').ajaxForm({
