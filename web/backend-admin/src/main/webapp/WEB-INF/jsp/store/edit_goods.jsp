@@ -147,7 +147,7 @@
 	});
 	
 	//初始化fileinput
-	var FileInput = function () {
+		var FileInput = function () {
 	    var oFile = new Object();
 
 	    //初始化fileinput控件（第一次初始化）
