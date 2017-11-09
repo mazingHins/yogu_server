@@ -114,7 +114,7 @@ public class UploadFileResource {
     			throw new ServiceException(ResultCode.PARAMETER_ERROR, "请上传正确的图片.");
     		logger.info("admin#upload#pic | 上传图片 | adminId: {}, fileName: '{}', fileSize: {}", adminId, fileName, pic.length);
 
-    		String[] array = fileName.split(".");
+    		String[] array = fileName.split("\\.");
     		FileCategory type = null;
 			if (array[1].equals("jpg")) {
 				type = FileCategory.giveBackendCategory(TYPE[1]);
