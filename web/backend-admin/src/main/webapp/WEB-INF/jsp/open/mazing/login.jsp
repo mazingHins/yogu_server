@@ -20,16 +20,42 @@
     <!--[if lt IE 9]><script src="/static/js/html5.js"></script><![endif]-->
 </head>
 <body>
-<form name="loginForm" id="loginForm" action="/open/yogu/login.do" class="login" method="post">
+<form name="loginForm" id="loginForm" class="login" method="post">
   <h1>米星帐号登录</h1>
-  <input type="passport" name="passport" class="login-input" placeholder="Passport" autofocus>
-  <input type="password" name="password" class="login-input" placeholder="Password">
-  <input type="submit" value="Login" class="login-submit">
+  <input type="passport" name="passport" id="passport" class="login-input" placeholder="Passport" autofocus>
+  <input type="password" name="password" id="password" class="login-input" placeholder="Password">
+  <input type="button" value="Login" class="login-submit" onclick="login()">
   <input type="hidden" name="countryCode" value="86"/>
   <p class="login-help" style="display: none; color: #f0C800;" id="errorMessage"></p>
   <p class="login-help"><a href="#">Forgot password?</a></p>
 </form>
 
+<script type="text/javascript">
+
+	function login(){
+		var fd = new FormData();
+		fd.append("countryCode", "86");
+		fd.append("passport", $('#passport').val());
+		fd.append("password", $('#password').val());
+		$.ajax({
+			url: "/open/yogu/login.do",
+			type: "POST",
+			processData: false,
+			contentType: false,
+			data: fd,
+			success: function(d) {
+				if(d.code == 1){
+					 window.location.href = d.object;
+				}else{
+					 $("#errorMessage").html(d.message);
+	                 $("#errorMessage").css("display", "block");
+				}
+			}
+		});
+	}
+
+
+</script>
 
 </body>
 </html>
