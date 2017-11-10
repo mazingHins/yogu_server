@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <%@ include file="/include/meta.html"%>
-    <title>欢迎进入米星管理后台</title>
+    <title>欢迎进入优固管理后台</title>
 </head>
 
 <body class="skin-blue sidebar-mini">

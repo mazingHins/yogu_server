@@ -64,7 +64,6 @@
 									<p class="text-left">订单状态有：未付款、在线支付、现金支付、已接单、已配送、买家确认收货、买家已评论、申请退款中、系统退款中、退款成功、拒绝退款、已取消</p>
 									<p class="text-left">下单渠道有：iphone、android、mobile(H5)</p>
 									<p class="text-left">支付类型有：线上支付、货到付款、没选择（下单后定时任务取消）</p>
-									<p class="text-left">米星付的订单不会在此展示</p>
 								</div>
 							</div>
 							<div class="row">

@@ -7,9 +7,9 @@
     <!-- Logo -->
     <a href="index2.html" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
-        <span class="logo-mini"><b>米</b>星</span>
+        <span class="logo-mini"><b>优</b>固</span>
         <!-- logo for regular state and mobile devices -->
-        <span class="logo-lg"><b>米星</b>Mazing</span>
+        <span class="logo-lg"><b>优固</b>Yogu</span>
     </a>
 
     <!-- Header Navbar -->

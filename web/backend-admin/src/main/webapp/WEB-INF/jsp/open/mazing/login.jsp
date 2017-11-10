@@ -13,7 +13,7 @@
     <meta content="black" name="apple-mobile-web-app-status-bar-style"/>
     <meta content="telephone=no,email=no" name="format-detection"/>
     <link rel="apple-touch-fullscreen" content="YES"/>
-    <title>米星登录</title>
+    <title>优固登录</title>
     <link rel="stylesheet" href="/static/css/login-style.css">
     <script src="/static/js/jQuery-2.1.4.min.js"></script>
     <script src="/static/plugins/jquery.form.js"></script>
@@ -21,7 +21,7 @@
 </head>
 <body>
 <form name="loginForm" id="loginForm" class="login" method="post">
-  <h1>米星帐号登录</h1>
+  <h1>优固帐号登录</h1>
   <input type="passport" name="passport" id="passport" class="login-input" placeholder="Passport" autofocus>
   <input type="password" name="password" id="password" class="login-input" placeholder="Password">
   <input type="button" value="Login" class="login-submit" onclick="login()">

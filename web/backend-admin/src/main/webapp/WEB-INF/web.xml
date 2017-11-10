@@ -66,6 +66,33 @@
 		<filter-name>adminFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+	
+	<!-- 帐号系统登录的filter -->
+	<filter>
+		<filter-name>mazingLogin</filter-name>
+		<filter-class>com.yogu.commons.sdk.user.MazingLoginFilter</filter-class>
+		<init-param>
+			<param-name>appkey</param-name>
+			<param-value>F58A1328D42DB1F5A981CA9713F7586D5BD97FCF2AE76CF29356D46EA8673E0D</param-value>
+		</init-param>
+		<init-param>
+			<param-name>appsecret</param-name>
+			<param-value>E427F543AEF922C5931C0BB7807414C533F533690FC1EB8D5715A100BF5A9081</param-value>
+		</init-param>
+		<init-param>
+			<!-- appkey 和 appsecret 解密的类，实现 com.mazing.commons.sdk.user.encrypt.ConfigurationDecoder -->
+			<param-name>decoder</param-name>
+			<param-value>com.yogu.commons.sdk.user.encrypt.DefaultConfigurationDecoder</param-value>
+		</init-param>
+		<init-param>
+			<param-name>exclude</param-name>
+			<param-value>/open/mazing/*,  /open/yogu/*,/open/health/status, /admin/error, /admin/exception</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>mazingLogin</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 
     <jsp-config>
         <taglib>
