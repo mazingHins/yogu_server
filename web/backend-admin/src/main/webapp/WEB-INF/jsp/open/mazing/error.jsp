@@ -26,7 +26,7 @@
   <input type="password" name="password" class="login-input" placeholder="Password">
   <input type="submit" value="Login" class="login-submit">
   <input type="hidden" name="countryCode" value="86"/>
-  <p class="login-help" style="display: none; color: #f0C800;" id="errorMessage">#{message}</p>
+  <p class="login-help" style="display: none; color: #f0C800;" id="errorMessage">登录异常</p>
   <p class="login-help"><a href="#">Forgot password?</a></p>
 </form>
 

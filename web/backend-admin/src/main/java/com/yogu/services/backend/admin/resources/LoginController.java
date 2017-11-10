@@ -24,6 +24,7 @@ import com.yogu.commons.utils.HttpClientUtils;
 import com.yogu.commons.utils.IpAddressUtils;
 import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.LogUtil;
+import com.yogu.core.enums.BooleanConstants;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
 import com.yogu.services.backend.admin.dto.AdminAccount;
@@ -72,18 +73,14 @@ public class LoginController {
      * @return result.success=true表示成功，result.callback=要跳转的地址
      */
     @RequestMapping("login.do")
-    public String login(@Valid LoginForm form,  BindingResult bindingResult, HttpServletRequest request,
+    public ModelAndView login(@Valid LoginForm form,  BindingResult bindingResult, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
 		String ip = IpAddressUtils.getClientIpAddr(request);
 		logger.info("open#mazing#login | 用户登录start | countryCode: {}, passport: {}, ip: {}", form.getCountryCode(),
 				LogUtil.hidePassport(form.getPassport()), ip);
-
 		String message = "参数错误";
-		if (bindingResult.hasErrors()) {
-			logger.error("open#mazing#login | 参数错误 | message: {}", message);
-			 return "open/mazing/error";
-		}
 		Map<String, Object> loginResult = doLogin(form, ip);
+		Map<String, Object> model = new HashMap<>(2);
 
 		if (loginResult.containsKey("success")) {
 			boolean success = (Boolean) loginResult.get("success");
@@ -95,7 +92,8 @@ public class LoginController {
 				if (adminAccount == null) {
 		            logger.error("admin#login | 管理员登录错误: 不是管理员 | uid: {}, ip: {}", user.get("uid"), ip);
 		            message = "您不是管理员，不能登录系统";
-		            return "open/mazing/error";
+		            model.put("message", "您不是管理员，不能登录系统");
+		            model.put("status", BooleanConstants.FALSE);
 		        }else{
 		        	// 写 cookie
 					Map<String, Object> map = new HashMap<>(4);
@@ -104,10 +102,11 @@ public class LoginController {
 					map.put("nickname", user.get("nickname"));
 					map.put("loginTime", System.currentTimeMillis());
 					MazingLoginContext.saveMazingLoginUserToCookie(response, map);
+					response.sendRedirect("/admin/welcome.xhtm");
 		        }
 			}
 		}
-		return "/index";
+		return new ModelAndView("/open/mazing/error", model);
 	}
 
 
