@@ -18,6 +18,7 @@ import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.remote.order.OrderRemoteService;
+import com.yogu.remote.user.dto.UserProfile;
 import com.yogu.remote.user.provider.UserRemoteService;
 import com.yogu.services.backend.admin.context.AdminContext;
 
@@ -90,10 +91,57 @@ public class OrderListResource {
         }
     	RestResult<List<Map<String, Object>>> result = orderRemoteService.adminQueryOrders(uid,
                 orderNo, 0L, page, pageSize);
+    	
+    	if (result.isSuccess()) {
+            readStoreInfo(result.getObject());
+        }
 
         logger.info("admin#store#query | 读取数据结果 | success: {}, time: {}", result.isSuccess(),
                 System.currentTimeMillis() - start);
         return result;
+    }
+    
+    /**
+     * 读取购买者的昵称、餐厅的名称
+     * @param list 订单列表，同 List&lt;Order&gt;
+     * @author ten 2016/1/26
+     */
+    private void readStoreInfo(List<Map<String, Object>> list) {
+    	if (list.isEmpty()) {
+			return;
+		}
+    	
+        long[] uids = new long[list.size()];
+        long[] storeIds = new long[list.size()];
+        int index = 0;
+        for (Map<String, Object> row : list) {
+            long uid = 0, storeId = 0;
+            if (row.containsKey("uid")) {
+                uid = ((Number) row.get("uid")).longValue();
+            }
+            if (row.containsKey("storeId")) {
+                storeId = ((Number) row.get("storeId")).longValue();
+            }
+            
+            // 将bigdecimal数字转字符串
+			row.put("orderNoStr", String.valueOf(row.get("orderNo").toString()));
+            
+            uids[index] = uid;
+            storeIds[index] = storeId;
+            index++;
+        }
+        Map<Long, UserProfile> userProfileMap = userRemoteService.getUserProfileByUids(uids);
+        for (Map<String, Object> row : list) {
+            String userNickname = "(读取昵称失败)";
+            if (row.containsKey("uid")) {
+                Long uid = ((Number) row.get("uid")).longValue();
+                if (userProfileMap.containsKey(uid)) {
+                    UserProfile userProfile = userProfileMap.get(uid);
+                    userNickname = userProfile.getNickname() + " (ID/帐号: " + uid + " / " + userProfile.getPassport() + ")";
+                }
+            }
+            row.put("userNickname", userNickname);
+        }
     }
 
     /**

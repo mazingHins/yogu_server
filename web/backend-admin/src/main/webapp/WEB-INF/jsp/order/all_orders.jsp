@@ -88,7 +88,7 @@
 													{{value.orderId}}
 												</td>
 												<td>
-													<a target="_blank" href="/admin/order/orderDetail.xhtm?orderNo={{value.orderNoStr}}">{{value.orderNoStr}}</a><
+													<a target="_blank" href="/admin/order/orderDetail.xhtm?orderNo={{value.orderNoStr}}">{{value.orderNoStr}}</a>
 												</td>
 												<td>
 													{{if value.totalFee >= 1000000}}
