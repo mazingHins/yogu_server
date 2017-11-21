@@ -88,7 +88,7 @@ public class OrderDaoImpl extends MyBatisDao implements OrderDao {
 		map.put("storeId", storeId);
 		map.put("offset", offset);
 		map.put("pageSize", pageSize);
-		return super.list("com.mazing.services.order.base.dao.OrderDao.listAllOrders", map);
+		return super.list("com.yogu.services.order.base.dao.OrderDao.listAllOrders", map);
 	}
 
 
