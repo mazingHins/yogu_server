@@ -92,7 +92,7 @@
 															{{if value.status == <%=BooleanConstants.TRUE%>}}
 															上架
 															{{/if}}
-															{{if value.status == <%=BooleanConstants.TRUE%>}}
+															{{if value.status == <%=BooleanConstants.FALSE%>}}
 															下架
 															{{/if}}
 														</td>

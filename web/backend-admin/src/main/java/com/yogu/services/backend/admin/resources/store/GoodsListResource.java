@@ -69,16 +69,7 @@ public class GoodsListResource {
 		return new RestResult<>(list);
 	}
 	
-	@ResponseBody
-	@MenuResource("查看商品详情")
-	@RequestMapping(value = "detail")
-	public RestResult<Goods> detail(@RequestParam(value = "goodsKey") long goodsKey) {
-
-		logger.info("admin#goodsListResource#query | 查看商品详情 |  goodsKey: {}", goodsKey);
-
-		Goods result = goodsRemoteService.getGoodsByKey(goodsKey);
-		return new RestResult<>(result);
-	}
+	
 
 	
 

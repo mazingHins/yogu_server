@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,7 +127,6 @@ public class UserResource {
 				LogUtil.hidePassport(passport), nickname, AdminContext.getAccountId());
 		ParameterUtil.assertNotBlank(countryCode, "国家代码不能为空");
 		ParameterUtil.assertNotBlank(passport, "帐号不能为空");
-		ParameterUtil.assertNotBlank(profilePic, "用户头像不能为空");
 		ParameterUtil.assertNotBlank(nickname, "昵称不能为空");
 		ParameterUtil.assertNotNull(password, "密码不能为空");
 		passport = passport.trim();
@@ -145,6 +145,8 @@ public class UserResource {
 		// 如果是生产环境，只能创建14000开头的用户
 		if (GlobalSetting.PROJENV_PROD.equals(GlobalSetting.getProjenv()) && !(passport.startsWith("14000")) && !(passport.startsWith("10000")))
 			throw ResultCode.paramExcp("只能创建14000或10000开头的账号！");
+		
+		profilePic = StringUtils.EMPTY;
 
 		// 获取IP
 		String ip = IpAddressUtils.getClientIpAddr(AdminContext.getHttpServletRequest());

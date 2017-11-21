@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<%@ include file="/include/meta.html"%>
-	<title>添加美食</title>
+	<title>编辑商品</title>
 </head>
 <body class="skin-blue sidebar-mini">
 <div class="wrapper">
@@ -19,11 +19,11 @@
 		<!-- Content Header (Page header) -->
 		<section class="content-header">
 			<h1 id="titleMessage">
-				添加美食
+				编辑商品
 				<small></small>
 			</h1>
 			<ol class="breadcrumb">
-				<li><a href="/admin/store/list.xhtm"><i class="fa fa-dashboard"></i> 返回餐厅列表</a></li>
+				<li><a href="/admin/goods/list.xhtm"><i class="fa fa-dashboard"></i> 返回商品列表</a></li>
 			</ol>
 		</section>
 
@@ -32,7 +32,7 @@
 			<div class="row">
 				<div class="col-md-12">
 					<p class="text-left">说明：</p>
-					<p class="text-left">（1）编辑美食的过程中，请不要离开界面；</p>
+					<p class="text-left">（1）编辑的过程中，请不要离开界面；</p>
 				</div>
 			</div>
 			<div class="row">
@@ -130,6 +130,7 @@
 			complete : function(xhr) {
 				try {
 					eval('json=' + xhr.responseText);
+					MyDialog.alert(json.success);
 					if (json.success) {
 						MyDialog.alert(json.message, function() {
 							window.location.href =  "/admin/goods/list.xhtm";
@@ -204,7 +205,7 @@
 		if (message != '') {
 			MyDialog.alert(message);
 		}
-		return (message == '');
+		return message == '';
 	}
 
 	

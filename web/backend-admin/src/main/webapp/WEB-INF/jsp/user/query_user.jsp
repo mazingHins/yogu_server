@@ -93,21 +93,7 @@
                   <div class="box-body">
                     <div class="row">
                       <div class="form-horizontal col-sm-12">
-                        <div class="form-group">
-                          <label class="col-sm-2 control-label"> 国家： </label>
-                          <div class="col-sm-2">
-                            <select class="form-control" name="countryCode">
-                              <option value="86">中国</option>
-                            </select>
-                          </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-sm-2 control-label"> 用户头像： </label>
-                          <div class="col-sm-2"> <img id="profilePicPreview" width="100" src=""/><br>
-                            <input type="file" id="profilePicFile" value="更换图片..." onChange="updateProfilePic();">
-                            <input type="hidden" id="profilePicInput" name="profilePic" class="form-control"/>
-                          </div>
-                        </div>
+                        
                         <div class="form-group">
                           <label class="col-sm-2 control-label"> 手机号码： </label>
                           <div class="col-sm-2">
@@ -280,13 +266,6 @@
 		}
 	}
 	
-	function updateProfilePic(){
-		uploadFile($('#profilePicFile'), function(data){
-			var url = data;
-			$('#profilePicPreview').attr('src', url);
-			$('#profilePicInput').val(data);
-		});
-	}
 
 	$(function() {
 		$('#createUserForm').ajaxForm({
