@@ -2,7 +2,11 @@ package com.yogu.services.backend.admin.util;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.yogu.commons.utils.resource.MenuItem;
+import com.yogu.services.backend.admin.resources.user.UserResource;
 
 /**
  * 生成HTML菜单
@@ -10,6 +14,10 @@ import com.yogu.commons.utils.resource.MenuItem;
  * 2014年2月27日
  */
 public class HtmlMenuGenerator {
+	
+	private static final Logger logger = LoggerFactory.getLogger(HtmlMenuGenerator.class);
+
+	
 //
 //	/**
 //	 * 每级菜单的CSS名称，最多3级，2级对应LEVEL_CSS[2]，以此类推
@@ -55,6 +63,7 @@ public class HtmlMenuGenerator {
 		} else if (level >= 3) {
 			space = "\t\t\t\t";
 		}
+		logger.info("jspxUrl: {}, children: {}", jspxUrl, children == null || children.isEmpty()? 0:1);
 
 		// 如果这个菜单下面的children，全是 .jspx, .do，说明已经到最里面的菜单了，直接输出 jspx页面的链接
 		if (children == null || children.isEmpty() || jspxUrl != null) {
