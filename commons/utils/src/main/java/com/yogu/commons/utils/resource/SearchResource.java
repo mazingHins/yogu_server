@@ -1,5 +1,14 @@
 package com.yogu.commons.utils.resource;
 
+import java.io.IOException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.ws.rs.Path;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,14 +18,6 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.type.classreading.MetadataReader;
 import org.springframework.core.type.classreading.MetadataReaderFactory;
 import org.springframework.core.type.classreading.SimpleMetadataReaderFactory;
-
-import javax.ws.rs.Path;
-import java.io.IOException;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 生成菜单数据
@@ -31,7 +32,7 @@ public class SearchResource {
 	/**
 	 * 默认的资源路径
 	 */
-	public static final String DEFAULT_RESOURCE_PATH = "com/yogu/services/backend/**/*.class";
+	public static final String DEFAULT_RESOURCE_PATH = "com/mazing/services/backend/**/*.class";
 
 	/**
 	 * 菜单描述
