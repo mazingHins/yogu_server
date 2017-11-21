@@ -236,7 +236,7 @@ public class SearchResource {
 										if (classPath != null && path != null) {
 											String resName = res.value();
 											String urlPath = (classPathValue + path.value()).replace("//", "/");
-
+											logger.info("resourceList add, urlPath: {}, resName: {}, name: {}", urlPath, resName, name);
 											resourceList.add(new MenuResourceDesc(
 													resName, urlPath, name));
 										}
