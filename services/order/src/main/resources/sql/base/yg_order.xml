@@ -57,7 +57,7 @@
 		where order_id=#{orderId} and status=#{oldStatus}
 	</update>
 	
-	<select id="listAllOrders" parameterType="Map" resultType="com.mazing.services.order.base.entry.OrderPO">
+	<select id="listAllOrders" parameterType="Map" resultType="com.yogu.services.order.base.entry.OrderPO">
 		SELECT * FROM yg_order.yg_order WHERE 1=1
 		<if test="uid > 0">
 			AND uid=#{uid}

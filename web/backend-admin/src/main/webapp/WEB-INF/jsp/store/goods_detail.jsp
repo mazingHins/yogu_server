@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<%@ include file="/include/meta.html"%>
-	<title>添加美食</title>
+	<title>商品</title>
 </head>
 <body class="skin-blue sidebar-mini">
 <div class="wrapper">
@@ -23,7 +23,7 @@
 				<small></small>
 			</h1>
 			<ol class="breadcrumb">
-				<li><a href="/admin/store/list.xhtm"><i class="fa fa-dashboard"></i> 返回餐厅列表</a></li>
+				<li><a href="/admin/goods/list.xhtm"><i class="fa fa-dashboard"></i> 返回商品列表</a></li>
 			</ol>
 		</section>
 
