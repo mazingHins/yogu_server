@@ -112,22 +112,17 @@ public class OrderListResource {
 		}
     	
         long[] uids = new long[list.size()];
-        long[] storeIds = new long[list.size()];
         int index = 0;
         for (Map<String, Object> row : list) {
-            long uid = 0, storeId = 0;
+            long uid = 0;
             if (row.containsKey("uid")) {
                 uid = ((Number) row.get("uid")).longValue();
-            }
-            if (row.containsKey("storeId")) {
-                storeId = ((Number) row.get("storeId")).longValue();
             }
             
             // 将bigdecimal数字转字符串
 			row.put("orderNoStr", String.valueOf(row.get("orderNo").toString()));
             
             uids[index] = uid;
-            storeIds[index] = storeId;
             index++;
         }
         Map<Long, UserProfile> userProfileMap = userRemoteService.getUserProfileByUids(uids);

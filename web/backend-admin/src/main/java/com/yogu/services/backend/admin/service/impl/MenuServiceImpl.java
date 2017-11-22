@@ -357,12 +357,12 @@ public class MenuServiceImpl implements MenuService {
 			if (menu.getParentMenuId() == 0) {
 				if (tmpMap.containsKey(menu.getMenuId())) {
 					// 忽略，不可能出现
-					;
 				}
 				else {
 					MenuItem item = new MenuItem(menu.getMenuName(), "");
 					item.setId(menu.getMenuId());
 					item.setSequence(menu.getSequence());
+					item.setUrl(menu.getUrl());
 					root.createChildren().add(item);
 					tmpMap.put(menu.getMenuId(), item);
 				}
@@ -385,6 +385,7 @@ public class MenuServiceImpl implements MenuService {
 					MenuItem item = new MenuItem(menu.getMenuName(), "");
 					item.setId(menu.getMenuId());
 					item.setSequence(menu.getSequence());
+					item.setUrl(menu.getUrl());
 					parent.createChildren().add(item);
 					tmpMap.put(menu.getMenuId(), item);
 					i++; // next
