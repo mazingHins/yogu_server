@@ -180,16 +180,12 @@
 		</td>
 	</tr>
 	<tr>
-		<td>餐厅</td>
-		<td><a href="/admin/store/storeDetail.xhtm?storeId={{storeId}}" target="_blank">{{storeName}}</a></td>
-	</tr>
-	<tr>
 		<td>收货人</td>
 		<td>{{contacts}}&nbsp; &nbsp; 电话：{{phone}}</td>
 	</tr>
 	<tr>
 		<td>送货地址</td>
-		<td>{{address}}   &nbsp; &nbsp; 坐标：({{lat}},{{lng}}) &nbsp; &nbsp; 所属配送区域：{{serviceRangeName}}</td>
+		<td>{{fullAddress}}  </td>
 	</tr>
 	<tr>
 		<td>消费金额</td>
@@ -197,11 +193,7 @@
 			商品总价：{{cent2yuan goodsFee}} 元<br/>
 			配送费：　{{cent2yuan deliveryFee}} 元 <br/>
 			应付金额：{{cent2yuan totalFee}} 元 <br/>
-			<span style="color:blue;">优惠总价：{{cent2yuan discountFee}} 元</span>
-			{{if couponName != ''}}
-			&nbsp; （优惠券：{{couponName}}）
-			{{/if}}
-			<br/>
+			<span style="color:blue;">优惠总价：{{cent2yuan discountFee}} 元</span> <br/>
 			<span style="color:green;">实付金额：{{cent2yuan actualFee}}</span> 元
 		</td>
 	</tr>
@@ -212,12 +204,6 @@
 	<tr>
 		<td>创建时间</td>
 		<td>{{formatDateTime createTime}}</td>
-	</tr>
-	<tr>
-		<td>预计送达时间</td>
-		<td>
-			{{formatDateTime deliveryTime}}
-		</td>
 	</tr>
 	<tr>
 		<td>用户确认收货时间</td>
@@ -241,7 +227,6 @@
 		</td>
 	</tr>
 </script>
-	<!-- 菜的信息模板 -->
 	<script id="dishInfoTemplate" type="text/html">
 		{{each orderDetails as value i}}
 		<tr>

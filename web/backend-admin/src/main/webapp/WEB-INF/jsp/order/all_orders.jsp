@@ -158,7 +158,7 @@
 												</td>
 												<td style="font-size: 14px;">{{formatDateTime value.createTime}}</td>
 												<td>
-													<a target="_blank" href="/admin/order/orderDetail.xhtm?orderNo={{value.orderNoStr}}">查看详情</a><
+													<a target="_blank" href="/admin/order/orderDetail.xhtm?orderNo={{value.orderNoStr}}">查看详情</a>
 												</td>
 											</tr>
 											{{/each}}

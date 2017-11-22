@@ -44,9 +44,6 @@ public class OrderDetailResource {
     private OrderRemoteService orderRemoteService;
 
     @Autowired
-    private StoreRemoteService storeRemoteService;
-
-    @Autowired
     private GoodsRemoteService goodsRemoteService;
 
     @Autowired

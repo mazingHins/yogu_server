@@ -1,26 +1,35 @@
 package com.yogu.services.order.resource.api;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.yogu.commons.utils.IpAddressUtils;
 import com.yogu.commons.utils.VOUtil;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.OrderMessages;
 import com.yogu.services.order.base.dto.Order;
+import com.yogu.services.order.base.dto.OrderDetail;
+import com.yogu.services.order.base.service.OrderDetailService;
 import com.yogu.services.order.base.service.OrderService;
+import com.yogu.services.order.coupon.dto.OrderCouponRecord;
+import com.yogu.services.order.coupon.service.OrderCouponRecordService;
 import com.yogu.services.order.resource.vo.order.AdminOrderVO;
 
 @Named
@@ -33,6 +42,12 @@ public class LocalOrderApiResource {
 
 	@Inject
 	private OrderService orderService;
+	
+	@Inject
+	private OrderDetailService orderDetailService;
+	
+	@Inject
+	private OrderCouponRecordService orderCouponRecordService;
 	
 	
 	/**
@@ -88,6 +103,55 @@ public class LocalOrderApiResource {
 		AdminOrderVO order = VOUtil.from(orderService.getByOrderNo(orderNo), AdminOrderVO.class);
 		return new RestResult<AdminOrderVO>(order);
 	}
+	
+	/**
+	 * 返回订单的详细信息，包括：基本信息、订单轨迹。<br/>
+	 * 成功返回相应的详细信息，失败抛出 ServiceException
+	 * <strong>注：后台管理系统使用</strong>，用于展示订单的信息。
+	 * <pre>
+	 * {
+	 *     order: 订单基本信息,
+	 *     orderTrackList: 员工列表,
+	 * }
+	 * </pre>
+	 * @param orderNo 订单号
+	 * @return 成功返回相应的详细信息，失败抛出 ServiceException
+	 * @author ben
+	 */
+    @GET
+    @Path("order/detail")
+    public RestResult<Map<String, Object>> orderDetail(@QueryParam("orderNo") long orderNo,
+                                                       @Context HttpServletRequest request) {
+
+        if (orderNo <= 0) {
+            return new RestResult<>(ResultCode.PARAMETER_ERROR, OrderMessages.ORDER_ORDERADMINAPI_ORDERDETAIL_ORDERNO_ERROR());
+        }
+        // 查询商家信息
+        Order order = orderService.getByOrderNo(orderNo);
+        if (order == null) {
+            return new RestResult<>(ResultCode.FAILURE, OrderMessages.ORDER_ORDERADMINAPI_ORDERDETAIL_ORDER_NOTEXIST());
+        }
+        else {
+			long orderId = order.getOrderId();
+            // 返回结果
+            Map<String, Object> map = new HashMap<>(4);
+            map.put("order", order);
+            // 2016/7/12 add by hins 内容：米星付的订单不查询美食详情
+			List<OrderDetail> orderDetails = orderDetailService.listByOrderId(orderId);
+			map.put("orderDetails", orderDetails);
+			if (order.getDiscountFee() > 0) {
+				// 读取优惠券相关信息
+				OrderCouponRecord coupon = orderCouponRecordService.getNewestRecord(orderId);
+				if (coupon != null) {
+					map.put("coupon", coupon);
+				}
+			}
+
+            logger.info("api#order#orderDetail | 订单详情 | orderNo: {}, IP: {}", orderNo,
+                    IpAddressUtils.getClientIpAddr(request));
+            return new RestResult<>(map);
+        }
+    }
 
 	
 }
