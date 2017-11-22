@@ -112,11 +112,11 @@ public class OrderDetailResource {
             StringBuffer buf = new StringBuffer(dishes.size() * 10);
             for (Map<String, Object> row : dishes) {
                 // 这里保存的是id
-                long dishId = ((Number)row.get("objectId")).longValue();
+                long dishId = ((Number)row.get("goodsId")).longValue();
                 if (buf.length() > 0)
                     buf.append(',');
                 buf.append(dishId);
-                row.put("dishName", "(找不到菜名)");
+                row.put("goodsName", "(找不到菜名)");
             }
             List<Goods> list = goodsRemoteService.listGoodsTrackByIds(buf.toString());
             Map<Long, String> dishNameMap = new HashMap<>(list.size() * 4 / 3);
@@ -124,9 +124,9 @@ public class OrderDetailResource {
                 dishNameMap.put(dish.getGoodsId(), dish.getGoodsName());
             }
             for (Map<String, Object> row : dishes) {
-                Long dishId = ((Number)row.get("objectId")).longValue();
+                Long dishId = ((Number)row.get("goodsId")).longValue();
                 if (dishNameMap.containsKey(dishId)) {
-                    row.put("dishName", dishNameMap.get(dishId));
+                    row.put("goodsName", dishNameMap.get(dishId));
                 }
             }
         }
