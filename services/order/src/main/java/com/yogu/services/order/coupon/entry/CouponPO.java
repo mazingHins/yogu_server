@@ -18,6 +18,8 @@ public class CouponPO implements Serializable {
 	
 	/** 券的显示名 */
 	private String couponName = "";
+	
+	private long couponRuleId;
 
 	/** 优惠券类型：1-减免 */
 	private short couponType;
@@ -25,14 +27,19 @@ public class CouponPO implements Serializable {
 	/** 用户id 为0时表示还没被领取 */
 	private long uid = 0;
 	
+	/** 券编号 全局唯一 */
+	private String couponCode;
+	
+	private long faceValue;
+	
 	/** 满多少钱才可以使用 */
 	private long enoughMoney = 0;
 	
-	/** 优惠券面值（类型为代金券则直接存值如20；类型有折扣券则存入 0.75 X100 =75 的值） */
-	private long faceValue;
-	
 	/** 使用的订单号 */
 	private long orderNo = 0;
+	
+	/** 折扣券最高优惠金额 **/
+	private long mostOffer = 0;
 	
 	/** 0：待领取 1：未使用 2：使用中 3：已使用 4：已失效 5：已删除 */
 	private short status;
@@ -70,6 +77,14 @@ public class CouponPO implements Serializable {
 	public void setCouponName(String couponName) {
 		this.couponName = couponName;
 	}
+	
+	public long getCouponRuleId() {
+		return couponRuleId;
+	}
+
+	public void setCouponRuleId(long couponRuleId) {
+		this.couponRuleId = couponRuleId;
+	}
 
 	public short getCouponType() {
 		return couponType;
@@ -86,6 +101,14 @@ public class CouponPO implements Serializable {
 	public void setUid(long uid) {
 		this.uid = uid;
 	}
+	
+	public String getCouponCode() {
+		return couponCode;
+	}
+
+	public void setCouponCode(String couponCode) {
+		this.couponCode = couponCode;
+	}
 
 	public long getEnoughMoney() {
 		return enoughMoney;
@@ -93,14 +116,6 @@ public class CouponPO implements Serializable {
 
 	public void setEnoughMoney(long enoughMoney) {
 		this.enoughMoney = enoughMoney;
-	}
-
-	public long getFaceValue() {
-		return faceValue;
-	}
-
-	public void setFaceValue(long faceValue) {
-		this.faceValue = faceValue;
 	}
 
 	public long getOrderNo() {
@@ -165,6 +180,22 @@ public class CouponPO implements Serializable {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+	
+	public long getMostOffer() {
+		return mostOffer;
+	}
+
+	public void setMostOffer(long mostOffer) {
+		this.mostOffer = mostOffer;
+	}
+	
+	public long getFaceValue() {
+		return faceValue;
+	}
+
+	public void setFaceValue(long faceValue) {
+		this.faceValue = faceValue;
 	}
 
 	public String toString() {

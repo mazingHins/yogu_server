@@ -60,4 +60,26 @@ public interface CouponDao {
 			@Param("oldStatus") short oldStatus, @Param("orderNo") long orderNo, @Param("useTime") Date useTime);
 	
 
+	/**
+	 * 将优惠券置为'已失效'<br>
+	 * 
+	 * 该接口将 状态为 0 和 1 的优惠券 置为状态 等于4 @see {CouponStatus}
+	 * 
+	 * @param couponRuleId 券规则id
+	 * @param toStatus 修改至的优惠券状态
+	 * @return
+	 * @author sky 2016-01-06
+	 */
+	public int disableCoupons(@Param("couponRuleId") long couponRuleId, @Param("toStatus") short toStatus);
+	
+	/**
+	 * 根据状态获取所有优惠券的信息
+	 * 
+	 * @param status 查询状态
+	 * @return
+	 * @author sky 2015/12/29
+	 */
+	public List<CouponPO> listCouponsByRuleIdAndStatus(@Param("couponRuleId") long couponRuleId, @Param("status") short status,
+			@Param("offset") int offset, @Param("pageSize") int pageSize);
+	
 }

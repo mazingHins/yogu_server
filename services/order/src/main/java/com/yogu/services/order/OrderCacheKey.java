@@ -79,4 +79,61 @@ public class OrderCacheKey {
 	public static String createOrderAndGetPayKey(long uid) {
 		return AnnoCacheExtendAspecter.toKey(CREATE_ORDER_AND_GET_PAY_PREFIX, uid);
 	}
+	
+	/**
+	 * 对应优惠券规则的所有优惠券的redis 缓存key
+	 * 
+	 * @param couponRuleId
+	 * @return
+	 */
+	public static String getCouponCacheKey(long couponRuleId) {
+
+		String key = AnnoCacheExtendAspecter.toKey("couponCodeCache", couponRuleId);
+		return key;
+	}
+
+	/**
+	 * 未被领取的所有优惠券是否已加载到缓存的 标识key
+	 * 
+	 * @return
+	 */
+	public static String getHasCacheAllUnClaimedCouponsFlagKey() {
+		String key = AnnoCacheExtendAspecter.toKey("hasCacheAllUnclaimedCoupons");
+		return key;
+	}
+
+	/**
+	 * 未被领取的优惠券第二次加载到缓存的标志key
+	 * 
+	 * @param couponRuleId
+	 * @return
+	 */
+	public static String getLoadSercordFlagKey(long couponRuleId) {
+		String key = AnnoCacheExtendAspecter.toKey("couponReloadFlag", couponRuleId);
+		return key;
+	}
+
+	/**
+	 * 优惠券防并发缓存key
+	 * 
+	 * @param account 手机md5加密串
+	 * @param couponRuleId 优惠券规格id
+	 * @return
+	 */
+	public static String getCouponObtainLockKey(long uid, long couponRuleId) {
+		String key = AnnoCacheExtendAspecter.toKey("couponObtainLockKey", uid, couponRuleId);
+		return key;
+	}
+
+	/**
+	 * 卡包防并发缓存key
+	 * 
+	 * @param account 手机md5加密串
+	 * @param bagId 卡包id
+	 * @return
+	 */
+	public static String getCouponBagObtainLockKey(String account, long bagId) {
+		String key = AnnoCacheExtendAspecter.toKey("couponBagObtainLockKey", account, bagId);
+		return key;
+	}
 }

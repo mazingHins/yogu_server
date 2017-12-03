@@ -1,6 +1,11 @@
 package com.yogu.services.backend.admin.resources.store;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -30,7 +35,6 @@ import com.yogu.remote.config.fs.api.FileStoreFactory;
 import com.yogu.remote.config.fs.api.FileType;
 import com.yogu.remote.config.fs.utils.FileStoreHelper;
 import com.yogu.remote.store.GoodsRemoteService;
-import com.yogu.services.backend.admin.annotation.log.AdminLog;
 import com.yogu.services.backend.admin.context.AdminContext;
 import com.yogu.services.backend.admin.resources.form.GoodsForm;
 import com.yogu.services.store.Goods;
@@ -69,9 +73,24 @@ public class GoodsEditResource {
 	public RestResult<Integer> saveGoods(@Valid @ModelAttribute GoodsForm form) {
 		logger.info("admin#coupon#saveCoupon | 保存商品 start | adminId: {}, coupon: {}", AdminContext.getAccountId(),
 				JsonUtils.toJSONString(form));
+		String content = form.getContent();
+		Map<String, String> contentMap = new HashMap<>(2);
+		contentMap.put("pic", JsonUtils.toJSONString(toList(content)));
 		goodsRemoteService.saveGoods(VOUtil.from(form, Goods.class));
 		logger.info("admin#coupon#saveCoupon | 保存商品 end ");
 		return new RestResult<Integer>(1);
+	}
+	
+	private List<String> toList(String str) {
+		if (StringUtils.isBlank(str)) {
+			return Collections.emptyList();
+		}
+		String[] array = StringUtils.split(str.trim(), ',');
+		List<String> list = new ArrayList<>(array.length);
+		for (String s : array) {
+			list.add(s);
+		}
+		return list;
 	}
 	
 	/**

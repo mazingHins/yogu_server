@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 这里namespace必须是接口的路径，不然要运行的时候要报错 “is not known to the MapperRegistry” -->
+<mapper namespace="com.yogu.services.order.coupon.dao.CouponRuleDao">
+
+	<!-- 新增 -->
+	<insert id="save"
+		parameterType="com.yogu.services.order.coupon.entry.CouponRulePO"
+		useGeneratedKeys="false">
+		insert into yg_order.yg_coupon_rule
+		(coupon_rule_id,coupon_name,description,coupon_type,enough_money,reg_expression,gain_total,start_time,end_time,create_time,modify_time,
+		admin_id,is_enable,is_stop,most_offer)
+		values
+		(#{couponRuleId},#{couponName},#{description},#{couponType},#{enoughMoney},#{regExpression},#{gainTotal},#{startTime},#{endTime},#{createTime},#{modifyTime},#{adminId},#{isEnable},#{isStop},#{mostOffer})
+	</insert>
+
+	<!-- 根据主键，删除数据 <delete id="deleteById" parameterType="Map"> DELETE FROM 
+		mz_activity.mz_coupon_rule WHERE coupon_rule_id=#{param1} </delete> -->
+
+	<!-- 更新 -->
+	<update id="update"
+		parameterType="com.yogu.services.order.coupon.entry.CouponRulePO">
+		update yg_order.yg_coupon_rule set
+		coupon_name=#{couponName},description=#{description},coupon_type=#{couponType},enough_money=#{enoughMoney},reg_expression=#{regExpression},gain_total=#{gainTotal},start_time=#{startTime},end_time=#{endTime},modify_time=#{modifyTime},admin_id=#{adminId},is_enable=#{isEnable},is_stop=#{isStop},most_offer=#{mostOffer}
+		where coupon_rule_id=#{couponRuleId}
+	</update>
+
+	<!-- 根据主键读取记录（主键可能有多个） -->
+	<select id="getById" parameterType="Map"
+		resultType="com.yogu.services.order.coupon.entry.CouponRulePO">
+		SELECT * FROM yg_order.yg_coupon_rule WHERE
+		coupon_rule_id=#{couponRuleId}
+	</select>
+
+	<!-- 查询全部记录 -->
+	<select id="listAll"
+		resultType="com.yogu.services.order.coupon.entry.CouponRulePO">
+		SELECT * FROM yg_order.yg_coupon_rule
+	</select>
+
+	<!-- 查询优惠券规则列表，结果按创建时间倒序排列 ten 2015/12/24 -->
+	<select id="queryCouponRules" parameterType="Map"
+		resultType="com.yogu.services.order.coupon.entry.CouponRulePO">
+		SELECT * FROM yg_order.yg_coupon_rule WHERE 1=1
+		<if test="keyword != null">
+			AND coupon_name LIKE #{keyword}
+		</if>
+		ORDER BY create_time DESC
+		LIMIT #{offset}, #{pageSize}
+	</select>
+
+	<!-- 设置优惠券规则是否可用 ten 2016/1/4 -->
+	<update id="updateEnable" parameterType="Map">
+		UPDATE
+		yg_order.yg_coupon_rule SET
+		is_enable=#{newValue}
+		WHERE
+		coupon_rule_id=#{couponRuleId} AND is_enable=#{oldValue}
+	</update>
+
+	<!-- 设置优惠券规则是否停止发放 ten 2016/1/4 -->
+	<update id="updateStop" parameterType="Map">
+		UPDATE
+		yg_order.yg_coupon_rule SET
+		is_stop=#{newValue}
+		WHERE
+		coupon_rule_id=#{couponRuleId} AND is_stop=#{oldValue}
+	</update>
+
+
+	<!-- 查询优惠券规则列表，仅用于后台管理的卡包生成展示，结果按创建时间倒序排列 ten 2016/1/26 去掉优惠券类型限制 AND coupon_type 
+		= 1 -->
+	<select id="queryCouponRulesForBag" parameterType="Map"
+		resultType="com.yogu.services.order.coupon.entry.CouponRulePO">
+		SELECT * FROM yg_order.yg_coupon_rule WHERE
+		bag_id = 0 and
+		is_enable=1 and is_stop=0 AND end_time > now()
+		<if test="keyword != null">
+			AND coupon_name LIKE #{keyword}
+		</if>
+
+		ORDER BY create_time DESC
+		LIMIT #{offset},
+		#{pageSize}
+	</select>
+
+</mapper>

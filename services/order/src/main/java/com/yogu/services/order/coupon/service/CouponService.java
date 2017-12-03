@@ -68,4 +68,39 @@ public interface CouponService {
 	public Coupon useCoupon(long couponId, long uid, long orderNo, long totalFee, long goodsFee);
 
 
+	/**
+	 * 使优惠券失效(admin 管理后台操作调用)<br>
+	 * 
+	 * 该接口将 状态为 0 和 1 的优惠券 置为状态 等于4 @see {CouponStatus}
+	 * 
+	 * @param couponRuleId 优惠券规则id
+	 * @author sky 2016-01-06
+	 * @return 影响的行数
+	 * 
+	 */
+	public int disableCoupons(long couponRuleId);
+	
+	
+	/**
+	 * 新注册用户是否有领取的优惠券 检查及分配<br>
+	 * 若有领取的优惠券, 该接口直接将id为couponId的优惠券分配给用户uid
+	 * 
+	 * @param uid 新注册的用户
+	 * @param account 领取的账户md5
+	 * @param mobile mobile的对称加密串 @see {@link LogUtil.encrypt}
+	 * @author sky 2015-12-30
+	 */
+	public void newOrder(long uid);
+	
+	/**
+	 * 分页获取指定优惠券规则的未被领取的优惠券列表数据
+	 * 
+	 * @param couponRuleId 优惠券规则id
+	 * @param pageIndex
+	 * @param pageSize
+	 * @return
+	 * @author sky 2015-12-29
+	 */
+	public List<Coupon> listUnclaimedCouponsByPage(long couponRuleId, int pageIndex, int pageSize);
+
 }

@@ -8,9 +8,9 @@
 		parameterType="com.yogu.services.order.coupon.entry.CouponPO"
 		useGeneratedKeys="false">
 		insert into yg_order.yg_coupon
-		(coupon_id,coupon_name,coupon_type,uid,enough_money,face_value,order_no,status,start_time,end_time,add_time,use_time,create_time,update_time)
+		(coupon_id,coupon_name,coupon_type,uid,face_value,enough_money,order_no,status,start_time,end_time,add_time,use_time,create_time,update_time)
 		values
-		(#{couponId},#{couponName},#{couponType},#{uid},#{enoughMoney},#{faceValue},#{orderNo},#{status},#{startTime},#{endTime},#{addTime},#{useTime},#{createTime},#{updateTime})
+		(#{couponId},#{couponName},#{couponType},#{uid},#{faceValue},#{enoughMoney},#{orderNo},#{status},#{startTime},#{endTime},#{addTime},#{useTime},#{createTime},#{updateTime})
 	</insert>
 
 	<!-- 更新 -->
@@ -39,9 +39,24 @@
 	<!-- 更新 优惠券的被使用了的一些信息 -->
 	<update id="updateCouponStatusAndOrderNoAndUseTime"
 		parameterType="Map">
-		update mz_activity.mz_coupon set order_no=#{orderNo},
+		update yg_order.yg_coupon set order_no=#{orderNo},
 		status=#{newStatus}, use_time=#{useTime} where coupon_id=#{couponId}
 		and status=#{oldStatus}
 	</update>
 	
+	<!-- 将状态为0和1的优惠券置为状态4, 失效 -->
+	<update id="disableCoupons" parameterType="Map">
+		update
+		yg_order.yg_coupon set status=#{toStatus} where
+		coupon_rule_id=#{couponRuleId} AND status in(0,1)
+	</update>
+	
+	<!-- 分页获取 指定券规则的未领取的优惠券 -->
+	<select id="listCouponsByRuleIdAndStatus" parameterType="Map"
+		resultType="com.mazing.services.activity.coupon.base.entry.CouponPO">
+		SELECT * FROM yg_order.mz_coupon where
+		coupon_rule_id=#{couponRuleId} AND status=#{status}
+		limit
+		#{offset},#{pageSize}
+	</select>
 </mapper>

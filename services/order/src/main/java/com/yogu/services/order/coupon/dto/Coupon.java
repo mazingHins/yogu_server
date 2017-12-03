@@ -18,9 +18,14 @@ public class Coupon implements Serializable {
 	
 	/** 券的显示名 */
 	private String couponName = "";
+	
+	private long couponRuleId;
 
 	/** 优惠券类型：1-减免 */
 	private short couponType;
+	
+	/** 券编号 全局唯一 */
+	private String couponCode;
 	
 	/** 用户id 为0时表示还没被领取 */
 	private long uid = 0;
@@ -71,6 +76,13 @@ public class Coupon implements Serializable {
 
 	public void setCouponName(String couponName) {
 		this.couponName = couponName;
+	}
+	public long getCouponRuleId() {
+		return couponRuleId;
+	}
+
+	public void setCouponRuleId(long couponRuleId) {
+		this.couponRuleId = couponRuleId;
 	}
 
 	public short getCouponType() {
@@ -176,6 +188,16 @@ public class Coupon implements Serializable {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+	
+	public String getCouponCode() {
+		return couponCode;
+	}
+
+	public void setCouponCode(String couponCode) {
+		this.couponCode = couponCode;
+	}
+	
+	
 
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);

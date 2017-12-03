@@ -9,23 +9,33 @@ import java.util.Set;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.yogu.commons.cache.redis.Redis;
+import com.yogu.commons.cache.redis.RedisLock;
 import com.yogu.commons.utils.DateUtils;
+import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.PageUtils;
+import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.VOUtil;
+import com.yogu.core.enums.BooleanConstants;
 import com.yogu.core.enums.CouponStatus;
+import com.yogu.core.remote.config.ConfigGroupConstants;
+import com.yogu.core.remote.config.ConfigRemoteService;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.ActivityMessages;
 import com.yogu.remote.config.id.IdGenRemoteService;
+import com.yogu.services.order.OrderCacheKey;
 import com.yogu.services.order.coupon.dao.CouponDao;
 import com.yogu.services.order.coupon.dto.Coupon;
+import com.yogu.services.order.coupon.dto.CouponRule;
 import com.yogu.services.order.coupon.entry.CouponPO;
+import com.yogu.services.order.coupon.service.CouponRuleService;
 import com.yogu.services.order.coupon.service.CouponService;
 import com.yogu.services.order.utils.CouponUtils;
 
@@ -48,14 +58,20 @@ public class CouponServiceImpl implements CouponService {
 		SETTLE_COUPON_STATUS.add(CouponStatus.DID_NOT_MEET_PHONE.getValue());
 		SETTLE_COUPON_STATUS.add(CouponStatus.DID_NOT_MEET_MONEY.getValue());
 	}
+	
+	private static final String FROM_CHAR = "3456789ABCDEFGHIJKLMNPQRSTUVWXY";// 去除了0,1, 2, o, z
+
+	private static final int CODE_LENGTH = 10;
 
 	@Inject
 	private CouponDao dao;
 
-
 	@Autowired
 	private IdGenRemoteService idGenRemoteService;
-
+	
+	@Autowired
+	private CouponRuleService couponRuleService;
+	
 	@Resource(name = "redis")
 	private Redis redis;
 
@@ -208,6 +224,152 @@ public class CouponServiceImpl implements CouponService {
 		
 	}
 		
+	@Override
+	public int disableCoupons(long couponRuleId) {
+		// 将规则为couponRuleId 的优惠券置为失效
+		logger.info("couponService#disableCoupons | 使优惠券失效 | couponRuleId: {}", couponRuleId);
+
+		short toStatus = CouponStatus.INVALID.getValue();
+
+		int row = dao.disableCoupons(couponRuleId, toStatus);
+		logger.info("couponService#disableCoupons | 优惠券失效  操作结束 | couponRuleId: {}, rows: {}", couponRuleId, row);
+
+		if (row <= 0)
+			return 0;
+		else
+			return row;
+
+	}
+
+	private long obtain(long uid, long couponRuleId) {
+		// 领取优惠券, 可能领不到
+		logger.info("couponService#obtainCoupon | 领取优惠券 | uid: {}, couponRuleId: {}", uid, couponRuleId);
+		if (uid <1) {
+			return 0;
+		}
+
+		String lockKey = OrderCacheKey.getCouponObtainLockKey(uid, couponRuleId);
+		RedisLock lock = new RedisLock(redis, lockKey, 5);
+		// 防并发
+		if (!lock.lock()) {
+			return 0;
+		}
+		// 前置 券规则检查
+		CouponRule rule = couponRuleService.getById(couponRuleId);
+		if (rule == null) {
+			logger.error("couponService#obtainCoupon | 领取的优惠券 规则不存在 , 不能再领取  | uid: {},  couponRuleId: {}", uid, couponRuleId);
+			return 0;
+		}
+		short isStop = rule.getIsStop();
+		if (BooleanConstants.TRUE == isStop) {
+			logger.info("couponService#obtainCoupon | 该优惠券已经终止发放, 领取失败 | uid: {},  couponRuleId: {}", uid, couponRuleId);
+			return 0;
+		}
+
+		short isEnable = rule.getIsEnable();
+		if (BooleanConstants.FALSE == isEnable) {
+			logger.info("couponService#obtainCoupon | 该优惠券已经失效 , 领取失败 | uid: {},  couponRuleId: {}", uid, couponRuleId);
+			return 0;
+		}
+
+		long now = System.currentTimeMillis();
+		Date endTime = rule.getEndTime();
+		if (null != endTime && now > endTime.getTime()) {// 是否过期
+			logger.info("couponService#obtainCoupon | 优惠券已过期 |  uid: {},  couponRuleId: {},  endTime: {}", uid, couponRuleId, endTime);
+			return 0;
+		}
+		
+		return createCoupon(rule);
+	}
+	
+	private long createCoupon(CouponRule rule) {
+
+		logger.info("couponService#batchCreateCoupons | 开始批量创建优惠券 | coupon: {}", JsonUtils.toJSONString(rule));
+
+		// 批量生成优惠券
+		Date now = new Date();
+		CouponPO coupon = new CouponPO();
+		coupon.setAddTime(now);
+
+		long couponRuleId = rule.getCouponRuleId();
+
+		coupon.setCouponName(rule.getCouponName());
+		coupon.setCouponRuleId(rule.getCouponRuleId());
+		coupon.setCouponType(rule.getCouponType());
+		coupon.setEndTime(rule.getEndTime());
+		coupon.setEnoughMoney(rule.getEnoughMoney());
+
+		coupon.setOrderNo(0);
+		coupon.setStartTime(rule.getStartTime());
+		coupon.setStatus(CouponStatus.UNCLAIMED.getValue());
+		coupon.setUid(0);
+		coupon.setMostOffer(rule.getMostOffer());
+		coupon.setFaceValue(Long.valueOf(rule.getRegExpression()));
+
+		long couponId = idGenRemoteService.getNextCouponPublicId();
+		coupon.setCouponId(couponId);
+		String couponCode = generateCouponCode();
+		coupon.setCouponCode(couponCode);
+		try {
+			dao.save(coupon);
+			logger.info("couponService#batchCreateCoupons | 创建优惠券成功 | couponRuleId: {},couponId: {}", couponRuleId, couponId);
+		} catch (Exception e) {
+			logger.error("couponService#batchCreateCoupons | 批量生成优惠券, 保存优惠券出错, 生成的couponId主键重复 | couponRuleId: {},couponId: {} msg: {}",
+					couponRuleId, couponId, e.getMessage(), e);
+			throw new RuntimeException("优惠券主键couponId 发生 重复");
+		}
+		
+		return couponId;
+	}
+	
+	/**
+	 * 生成8位 优惠券码, 可能发生重复
+	 * 
+	 * @return
+	 */
+	private static String generateCouponCode() {
+		// 2016/1/5 by ten
+		// 至少保证：1. 优惠券号码在本次生成中不重复；
+		// 2. 优惠券号码在本次生成中不连续；
+		return RandomStringUtils.random(CODE_LENGTH, FROM_CHAR);
+	}
+
+	@Override
+	public List<Coupon> listUnclaimedCouponsByPage(long couponRuleId, int pageIndex, int pageSize) {
+		// 获取所有未领取的优惠券信息数据
+
+		logger.info("couponService#listUnclaimedCouponsByPage | 分页获取所有未领取的优惠券信息 | couponRuleId: {}", couponRuleId);
+
+		short queryStatus = CouponStatus.UNCLAIMED.getValue();
+		int offset = PageUtils.offset(pageIndex, pageSize);
+		List<CouponPO> list = dao.listCouponsByRuleIdAndStatus(couponRuleId, queryStatus, offset, pageSize);
+
+		List<Coupon> result = VOUtil.fromList(list, Coupon.class);
+
+		logger.info("couponService#listUnclaimedCouponsByPage | 分页获取所有未领取的优惠券信息结束 | result: {}", result.size());
+
+		return result;
+	}
+
+	@Override
+	public void newOrder(long uid) {
+		logger.info("couponService#givingGift | 派发礼包给新注册的用户 | uid: {}", uid);
+		String couponRuleIdStr = StringUtils.trimToEmpty(
+				ConfigRemoteService.getConfig(ConfigGroupConstants.COUPON_GIFT, ConfigGroupConstants.GIFT_OF_COUPON));
+
+		long couponRuleId = 0;
+		if (StringUtils.isNotBlank(couponRuleIdStr)) {
+			couponRuleId = Long.valueOf(couponRuleIdStr);
+			if (couponRuleId > 0) {
+				long couponId = obtain(uid, couponRuleId);
+				logger.info("couponService#givingGift | 完成礼包类型 [优惠券] 派发给新注册的用户 | uid: {}, couponRuleId: {}, couponId: {}",
+						uid, couponRuleId, couponId);
+				return;
+			}
+		}
+
+		logger.info("couponService#givingGift | 用户新注册, 但没有任何可派发的礼包 | uid: {}, couponRuleId: {} ", uid, couponRuleIdStr);
+	}
 		
 
 }

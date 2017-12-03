@@ -37,7 +37,6 @@
 						<ul id="storeTab" class="nav nav-tabs">
 							<li class="active"><a href="#baseInfoTab" data-toggle="tab">
 									基础信息 </a></li>
-							<li><a href="#orderTrack" data-toggle="tab">订单轨迹</a></li>
 						</ul>
 						<div id="storeTabContent" class="tab-content">
 							<!-- tab start -->
