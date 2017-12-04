@@ -2,6 +2,8 @@ package com.yogu.remote.order.vo;
 
 import java.util.Date;
 
+import javax.ws.rs.FormParam;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 import com.yogu.commons.utils.DateUtils;
@@ -14,47 +16,59 @@ import com.yogu.commons.utils.DateUtils;
 public class CouponRuleForm {
 
 	/** 优惠券规则主键id */
+	@FormParam("couponRuleId")
 	private long couponRuleId;
 
 	/** 券的显示名称 */
+	@FormParam("couponName")
 	private String couponName = "";
 
 	/** 券的显示描述 */
+	@FormParam("couponName")
 	private String description = "";
 
 	/** 券的责任方类型 1:平台型 2:商家性 */
+	@FormParam("couponName")
 	private short couponBearType;
 
 	/** 优惠券类型 1：现金抵用券 2：折扣券 3：满减券 */
+	@FormParam("couponName")
 	private short couponType;
 
 	/** 满多少钱(该值大于0表示使用该券订单应该满足的额度) */
+	@FormParam("couponName")
 	private long enoughMoney = 0;
 
 	/** 规则表达式 (如: faceValue=30;discount=0.5; )目前该字段只存值如：30，0.5 */
+	@FormParam("couponName")
 	private String regExpression = "";
 
 	/** 每人最高可领次数 */
+	@FormParam("couponName")
 	private int gainTotal;
 
 	/** 使用时的手机尾号限制 */
+	@FormParam("couponName")
 	private String phoneSuffix = "";
 
 	/** 有效期开始时间 */
-	@DateTimeFormat(pattern = DateUtils.YYYY_MM_DD_HH_mm_ss)
+	@FormParam("couponName")
 	private Date startTime;
 
 	/** 有效期截止时间 */
-	@DateTimeFormat(pattern = DateUtils.YYYY_MM_DD_HH_mm_ss)
+	@FormParam("couponName")
 	private Date endTime;
 
 	/** 修改人 */
+	@FormParam("couponName")
 	private long adminId;
 
 	/** 是否启用 1:启用 0:不启用 */
+	@FormParam("couponName")
 	private short isEnable;
 
 	/** 是否终止发放 1: 是 0: 否 */
+	@FormParam("couponName")
 	private short isStop;
 
 	/**

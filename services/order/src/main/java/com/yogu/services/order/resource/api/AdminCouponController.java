@@ -5,7 +5,14 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.inject.Singleton;
 import javax.validation.Valid;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -38,8 +45,10 @@ import com.yogu.services.order.coupon.service.CouponRuleService;
  * 
  * @author ten 2015/12/24.
  */
-@Controller
-@RequestMapping("api/coupon/admin/")
+@Named
+@Path("api")
+@Singleton
+@Produces("application/json;charset=UTF-8")
 public class AdminCouponController {
 
 	private static final Logger logger = LoggerFactory.getLogger(AdminCouponController.class);
@@ -65,8 +74,8 @@ public class AdminCouponController {
 	 * @return 返回符合条件的数据，如果没有数据，返回 empty list
 	 */
 	@ResponseBody
-	@RequestMapping("queryCouponRules")
-	public RestResult<List<AdminCouponListVO>> queryCouponRules(String keyword, int page, int pageSize) {
+	@RequestMapping("/coupon/admin/queryCouponRules")
+	public RestResult<List<AdminCouponListVO>> queryCouponRules(@PathParam("keyword")String keyword, @PathParam("page")int page, @PathParam("pageSize")int pageSize) {
 		List<AdminCouponListVO> list = couponRuleService.queryCouponRules(keyword, page, pageSize);
 		return new RestResult<>(list);
 	}
@@ -78,8 +87,8 @@ public class AdminCouponController {
 	 * @return 返回优惠券规则的详细内容，失败 result.object 返回null
 	 */
 	@ResponseBody
-	@RequestMapping("getCouponRuleDetail")
-	public RestResult<CouponRuleVO> getCouponRuleDetail(long couponRuleId) {
+	@RequestMapping("/coupon/admin/getCouponRuleDetail")
+	public RestResult<CouponRuleVO> getCouponRuleDetail(@PathParam("couponRuleId")long couponRuleId) {
 		CouponRule rule = couponRuleService.getById(couponRuleId);
 		if(null == rule){
 			return new RestResult<>(ResultCode.FAILURE, "没有找到优惠券规则数据");
@@ -95,9 +104,9 @@ public class AdminCouponController {
 	 * @return 返回 result.success=true表示成功, result.object=优惠券规则ID，失败抛出异常
 	 * @author ten 2015/12/26
 	 */
-	@ResponseBody
-	@RequestMapping(value = "saveCoupon.do", method = RequestMethod.POST)
-	public RestResult<Long> saveCoupon(@Valid @ModelAttribute CouponRuleForm form) {
+	@POST
+	@Path("coupon/admin/saveCoupon.do")
+	public RestResult<Long> saveCoupon(@Valid @BeanParam  CouponRuleForm form) {
 		String ip = ThreadLocalContext.getThreadValue(ThreadLocalContext.REQ_CLIENT_IP);
 		logger.info("api#coupon#saveCoupon | 保存优惠券 start | coupon: {}, ip: {}", JsonUtils.toJSONString(form), ip);
 		validateCouponRuleForm(form);
@@ -142,9 +151,9 @@ public class AdminCouponController {
 	 * @return result.success=true为成功
 	 * @author ten 2016/1/4
 	 */
-	@ResponseBody
-	@RequestMapping(value = "stopCouponExchange.do", method = RequestMethod.POST)
-	public RestResult<Object> stopCouponExchange(long adminId, long couponRuleId) {
+	@POST
+	@Path("coupon/admin/stopCouponExchange.do")
+	public RestResult<Object> stopCouponExchange(@FormParam("adminId")long adminId, @FormParam("couponRuleId")long couponRuleId) {
 		String ip = ThreadLocalContext.getThreadValue(ThreadLocalContext.REQ_CLIENT_IP);
 		logger.info("admin#coupon#stopCouponExchange | 设置优惠券停止兑换 | adminId: {}, couponRuleId: {}, ip: {}", adminId, couponRuleId, ip);
 		ParameterUtil.assertGreaterThanZero(adminId, "管理员ID不能为空");
