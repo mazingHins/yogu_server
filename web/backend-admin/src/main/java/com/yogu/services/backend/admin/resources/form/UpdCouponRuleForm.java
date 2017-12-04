@@ -24,7 +24,7 @@ public class UpdCouponRuleForm {
 	private short couponType;
 
 	/** 满多少钱(该值大于0表示使用该券订单应该满足的额度) */
-	private long enoughMoney = 0;
+	private String enoughMoneyStr = "";
 
 	/** 规则表达式 (如: faceValue=30;discount=0.5; )目前该字段只存值如：30，0.5 */
 	private String regExpression = "";
@@ -98,12 +98,12 @@ public class UpdCouponRuleForm {
 		this.couponType = couponType;
 	}
 
-	public long getEnoughMoney() {
-		return enoughMoney;
+	public String getEnoughMoneyStr() {
+		return enoughMoneyStr;
 	}
 
-	public void setEnoughMoney(long enoughMoney) {
-		this.enoughMoney = enoughMoney;
+	public void setEnoughMoneyStr(String enoughMoneyStr) {
+		this.enoughMoneyStr = enoughMoneyStr;
 	}
 
 	public String getRegExpression() {

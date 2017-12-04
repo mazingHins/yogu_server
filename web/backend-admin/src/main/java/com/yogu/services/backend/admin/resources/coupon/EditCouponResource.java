@@ -101,18 +101,21 @@ public class EditCouponResource {
 	 * @return 如果成功，返回验证成功后的VO
 	 */
 	private CouponRuleForm validCouponForm(UpdCouponRuleForm form) {
+		if (!NumberUtils.isNumber(StringUtils.trimToEmpty(form.getEnoughMoneyStr()))) {
+			throw new ServiceException(ResultCode.PARAMETER_ERROR, "可用订单金额必须是数字");
+		}
 		if (!NumberUtils.isNumber(StringUtils.trimToEmpty(form.getRegExpression()))) {
 			throw new ServiceException(ResultCode.PARAMETER_ERROR, "面值必须是数字");
 		}
 
 		BigDecimal faceValue = new BigDecimal(form.getRegExpression().trim());
-		BigDecimal enoughMoney = new BigDecimal(form.getEnoughMoney());
+		BigDecimal enoughMoney = new BigDecimal(form.getEnoughMoneyStr().trim());
 		BigDecimal mostOffer = new BigDecimal(form.getMostOffer());
 
 		if (enoughMoney.compareTo(new BigDecimal("0.01")) < 0) {
 			throw new ServiceException(ResultCode.PARAMETER_ERROR, "可用订单金额不能小于0.01元");
 		}
-		if (form.getEnoughMoney() == CouponTypeConstants.CASH_COUPON) {
+		if (form.getCouponType() == CouponTypeConstants.CASH_COUPON) {
 			if (faceValue.compareTo(new BigDecimal("0.01")) < 0 || faceValue.compareTo(new BigDecimal("99999")) > 0) {
 				throw new ServiceException(ResultCode.PARAMETER_ERROR, "面值的取值范围是0.01~99999元");
 			}
@@ -163,6 +166,8 @@ public class EditCouponResource {
 		CouponRuleForm result = VOUtil.from(form, CouponRuleForm.class);
 		result.setStartTime(startTime);
 		result.setEndTime(endTime);
+		// 设置订单金额，元 -> 分，整数
+		result.setEnoughMoney(enoughMoney.multiply(new BigDecimal(100)).intValue());
 		return result;
 	}
 
