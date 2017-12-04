@@ -53,7 +53,7 @@
 	
 	<!-- 分页获取 指定券规则的未领取的优惠券 -->
 	<select id="listCouponsByRuleIdAndStatus" parameterType="Map"
-		resultType="com.mazing.services.activity.coupon.base.entry.CouponPO">
+		resultType="com.yogu.services.order.coupon.entry.CouponPO">
 		SELECT * FROM yg_order.yg_coupon where
 		coupon_rule_id=#{couponRuleId} AND status=#{status}
 		limit
