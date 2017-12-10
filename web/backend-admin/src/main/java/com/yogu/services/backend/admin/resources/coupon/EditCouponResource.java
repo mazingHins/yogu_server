@@ -166,7 +166,7 @@ public class EditCouponResource {
 //		result.setStartTime(startTime);
 //		result.setEndTime(endTime);
 //		// 设置订单金额，元 -> 分，整数
-//		result.setEnoughMoney(enoughMoney.multiply(new BigDecimal(100)).intValue());
+		form.setEnoughMoney(enoughMoney.multiply(new BigDecimal(100)).intValue());
 //		return result;
 	}
 

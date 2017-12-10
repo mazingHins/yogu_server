@@ -75,6 +75,7 @@ public class CouponRuleForm {
 	/**
 	 * 发放总量
 	 */
+	@FormParam("createTotal")
 	private int createTotal;
 
 	/** 折扣券最高优惠金额 **/

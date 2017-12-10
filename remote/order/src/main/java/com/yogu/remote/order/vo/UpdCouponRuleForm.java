@@ -28,6 +28,8 @@ public class UpdCouponRuleForm {
 
 	/** 规则表达式 (如: faceValue=30;discount=0.5; )目前该字段只存值如：30，0.5 */
 	private String regExpression = "";
+	
+	private long enoughMoney;
 
 	/** 每人最高可领次数 */
 	private int gainTotal;
@@ -140,6 +142,14 @@ public class UpdCouponRuleForm {
 
 	public void setEffectiveTimeRange(String effectiveTimeRange) {
 		this.effectiveTimeRange = effectiveTimeRange;
+	}
+	
+	public long getEnoughMoney() {
+		return enoughMoney;
+	}
+
+	public void setEnoughMoney(long enoughMoney) {
+		this.enoughMoney = enoughMoney;
 	}
 
 	public long getAdminId() {
