@@ -127,8 +127,8 @@ public class AdminCouponController {
 		ParameterUtil.assertNotNull(form.getStartTimeStr(), "优惠券有效期的开始时间不能为空");
 		ParameterUtil.assertNotNull(form.getEndTimeStr(), "优惠券有效期的结束时间不能为空");
 		try {
-			form.setStartTime(DateUtils.parseString(form.getStartTimeStr(), DateUtils.YYYY_MM_DD_HH_mm_ss));
-			form.setEndTime(DateUtils.parseString(form.getEndTimeStr(), DateUtils.YYYY_MM_DD_HH_mm_ss));
+			form.setStartTime(DateUtils.parseString(form.getStartTimeStr(), DateUtils.YYYY_MM_DD_HH_mm));
+			form.setEndTime(DateUtils.parseString(form.getEndTimeStr(), DateUtils.YYYY_MM_DD_HH_mm));
 		} catch (ParseException e) {
 			throw new ServiceException(ResultCode.PARAMETER_ERROR, "时间格式错误");
 		}
