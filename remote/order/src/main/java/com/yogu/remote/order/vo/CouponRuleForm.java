@@ -4,10 +4,6 @@ import java.util.Date;
 
 import javax.ws.rs.FormParam;
 
-import org.springframework.format.annotation.DateTimeFormat;
-
-import com.yogu.commons.utils.DateUtils;
-
 /**
  * 新增、编辑优惠券的时候，admin接口接受参数的表单
  * 
@@ -53,10 +49,15 @@ public class CouponRuleForm {
 
 	/** 有效期开始时间 */
 	@FormParam("startTime")
-	private Date startTime;
+	private String startTimeStr;
 
 	/** 有效期截止时间 */
 	@FormParam("endTime")
+	private String endTimeStr;
+	
+	private Date startTime;
+
+	/** 有效期截止时间 */
 	private Date endTime;
 
 	/** 修改人 */
@@ -154,20 +155,20 @@ public class CouponRuleForm {
 		this.phoneSuffix = phoneSuffix;
 	}
 
-	public Date getStartTime() {
-		return startTime;
+	public String getStartTimeStr() {
+		return startTimeStr;
 	}
 
-	public void setStartTime(Date startTime) {
-		this.startTime = startTime;
+	public void setStartTimeStr(String startTimeStr) {
+		this.startTimeStr = startTimeStr;
 	}
 
-	public Date getEndTime() {
-		return endTime;
+	public String getEndTimeStr() {
+		return endTimeStr;
 	}
 
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
+	public void setEndTimeStr(String endTimeStr) {
+		this.endTimeStr = endTimeStr;
 	}
 
 	public long getAdminId() {
@@ -217,6 +218,24 @@ public class CouponRuleForm {
 	public void setUsingChannel(short usingChannel) {
 		this.usingChannel = usingChannel;
 	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+	
+	
 
 	
 }

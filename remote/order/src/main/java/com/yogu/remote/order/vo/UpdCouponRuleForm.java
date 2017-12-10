@@ -1,4 +1,4 @@
-package com.yogu.services.backend.admin.resources.form;
+package com.yogu.remote.order.vo;
 
 import java.util.Date;
 

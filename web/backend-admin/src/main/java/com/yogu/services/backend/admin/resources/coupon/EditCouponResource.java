@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yogu.commons.utils.DateUtils;
 import com.yogu.commons.utils.JsonUtils;
-import com.yogu.commons.utils.VOUtil;
 import com.yogu.commons.utils.resource.Menu;
 import com.yogu.commons.utils.resource.MenuResource;
 import com.yogu.core.constant.CouponTypeConstants;
@@ -31,10 +30,9 @@ import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.remote.order.CouponRemoteService;
-import com.yogu.remote.order.vo.CouponRuleForm;
+import com.yogu.remote.order.vo.UpdCouponRuleForm;
 import com.yogu.services.backend.admin.annotation.log.AdminLog;
 import com.yogu.services.backend.admin.context.AdminContext;
-import com.yogu.services.backend.admin.resources.form.UpdCouponRuleForm;
 
 /**
  * 编辑优惠券
@@ -84,10 +82,9 @@ public class EditCouponResource {
 	public RestResult<Integer> saveCoupon(@Valid @ModelAttribute UpdCouponRuleForm form) {
 		logger.info("admin#coupon#saveCoupon | 保存优惠券 start | adminId: {}, coupon: {}", AdminContext.getAccountId(),
 				JsonUtils.toJSONString(form));
-		CouponRuleForm req = validCouponForm(form);
+		validCouponForm(form);
 		long adminId = AdminContext.getAccountId();
-		req.setAdminId(adminId);
-		RestResult<Integer> restResult = couponRemoteService.adminSaveCoupon(req);
+		RestResult<Integer> restResult = couponRemoteService.adminSaveCoupon(form);
 		logger.info("admin#coupon#saveCoupon | 保存优惠券 end | code: {}, message: {}, couponRuleId: {}", restResult.getCode(),
 				restResult.getMessage(), restResult.getObject());
 		return restResult;
@@ -100,7 +97,7 @@ public class EditCouponResource {
 	 * @param form 优惠券数据
 	 * @return 如果成功，返回验证成功后的VO
 	 */
-	private CouponRuleForm validCouponForm(UpdCouponRuleForm form) {
+	private void validCouponForm(UpdCouponRuleForm form) {
 		if (!NumberUtils.isNumber(StringUtils.trimToEmpty(form.getEnoughMoneyStr()))) {
 			throw new ServiceException(ResultCode.PARAMETER_ERROR, "可用订单金额必须是数字");
 		}
@@ -163,12 +160,12 @@ public class EditCouponResource {
 			ParameterUtil.assertMaxLength(form.getDescription(), 1000, "优惠券的说明不能超过1000个字符");
 		}
 		ParameterUtil.assertGreaterThanZero(form.getGainTotal(), "每人限领数量必须大于0");
-		CouponRuleForm result = VOUtil.from(form, CouponRuleForm.class);
-		result.setStartTime(startTime);
-		result.setEndTime(endTime);
-		// 设置订单金额，元 -> 分，整数
-		result.setEnoughMoney(enoughMoney.multiply(new BigDecimal(100)).intValue());
-		return result;
+//		CouponRuleForm result = VOUtil.from(form, CouponRuleForm.class);
+//		result.setStartTime(startTime);
+//		result.setEndTime(endTime);
+//		// 设置订单金额，元 -> 分，整数
+//		result.setEnoughMoney(enoughMoney.multiply(new BigDecimal(100)).intValue());
+//		return result;
 	}
 
 	private List<Long> toList(String str) {

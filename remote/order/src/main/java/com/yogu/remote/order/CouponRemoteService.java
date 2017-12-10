@@ -27,8 +27,8 @@ import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.encrypt.StaticKeyHelper;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.remote.order.vo.AdminCouponListVO;
-import com.yogu.remote.order.vo.CouponRuleForm;
 import com.yogu.remote.order.vo.CouponVO;
+import com.yogu.remote.order.vo.UpdCouponRuleForm;
 
 /**
  * 优惠券系统 对内部系统提供的远程service接口
@@ -196,7 +196,7 @@ public class CouponRemoteService {
 	 * @return 返回 result.success=true 表示成功, result.object=优惠券规则ID
 	 * @author ten 2015/12/26
 	 */
-	public RestResult<Integer> adminSaveCoupon(CouponRuleForm rule) {
+	public RestResult<Integer> adminSaveCoupon(UpdCouponRuleForm rule) {
 		try {
 
 			Map<String, String> params = toMapString(rule);

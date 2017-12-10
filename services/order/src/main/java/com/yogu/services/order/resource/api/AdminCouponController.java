@@ -1,5 +1,6 @@
 package com.yogu.services.order.resource.api;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yogu.commons.cache.redis.Redis;
+import com.yogu.commons.utils.DateUtils;
 import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.ThreadLocalContext;
 import com.yogu.commons.utils.VOUtil;
@@ -122,8 +124,14 @@ public class AdminCouponController {
 			throw new ServiceException(ResultCode.PARAMETER_ERROR, "优惠券名称长度是12个中文或24个英文字符");
 		}
 		ParameterUtil.assertGreaterThanZero(form.getAdminId(), "管理员ID不能为空");
-		ParameterUtil.assertNotNull(form.getStartTime(), "优惠券有效期的开始时间不能为空");
-		ParameterUtil.assertNotNull(form.getEndTime(), "优惠券有效期的结束时间不能为空");
+		ParameterUtil.assertNotNull(form.getStartTimeStr(), "优惠券有效期的开始时间不能为空");
+		ParameterUtil.assertNotNull(form.getEndTimeStr(), "优惠券有效期的结束时间不能为空");
+		try {
+			form.setStartTime(DateUtils.parseString(form.getStartTimeStr(), DateUtils.YYYY_MM_DD_HH_mm_ss));
+			form.setEndTime(DateUtils.parseString(form.getEndTimeStr(), DateUtils.YYYY_MM_DD_HH_mm_ss));
+		} catch (ParseException e) {
+			throw new ServiceException(ResultCode.PARAMETER_ERROR, "时间格式错误");
+		}
 		ParameterUtil.assertTrue(form.getEndTime().after(form.getStartTime()), "优惠券有效期的结束时间要在开始时间之前");
 		ParameterUtil.assertTrue(form.getEndTime().getTime() > System.currentTimeMillis(), "优惠券有效期的结束时间要在当前时间之后");
 		ParameterUtil.assertGreaterThanOrEqual(form.getCreateTotal(), 1, "优惠券的发放数量要大于0");
