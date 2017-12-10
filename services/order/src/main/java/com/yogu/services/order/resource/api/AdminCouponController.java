@@ -123,7 +123,7 @@ public class AdminCouponController {
 		if (WordCountUtils.getWordCount(form.getCouponName()) > 24) {
 			throw new ServiceException(ResultCode.PARAMETER_ERROR, "优惠券名称长度是12个中文或24个英文字符");
 		}
-		ParameterUtil.assertGreaterThanZero(form.getAdminId(), "管理员ID不能为空");
+//		ParameterUtil.assertGreaterThanZero(form.getAdminId(), "管理员ID不能为空");
 		ParameterUtil.assertNotNull(form.getStartTimeStr(), "优惠券有效期的开始时间不能为空");
 		ParameterUtil.assertNotNull(form.getEndTimeStr(), "优惠券有效期的结束时间不能为空");
 		try {
