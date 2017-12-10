@@ -544,6 +544,9 @@ public class OrderPayServiceImpl implements OrderPayService {
 		po.setOrderBeginTime(new Date());
 
 		orderDao.payOrder(po);
+		
+		// 尝试领取优惠卷
+		couponService.newOrder(order.getUid());
 
 	}
 

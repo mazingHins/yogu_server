@@ -63,7 +63,7 @@ public class IndexResource {
 	 */
 	@GET
 	@Path("v1/index")
-	public RestResult<IndexVO> details() {
+	public RestResult<IndexVO> index() {
 		
 		IndexVO result = new IndexVO();
 		
