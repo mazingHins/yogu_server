@@ -37,6 +37,10 @@ public class UpdCouponRuleForm {
 
 	/** 有效期开始时间 */
 	private String effectiveTimeRange;
+	
+	private String startTime;
+	
+	private String endTime;
 
 	/** 修改人 */
 	private long adminId;
@@ -185,5 +189,22 @@ public class UpdCouponRuleForm {
 	public void setUsingChannel(short usingChannel) {
 		this.usingChannel = usingChannel;
 	}
+
+	public String getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+	
 
 }

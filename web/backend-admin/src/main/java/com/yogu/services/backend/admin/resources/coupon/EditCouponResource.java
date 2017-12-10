@@ -160,6 +160,8 @@ public class EditCouponResource {
 			ParameterUtil.assertMaxLength(form.getDescription(), 1000, "优惠券的说明不能超过1000个字符");
 		}
 		ParameterUtil.assertGreaterThanZero(form.getGainTotal(), "每人限领数量必须大于0");
+		form.setStartTime(array[0]);
+		form.setEndTime(array[1]);
 //		CouponRuleForm result = VOUtil.from(form, CouponRuleForm.class);
 //		result.setStartTime(startTime);
 //		result.setEndTime(endTime);
