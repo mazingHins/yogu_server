@@ -10,21 +10,17 @@ import javax.inject.Singleton;
 import javax.validation.Valid;
 import javax.ws.rs.BeanParam;
 import javax.ws.rs.FormParam;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yogu.commons.cache.redis.Redis;
 import com.yogu.commons.utils.DateUtils;
@@ -75,9 +71,9 @@ public class AdminCouponController {
 	 * @param pageSize 每页多少条记录，最小值是1
 	 * @return 返回符合条件的数据，如果没有数据，返回 empty list
 	 */
-	@ResponseBody
-	@RequestMapping("/coupon/admin/queryCouponRules")
-	public RestResult<List<AdminCouponListVO>> queryCouponRules(@PathParam("keyword")String keyword, @PathParam("page")int page, @PathParam("pageSize")int pageSize) {
+	@GET
+	@Path("coupon/admin/queryCouponRules")
+	public RestResult<List<AdminCouponListVO>> queryCouponRules(@QueryParam("keyword")String keyword, @QueryParam("page")int page, @QueryParam("pageSize")int pageSize) {
 		List<AdminCouponListVO> list = couponRuleService.queryCouponRules(keyword, page, pageSize);
 		return new RestResult<>(list);
 	}
@@ -88,9 +84,9 @@ public class AdminCouponController {
 	 * @param couponRuleId 优惠券规则ID
 	 * @return 返回优惠券规则的详细内容，失败 result.object 返回null
 	 */
-	@ResponseBody
-	@RequestMapping("/coupon/admin/getCouponRuleDetail")
-	public RestResult<CouponRuleVO> getCouponRuleDetail(@PathParam("couponRuleId")long couponRuleId) {
+	@POST
+	@Path("coupon/admin/getCouponRuleDetail")
+	public RestResult<CouponRuleVO> getCouponRuleDetail(@QueryParam("couponRuleId")long couponRuleId) {
 		CouponRule rule = couponRuleService.getById(couponRuleId);
 		if(null == rule){
 			return new RestResult<>(ResultCode.FAILURE, "没有找到优惠券规则数据");
