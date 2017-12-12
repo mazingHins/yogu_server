@@ -71,20 +71,23 @@ public class CouponRemoteService {
 		}
 	}
 
-
 	/**
-	 * 读取券信息
+	 * 读取优惠券规则的所有详细内容
 	 * 
-	 * @param couponId 券id
+	 * @param couponRuleId 优惠券规则ID
+	 * @return 返回优惠券规则的详细内容，失败返回null
 	 */
-	public CouponVO getCoupon(long couponId) {
+	public RestResult<Map<String, Object>> adminGetCouponRuleDetail(long couponRuleId) {
 		try {
-			String json = HttpClientUtils.doGet(CommonConstants.ORDER_DOMAIN + "/api/coupon/getCoupon?couponId=" + couponId);
-			RestResult<CouponVO> result = JsonUtils.parseObject(json, new TypeReference<RestResult<CouponVO>>() {
+			Map<String, String> params = new HashMap<>(2);
+			params.put("couponRuleId", couponRuleId + "");
+			String json = HttpClientUtils.doGet(CommonConstants.ORDER_DOMAIN + "/api/coupon/admin/getCouponRuleDetail", params);
+			RestResult<Map<String, Object>> result = JsonUtils.parseObject(json, new TypeReference<RestResult<Map<String, Object>>>() {
 			});
-			return result.getObject();
+			return result;
+
 		} catch (Exception e) {
-			logger.error("remote#coupon#getCoupon | 远程获取优惠券信息发生错误 | couponId: {}", couponId, e);
+			logger.error("remote#coupon#adminGetCouponRuleDetail | 远程获取优惠券详细内容错误 | couponRuleId: {}", couponRuleId, e);
 			throw new ServiceException(ResultCode.UNKNOWN_ERROR, e.getMessage());
 		}
 	}

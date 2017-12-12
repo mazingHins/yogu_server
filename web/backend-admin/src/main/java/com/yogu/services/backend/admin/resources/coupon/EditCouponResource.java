@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.yogu.commons.utils.DateUtils;
@@ -25,6 +27,7 @@ import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.resource.Menu;
 import com.yogu.commons.utils.resource.MenuResource;
 import com.yogu.core.constant.CouponTypeConstants;
+import com.yogu.core.enums.BooleanConstants;
 import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
@@ -168,6 +171,52 @@ public class EditCouponResource {
 //		// 设置订单金额，元 -> 分，整数
 		form.setEnoughMoney(enoughMoney.multiply(new BigDecimal(100)).intValue());
 //		return result;
+	}
+	
+	/**
+	 * 读取优惠券规则的所有详细内容
+	 * 
+	 * @param couponRuleId 优惠券规则ID
+	 * @param display 是否只用于显示，如果为true，不判断优惠券的规则
+	 * @return 返回优惠券规则的详细内容
+	 */
+	@ResponseBody
+	@RequestMapping("getCouponRuleDetail")
+	@MenuResource("查询优惠券规则详细内容")
+	public RestResult<Map<String, Object>> getCouponRuleDetail(long couponRuleId,
+			@RequestParam(value = "display", defaultValue = "false", required = false) boolean display) {
+		RestResult<Map<String, Object>> result = couponRemoteService.adminGetCouponRuleDetail(couponRuleId);
+		if (!result.isSuccess()) {
+			return result;
+		}
+		Map<String, Object> couponDetail = result.getObject();
+		if (couponDetail == null || couponDetail.isEmpty()) {
+			return new RestResult<>(ResultCode.REJECTED_OPERATION, "找不到优惠券，请重试或联系管理员");
+		}
+		// 判断是否已经过期
+		if (display == false) {
+			Long startTime = (Long) couponDetail.get("startTime");
+			Long endTime = (Long) couponDetail.get("endTime");
+			Number isEnable = (Number) couponDetail.get("isEnable");
+			Number isStop = (Number) couponDetail.get("isStop");
+			if (startTime == null || endTime == null || isEnable == null || isStop == null) {
+				logger.error("admin#coupon#getCouponRuleDetail | 数据错误 | startTime{}, endTime: {}, isEnable: {}, isStop: {}", startTime,
+						endTime, isEnable, isStop);
+				return new RestResult<>(ResultCode.REJECTED_OPERATION, "优惠券数据错误，请重试或联系管理员");
+			}
+			if (isEnable.intValue() != BooleanConstants.TRUE) {
+				return new RestResult<>(ResultCode.REJECTED_OPERATION, "优惠券已经废弃，不能编辑");
+			}
+			long now = System.currentTimeMillis();
+			if (now >= startTime) {
+				return new RestResult<>(ResultCode.REJECTED_OPERATION, "优惠券有效期已经开始，不能再编辑");
+			}
+			if (isStop.intValue() == BooleanConstants.TRUE) {
+				return new RestResult<>(ResultCode.REJECTED_OPERATION, "优惠券已经设置了停止发放，不能被编辑，请废弃当前优惠券，然后生成新的。");
+			}
+		}
+
+		return new RestResult<>(couponDetail);
 	}
 
 	private List<Long> toList(String str) {

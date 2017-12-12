@@ -3,6 +3,7 @@ package com.yogu.services.order.resource.api;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -22,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.yogu.commons.cache.redis.Redis;
 import com.yogu.commons.utils.DateUtils;
 import com.yogu.commons.utils.JsonUtils;
@@ -86,13 +88,18 @@ public class AdminCouponController {
 	 */
 	@POST
 	@Path("coupon/admin/getCouponRuleDetail")
-	public RestResult<CouponRuleVO> getCouponRuleDetail(@QueryParam("couponRuleId")long couponRuleId) {
+	public RestResult<Map<String, Object>> getCouponRuleDetail(@QueryParam("couponRuleId")long couponRuleId) {
 		CouponRule rule = couponRuleService.getById(couponRuleId);
 		if(null == rule){
 			return new RestResult<>(ResultCode.FAILURE, "没有找到优惠券规则数据");
 		}
-		
-		return new RestResult<>(VOUtil.from(rule, CouponRuleVO.class));
+		String json = JsonUtils.toJSONString(rule);
+		Map<String, Object> result = JsonUtils.parseObject(json, new TypeReference<Map<String, Object>>() {
+		});
+		result.put("createTotal", 0);
+		result.put("useTotal", 0);
+		result.put("userGainTotal", 0);
+		return new RestResult<>(result);
 	}
 
 	/**

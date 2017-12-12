@@ -337,41 +337,9 @@
 		$.getJSON("/admin/coupon/getCouponRuleDetail", {'couponRuleId':couponRuleId, 'display' : true}, function(json) {
 			if (json.success) {
 				var detail = json.object;
-				var includeStoreNameMap = detail.includeStoreNameMap;
-				
-				var excludeStoreNameMap = detail.excludeStoreNameMap;
-				
-				var includeGroupType = detail.includeGroupType;
-				
-				var useLimit = '';
-				var inclu = 0;
-				var exclu = 0;
-				for (var prop in includeStoreNameMap) {
-					if (useLimit != '') {
-						useLimit += '，';
-					}
-					useLimit += prop;
-					
-					inclu ++;
-				}
-				
-				for (var prop in excludeStoreNameMap) {
-					if (useLimit != '') {
-						useLimit += '，';
-					}
-					useLimit += prop;
-					exclu ++;
-				}
-				
-				
-				if (useLimit == '') {
-					useLimit = '【不限】';
-				}
-				detail['useLimit'] = useLimit;
 				var htmlTxt = template('couponRuleDetailTpl', detail);
 				$('#couponRuleModalBody').html(htmlTxt);
 				$('#couponRuleModal').modal('show');
-
 			}
 			else {
 				MyDialog.alert(json.message);
