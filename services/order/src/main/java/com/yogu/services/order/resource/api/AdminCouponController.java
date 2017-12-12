@@ -86,7 +86,7 @@ public class AdminCouponController {
 	 * @param couponRuleId 优惠券规则ID
 	 * @return 返回优惠券规则的详细内容，失败 result.object 返回null
 	 */
-	@POST
+	@GET
 	@Path("coupon/admin/getCouponRuleDetail")
 	public RestResult<Map<String, Object>> getCouponRuleDetail(@QueryParam("couponRuleId")long couponRuleId) {
 		CouponRule rule = couponRuleService.getById(couponRuleId);
