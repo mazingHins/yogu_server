@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.VOUtil;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.context.SecurityContext;
@@ -42,13 +43,19 @@ public class GoodsResource {
 	@GET
 	@Path("v1/goods/details")
 	public RestResult<GoodsVO> details(@QueryParam("goodsKey") long goodsKey) {
-		
-		Goods goods = goodsService.getByKey(goodsKey);
+		Long uid = SecurityContext.getUserId();
+		Goods goods = goodsService.getByKey(goodsKey, uid);
 		if(null == goods){
 			return new RestResult<GoodsVO>(null);
 		}
 		
-		return new RestResult<GoodsVO>(VOUtil.from(goods, GoodsVO.class));
+		GoodsVO result = VOUtil.from(goods, GoodsVO.class);
+		result.setPrice(goods.getRetailPrice());
+		if (StringUtils.isNotBlank(goods.getContent())) {
+			String[] content = goods.getContent().trim().split(",");
+			result.setContent(content);
+		}
+		return new RestResult<GoodsVO>(result);
 	}
 	
 	

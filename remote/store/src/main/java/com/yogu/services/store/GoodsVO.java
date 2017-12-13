@@ -1,6 +1,7 @@
 package com.yogu.services.store;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * 商品VO <br>
@@ -28,7 +29,7 @@ public class GoodsVO implements Serializable {
 	private String cardImg;
 	
 	/** 商品介绍，json字符串 */
-	private String content;
+	private String[] content;
 	
 	/** 价格，单位分 */
 	private long price;
@@ -76,11 +77,11 @@ public class GoodsVO implements Serializable {
 		this.cardImg = cardImg;
 	}
 
-	public String getContent() {
+	public String[] getContent() {
 		return content;
 	}
 
-	public void setContent(String content) {
+	public void setContent(String[] content) {
 		this.content = content;
 	}
 

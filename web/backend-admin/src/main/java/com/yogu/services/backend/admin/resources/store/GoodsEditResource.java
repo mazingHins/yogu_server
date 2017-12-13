@@ -74,9 +74,9 @@ public class GoodsEditResource {
 		logger.info("admin#coupon#saveCoupon | 保存商品 start | adminId: {}, coupon: {}", AdminContext.getAccountId(),
 				JsonUtils.toJSONString(form));
 		String content = form.getContent();
-		Map<String, String> contentMap = new HashMap<>(2);
-		contentMap.put("pic", JsonUtils.toJSONString(toList(content)));
-		goodsRemoteService.saveGoods(VOUtil.from(form, Goods.class));
+		Goods goods = VOUtil.from(form, Goods.class);
+		goods.setContent(StringUtils.isBlank(content) ? StringUtils.EMPTY : content.trim());
+		goodsRemoteService.saveGoods(goods);
 		logger.info("admin#coupon#saveCoupon | 保存商品 end ");
 		return new RestResult<Integer>(1);
 	}

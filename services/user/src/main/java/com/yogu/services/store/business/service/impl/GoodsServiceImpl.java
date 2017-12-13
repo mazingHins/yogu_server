@@ -388,4 +388,19 @@ public class GoodsServiceImpl implements GoodsService {
 		cacheExtendService.set(key, dto, MerchantCacheKey.TIME_FOREVER);
 	}
 
+	@Override
+	public Goods getByKey(long goodsKey, Long uid) {
+		GoodsPO po = goodsDao.getByKey(goodsKey);
+		if (null == po) {
+			return null;
+		}
+		
+		long storeId = getUserAgentStoreId(uid); // 查询用户所属的商家id，为0标示不属于任何商家
+		if (po.getStoreId() == storeId) {
+			po.setRetailPrice(po.getTradePrice());
+		}
+		
+		return VOUtil.from(po, Goods.class);
+	}
+
 }

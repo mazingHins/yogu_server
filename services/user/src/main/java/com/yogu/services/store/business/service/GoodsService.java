@@ -27,6 +27,14 @@ public interface GoodsService {
 	Goods getByKey(long goodsKey);
 	
 	/**
+	 * 通过商品key获取店铺信息
+	 * 
+	 * @param goodsKey - 商品key
+	 * @return 商品信息，如果无，返回null
+	 */
+	Goods getByKey(long goodsKey, Long uid);
+	
+	/**
 	 * 分页获取商品信息，按照创建时间倒序（从小到大）<br>
 	 * 方法会区分用户对应的上级批发商装载不同的价格，如果不传用户id，默认为零售价
 	 * 
