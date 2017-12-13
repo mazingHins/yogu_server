@@ -56,7 +56,7 @@ public class GoodsAdminResource {
 	}
 	
 	@POST
-	@Path("goods/saveGoods。do")
+	@Path("goods/saveGoods.do")
 	public RestResult<Integer> saveGoods(@Valid @BeanParam  GoodsParam params) {
 		logger.info("api#goods#saveGoods | 新增商品 | params: {}", JsonUtils.toJSONString(params));
 		
