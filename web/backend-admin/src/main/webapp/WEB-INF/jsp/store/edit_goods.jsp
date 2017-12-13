@@ -42,8 +42,7 @@
 							<label class="col-md-2 control-label">美食名称</label>
 							<div class="col-md-3">
 								<input class="form-control" type="text" id="goodsName"
-									   name="goodsName" title="商品名称" placeholder="商品名称"
-									   maxlength="12">
+									   name="goodsName" title="商品名称" placeholder="商品名称" >
 								<input name="goodsId" id="goodsId" type="hidden" value="0"/>
 								<input name="goodsKey" id="goodsKey" type="hidden" value="0"/>
 							</div>
