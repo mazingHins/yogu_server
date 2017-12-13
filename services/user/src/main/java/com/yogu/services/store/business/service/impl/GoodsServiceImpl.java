@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.yogu.CommonConstants;
 import com.yogu.commons.cache.CacheExtendService;
+import com.yogu.commons.utils.DateUtils;
 import com.yogu.commons.utils.PageUtils;
 import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.VOUtil;
@@ -256,6 +257,8 @@ public class GoodsServiceImpl implements GoodsService {
 		GoodsPO po = VOUtil.from(goods, GoodsPO.class);
 		po.setGoodsId(goodsId);
 		po.setGoodsKey(goodsId);
+		po.setCreateTime(DateUtils.getUniformCurrentTimeForThread());
+		po.setUpdateTime(DateUtils.getUniformCurrentTimeForThread());
 		goodsDao.save(po);
 
 		// 新增快照
@@ -297,6 +300,8 @@ public class GoodsServiceImpl implements GoodsService {
 		}
 		long newDishId = idGenRemoteService.getNextStoreId();
 		update.setGoodsId(newDishId);
+		update.setCreateTime(DateUtils.getUniformCurrentTimeForThread());
+		update.setUpdateTime(DateUtils.getUniformCurrentTimeForThread());
 		goodsDao.deleteById(old.getGoodsId());
 		goodsDao.save(update);
 		// 新增菜品快照
@@ -316,6 +321,8 @@ public class GoodsServiceImpl implements GoodsService {
 		// 新增菜品快照
 		GoodsTrackPO track = VOUtil.from(goods, GoodsTrackPO.class);
 		track.setParentGoodsId(parentDishId);
+		track.setCreateTime(DateUtils.getUniformCurrentTimeForThread());
+		track.setUpdateTime(DateUtils.getUniformCurrentTimeForThread());
 		goodsTrackDao.save(track);
 	}
 
