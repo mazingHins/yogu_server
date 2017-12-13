@@ -5,8 +5,8 @@
 
 	<!-- 新增 -->
 	<insert id="save" parameterType="com.yogu.services.store.business.entry.GoodsTrackPO" useGeneratedKeys="false" >
-		insert into yg_user.yg_goods_track (parent_goods_id,goods_id,goods_key,goods_name,store_id,card_img,retail_price,trade_price,sequence,status,create_time,update_time) values 
-		(#{parentGoodsId},#{goodsId},#{goodsKey},#{goodsName},#{storeId},#{cardImg},#{cardImg},#{retailPrice},#{tradePrice},#{sequence},#{status},#{createTime},#{updateTime})
+		insert into yg_user.yg_goods_track (parent_goods_id,goods_id,goods_key,goods_name,store_id,card_img,content,retail_price,trade_price,sequence,status,create_time,update_time) values 
+		(#{parentGoodsId},#{goodsId},#{goodsKey},#{goodsName},#{storeId},#{cardImg},#{content},#{retailPrice},#{tradePrice},#{sequence},#{status},#{createTime},#{updateTime})
 	</insert>
 	
 	<!-- 根据主键读取记录（主键可能有多个） -->
