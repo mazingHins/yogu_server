@@ -72,7 +72,7 @@
 							<label class="col-md-2 control-label">商品介绍</label>
 							<div class="col-md-3">
 							</div>
-							<div class="col-md-3" id="content">
+							<div class="col-md-8" id="content">
 								
 							</div>
 						</div>
@@ -137,9 +137,9 @@
 		$("#tradePrice").val(goods.tradePrice);
 		$("#cardImg").attr("src", goods.cardImg);
 		var arr = goods.contentImgs;
-		var content;
+		var content = "";
 		for(var i=0;i<arr.length;i++){
- 			content = content+"<img width='80' src='"+arr[i]+"' /><br/>"
+ 			content = content+"<img width='380' src='"+arr[i]+"' /><br/>"
 		}
 		$("#content").html(content);
 	}

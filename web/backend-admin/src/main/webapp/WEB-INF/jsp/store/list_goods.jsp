@@ -84,10 +84,10 @@
 															{{value.goodsId}}
 														</td>
 														<td><a href="/admin/goods/goodsDetail.xhtm?goodsKey={{value.goodsKey}}">{{value.goodsName}}</a></td>
-														<td>{{value.cardImg}}</td>
+														<td><img width='80' src='{{value.cardImg}}' /></td>
 														<td>{{cent2yuan value.retailPrice}}</td>
-														<td>{{cent2yuan value.tradePrice}</td>
-														<td>{{value.sequence}</td>
+														<td>{{cent2yuan value.tradePrice}}</td>
+														<td>{{value.sequence}}</td>
 														<td>
 															{{if value.status == <%=BooleanConstants.TRUE%>}}
 															上架
