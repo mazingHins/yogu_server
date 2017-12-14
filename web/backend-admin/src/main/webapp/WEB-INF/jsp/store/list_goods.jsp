@@ -134,6 +134,7 @@
 
 <!-- bottom js -->
 <%@ include file="/include/bottom-js.jsp"%>
+<jsp:include page="/include/bottom-js.jsp" />
 <jsp:include page="/include/map-lib.jsp" />
 <script type="text/javascript">
 	function search() {

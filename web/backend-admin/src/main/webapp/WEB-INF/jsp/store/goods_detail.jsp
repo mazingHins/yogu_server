@@ -136,6 +136,12 @@
 		$("#retailPrice").val(goods.retailPrice);
 		$("#tradePrice").val(goods.tradePrice);
 		$("#cardImg").attr("src", goods.cardImg);
+		var arr = goods.contentImgs;
+		var content;
+		for(var i=0;i<arr.length;i++){
+ 			content = content+"<img width='80' src='"+arr[i]+"' /><br/>"
+		}
+		$("#content").html(content);
 	}
 	
 </script>

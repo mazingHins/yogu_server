@@ -27,7 +27,7 @@ public class GoodsResourceTest extends HttpResourceTest {
 	public void detail() {
 
 		ApiReq<RestResult<?>> req = build("p/v1/goods/details");
-		req.putGet("goodsKey", "1001");
+		req.putGet("goodsKey", "3001");
 		RestResult<?> result = req.doGet();
 
 		Map<?, ?> map = assertMap(result);
