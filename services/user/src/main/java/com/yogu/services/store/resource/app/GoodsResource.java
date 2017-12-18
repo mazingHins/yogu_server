@@ -18,7 +18,9 @@ import com.yogu.core.web.RestResult;
 import com.yogu.core.web.context.SecurityContext;
 import com.yogu.services.store.Goods;
 import com.yogu.services.store.GoodsVO;
+import com.yogu.services.store.base.dto.GoodsCategory;
 import com.yogu.services.store.base.dto.GoodsTag;
+import com.yogu.services.store.base.service.GoodsCategoryService;
 import com.yogu.services.store.base.service.GoodsTagService;
 import com.yogu.services.store.business.service.GoodsService;
 
@@ -36,6 +38,9 @@ public class GoodsResource {
 	
 	@Inject
 	private GoodsService goodsService;
+	
+	@Inject
+	private GoodsCategoryService goodsCategoryService;
 	
 	@Inject
 	private GoodsTagService goodsTagService;
@@ -58,6 +63,43 @@ public class GoodsResource {
 		return new RestResult<GoodsVO>(result);
 	}
 	
+	@GET
+	@Path("v1/goods/listByCategory")
+	public RestResult<List<GoodsVO>> listByCategory(@QueryParam("categoryId") long categoryId, @QueryParam("sort") int sort, 
+			@QueryParam("pageIndex") int pageIndex, @QueryParam("pageSize") int pageSize) {
+		GoodsCategory category = goodsCategoryService.getById(categoryId);
+		if(category == null){
+			return new RestResult<List<GoodsVO>>(Collections. <GoodsVO>emptyList());
+		}
+		
+		List<GoodsTag> tags = goodsTagService.listByCategoryId(categoryId);
+		
+		List<Long> tagIds = new ArrayList<>(tags.size());
+		for(GoodsTag tg : tags){
+			tagIds.add(tg.getTagId());
+		}
+		
+		// 获取符合的商品列表
+		Long uid = SecurityContext.getUserId();
+		List<Goods> goodsList = null;
+		if (sort == 2) {
+			goodsList = goodsService.listByTagIdOrderByPriceDesc(tagIds, uid, pageIndex, pageSize);
+		} else if (sort == 3) {
+			goodsList = goodsService.listByTagIdOrderByPriceAsc(tagIds, uid, pageIndex, pageSize);
+		} else {
+			goodsList = goodsService.listByTagId(tagIds, uid, pageIndex, pageSize);
+		}
+
+		// 装载结果
+		List<GoodsVO> result = new ArrayList<>(goodsList.size());
+		for (Goods goods : goodsList) {
+			GoodsVO vo = VOUtil.from(goods, GoodsVO.class);
+			vo.setPrice(goods.getRetailPrice());
+			result.add(vo);
+		}
+		return new RestResult<List<GoodsVO>>(result);
+		
+	}
 	
 	/**
 	 * 

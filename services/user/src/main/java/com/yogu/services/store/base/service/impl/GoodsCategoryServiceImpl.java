@@ -31,4 +31,13 @@ public class GoodsCategoryServiceImpl implements GoodsCategoryService {
 		return VOUtil.fromList(list, GoodsCategory.class);
 	}
 
+	@Override
+	public GoodsCategory getById(long categoryId) {
+		GoodsCategoryPO po = goodsCategoryDao.getById(categoryId);
+		if(null == po){
+			return null;
+		}
+		return VOUtil.from(po, GoodsCategory.class);
+	}
+
 }

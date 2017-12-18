@@ -78,6 +78,9 @@ public interface GoodsDao {
 	 */
 	public List<GoodsPO> listByTagId(@Param("tagId") long tagId, @Param("pageSize") int pageSize, @Param("offset") int offset,  @Param("orderBy") int orderBy, @Param("status") short status);
 
+	
+	public List<GoodsPO> listByTagIds(@Param("tagIds") List<Long> tagIds, @Param("pageSize") int pageSize, @Param("offset") int offset,  @Param("orderBy") int orderBy, @Param("status") short status);
+
 	public List<GoodsPO> listByKey(@Param("goodsKeys") List<Long> goodsKeys);
 	
 	public List<GoodsPO> listByLikeName(@Param("goodsName") String goodsName, @Param("offset") int offset, @Param("pageSize") int pageSize);

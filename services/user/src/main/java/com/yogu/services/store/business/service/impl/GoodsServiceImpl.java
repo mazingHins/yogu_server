@@ -164,6 +164,38 @@ public class GoodsServiceImpl implements GoodsService {
 
 		return VOUtil.fromList(list, Goods.class);
 	}
+	
+	@Override
+	public List<Goods> listByTagIdOrderByPriceDesc(List<Long> tagIds, Long uid, int pageNo, int pageSize) {
+		long storeId = getUserAgentStoreId(uid); // 查询用户所属的商家id，为0标示不属于任何商家
+		pageSize = PageUtils.limitSize(pageSize, 1, 100);
+		int offset = PageUtils.offset(pageNo, pageSize);
+		List<GoodsPO> list = goodsDao.listByTagIds(tagIds, pageSize, offset, 2, BooleanConstants.TRUE);
+		
+		for (GoodsPO goods : list) {
+			if (goods.getStoreId() == storeId) {
+				goods.setRetailPrice(goods.getTradePrice());
+			}
+		}
+
+		return VOUtil.fromList(list, Goods.class);
+	}
+	
+	@Override
+	public List<Goods> listByTagIdOrderByPriceAsc(List<Long> tagIds, Long uid, int pageNo, int pageSize) {
+		long storeId = getUserAgentStoreId(uid); // 查询用户所属的商家id，为0标示不属于任何商家
+		pageSize = PageUtils.limitSize(pageSize, 1, 100);
+		int offset = PageUtils.offset(pageNo, pageSize);
+		List<GoodsPO> list = goodsDao.listByTagIds(tagIds, pageSize, offset, 3, BooleanConstants.TRUE);
+		
+		for (GoodsPO goods : list) {
+			if (goods.getStoreId() == storeId) {
+				goods.setRetailPrice(goods.getTradePrice());
+			}
+		}
+
+		return VOUtil.fromList(list, Goods.class);
+	}
 
 	@Override
 	public List<Goods> listByTagId(long tagId, Long uid, int pageNo,
@@ -172,6 +204,23 @@ public class GoodsServiceImpl implements GoodsService {
 		pageSize = PageUtils.limitSize(pageSize, 1, 100);
 		int offset = PageUtils.offset(pageNo, pageSize);
 		List<GoodsPO> list = goodsDao.listByTagId(tagId, pageSize, offset, 0, BooleanConstants.TRUE);
+
+		for (GoodsPO goods : list) {
+			if (goods.getStoreId() == storeId) {
+				goods.setRetailPrice(goods.getTradePrice());
+			}
+		}
+
+		return VOUtil.fromList(list, Goods.class);
+	}
+	
+	@Override
+	public List<Goods> listByTagId(List<Long> tagIds, Long uid, int pageNo,
+			int pageSize) {
+		long storeId = getUserAgentStoreId(uid); // 查询用户所属的商家id，为0标示不属于任何商家
+		pageSize = PageUtils.limitSize(pageSize, 1, 100);
+		int offset = PageUtils.offset(pageNo, pageSize);
+		List<GoodsPO> list = goodsDao.listByTagIds(tagIds, pageSize, offset, 0, BooleanConstants.TRUE);
 
 		for (GoodsPO goods : list) {
 			if (goods.getStoreId() == storeId) {

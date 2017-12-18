@@ -16,5 +16,7 @@ public interface GoodsCategoryService {
 	 * @return 符合的记录，若无，返回empty list
 	 */
 	List<GoodsCategory> listAll();
+	
+	GoodsCategory getById(long categoryId);
 
 }
