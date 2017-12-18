@@ -162,9 +162,9 @@ public class OrderServiceImpl implements OrderService {
 		if (goods != null) {
 			result.setCardImg(goods.getCardImg());
 			if (list.size() > 1) {
-				result.setOrderName(goods.getGoodsName());
-			} else {
 				result.setOrderName(goods.getGoodsName() + "等" + list.size() + "种商品");
+			} else {
+				result.setOrderName(goods.getGoodsName());
 			}
 		}
 		return result;

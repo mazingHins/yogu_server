@@ -46,4 +46,17 @@ public class GoodsResourceTest extends HttpResourceTest {
 		Map<?, ?> map = assertMap(result);
 	}
 	
+	@Test
+	public void listByCategory() {
+
+		ApiReq<RestResult<?>> req = build("p/v1/goods/listByCategory");
+		req.putGet("categoryId", "1001");
+		req.putGet("sort", "1");
+		req.putGet("pageIndex", "1");
+		req.putGet("pageSize", "10");
+		RestResult<?> result = req.doGet();
+
+		Map<?, ?> map = assertMap(result);
+	}
+	
 }

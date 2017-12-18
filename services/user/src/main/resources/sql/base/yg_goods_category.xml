@@ -11,7 +11,7 @@
 	
 	<!-- 根据主键读取记录（主键可能有多个） -->
 	<select id="getById" parameterType="Map" resultType="com.yogu.services.store.base.entry.GoodsCategoryPO">
-		SELECT * FROM yg_user.yg_goods_category_details WHERE category_id=#{categoryId}
+		SELECT * FROM yg_user.yg_goods_category WHERE category_id=#{categoryId}
 	</select>
 
 	<!-- 查询全部记录 -->
