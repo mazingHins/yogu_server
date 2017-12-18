@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import com.yogu.CommonConstants;
 import com.yogu.commons.cache.CacheExtendService;
+import com.yogu.commons.utils.CollectionUtils;
 import com.yogu.commons.utils.DateUtils;
 import com.yogu.commons.utils.PageUtils;
 import com.yogu.commons.utils.StringUtils;
@@ -167,6 +168,9 @@ public class GoodsServiceImpl implements GoodsService {
 	
 	@Override
 	public List<Goods> listByTagIdOrderByPriceDesc(List<Long> tagIds, Long uid, int pageNo, int pageSize) {
+		if (CollectionUtils.isEmpty(tagIds)) {
+			return Collections.emptyList();
+		}
 		long storeId = getUserAgentStoreId(uid); // 查询用户所属的商家id，为0标示不属于任何商家
 		pageSize = PageUtils.limitSize(pageSize, 1, 100);
 		int offset = PageUtils.offset(pageNo, pageSize);
@@ -183,6 +187,9 @@ public class GoodsServiceImpl implements GoodsService {
 	
 	@Override
 	public List<Goods> listByTagIdOrderByPriceAsc(List<Long> tagIds, Long uid, int pageNo, int pageSize) {
+		if (CollectionUtils.isEmpty(tagIds)) {
+			return Collections.emptyList();
+		}
 		long storeId = getUserAgentStoreId(uid); // 查询用户所属的商家id，为0标示不属于任何商家
 		pageSize = PageUtils.limitSize(pageSize, 1, 100);
 		int offset = PageUtils.offset(pageNo, pageSize);
@@ -217,6 +224,9 @@ public class GoodsServiceImpl implements GoodsService {
 	@Override
 	public List<Goods> listByTagId(List<Long> tagIds, Long uid, int pageNo,
 			int pageSize) {
+		if (CollectionUtils.isEmpty(tagIds)) {
+			return Collections.emptyList();
+		}
 		long storeId = getUserAgentStoreId(uid); // 查询用户所属的商家id，为0标示不属于任何商家
 		pageSize = PageUtils.limitSize(pageSize, 1, 100);
 		int offset = PageUtils.offset(pageNo, pageSize);

@@ -12,6 +12,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 
+import com.yogu.commons.utils.CollectionUtils;
 import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.VOUtil;
 import com.yogu.core.web.RestResult;
@@ -73,7 +74,9 @@ public class GoodsResource {
 		}
 		
 		List<GoodsTag> tags = goodsTagService.listByCategoryId(categoryId);
-		
+		if (CollectionUtils.isEmpty(tags)) {
+			return new RestResult<List<GoodsVO>>(Collections.<GoodsVO>emptyList());
+		}
 		List<Long> tagIds = new ArrayList<>(tags.size());
 		for(GoodsTag tg : tags){
 			tagIds.add(tg.getTagId());
