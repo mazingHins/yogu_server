@@ -22,12 +22,16 @@ import com.yogu.core.web.OrderErrorCode;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.language.OrderMessages;
+import com.yogu.remote.store.GoodsRemoteService;
 import com.yogu.services.order.base.dao.OrderDao;
+import com.yogu.services.order.base.dao.OrderDetailDao;
 import com.yogu.services.order.base.dto.Order;
+import com.yogu.services.order.base.entry.OrderDetailPO;
 import com.yogu.services.order.base.entry.OrderPO;
 import com.yogu.services.order.base.service.OrderService;
 import com.yogu.services.order.resource.vo.order.AdminOrderVO;
-import com.yogu.services.order.resource.vo.order.UserOrderDetailVO;
+import com.yogu.services.order.resource.vo.order.UserOrderVO;
+import com.yogu.services.store.Goods;
 
 /**
  * OrderService 的实现类
@@ -44,6 +48,12 @@ public class OrderServiceImpl implements OrderService {
 
 	@Resource(name = "redis")
 	private Redis redis;
+	
+	@Inject
+	private GoodsRemoteService goodsRemoteService;
+	
+	@Inject
+	private OrderDetailDao orderDetailDao;
 
 	@Override
 	public Order getByOrderNo(long uid, long orderNo) {
@@ -138,15 +148,26 @@ public class OrderServiceImpl implements OrderService {
 	}
 
 	@Override
-	public UserOrderDetailVO userOrdeDetail(long uid, long orderNo) {
+	public UserOrderVO userOrdeDetail(long uid, long orderNo) {
 		OrderPO order = orderDao.getByOrderNoUid(uid, orderNo);
 		if (order == null) {
 			logger.error("orderDetail#service#getByOrderNo | order not exist | uid: {}, " + "orderNo: {}", uid, orderNo);
 			throw new ServiceException(OrderErrorCode.ORDER_NOT_EXIST, OrderMessages.ORDER_ORDERADMINAPI_ORDERDETAIL_ORDER_NOTEXIST());
 		}
+		List<OrderDetailPO> list = orderDetailDao.listByOrderId(order.getOrderId());
+		long goodsId = list.get(0).getGoodsId();
 		
-		
-		return VOUtil.from(order, UserOrderDetailVO.class);
+		Goods goods = goodsRemoteService.getGoods(goodsId);
+		UserOrderVO result = VOUtil.from(order, UserOrderVO.class);
+		if (goods != null) {
+			result.setCardImg(goods.getCardImg());
+			if (list.size() > 1) {
+				result.setOrderName(goods.getGoodsName());
+			} else {
+				result.setOrderName(goods.getGoodsName() + "等" + list.size() + "种商品");
+			}
+		}
+		return result;
 	}
 	
 	@Override

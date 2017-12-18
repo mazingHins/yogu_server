@@ -1,8 +1,8 @@
 package com.yogu.services.order.resource.app;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -14,14 +14,12 @@ import javax.ws.rs.QueryParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.yogu.commons.utils.VOUtil;
 import com.yogu.core.web.ParameterUtil;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.context.SecurityContext;
 import com.yogu.language.OrderMessages;
 import com.yogu.services.order.base.dto.Order;
 import com.yogu.services.order.base.service.OrderService;
-import com.yogu.services.order.resource.vo.order.UserOrderDetailVO;
 import com.yogu.services.order.resource.vo.order.UserOrderVO;
 
 /**
@@ -63,7 +61,19 @@ public class OrderListResource {
 
 		List<Order> list = orderService.listOrderByUid(uid, pageIndex, pageSize);
 		
-		return new RestResult<List<UserOrderVO>>(VOUtil.fromList(list, UserOrderVO.class));
+		return new RestResult<List<UserOrderVO>>(orderToVo(uid, list));
+	}
+	
+	private List<UserOrderVO> orderToVo(long uid, List<Order> list){
+		
+		List<UserOrderVO> result = new ArrayList<>(list.size());
+		for(Order order : list){
+			UserOrderVO vo = orderService.userOrdeDetail(uid, order.getOrderNo());
+			result.add(vo);
+		}
+		
+		return result;
+		
 	}
 	
 	/**
@@ -74,11 +84,11 @@ public class OrderListResource {
 	 */
 	@GET
 	@Path("v1/order/detail")
-	public RestResult<UserOrderDetailVO> orderDetail(@QueryParam("orderNo") Long orderNo) {
+	public RestResult<UserOrderVO> orderDetail(@QueryParam("orderNo") Long orderNo) {
 		long uid = SecurityContext.getUid();
 		logger.debug("order#orderDetail | 订单详情 | uid: {}, orderNo: {}", uid, orderNo);
 		ParameterUtil.assertNotNull(orderNo, OrderMessages.ORDER_ORDERLIST_ORDERDETAIL_ORDERNO_EMPTY());
-		return new RestResult<UserOrderDetailVO>(orderService.userOrdeDetail(uid, orderNo));
+		return new RestResult<UserOrderVO>(orderService.userOrdeDetail(uid, orderNo));
 	}
 	
 }

@@ -22,7 +22,9 @@ public class UserOrderVO implements Serializable {
 
 	/** 店家id */
 	private long storeId;
-
+	
+	private String orderName;
+	
 	/** 订单创建时间 */
 	private Date createTime;
 
@@ -34,6 +36,13 @@ public class UserOrderVO implements Serializable {
 
 	/** 应付金额（精确到分） */
 	private long totalFee;
+	
+	private long couponFee;
+	
+	private long goodsFee;
+	
+	private String cardImg;
+
 
 	/** 收货联系人 */
 	private String contacts;
@@ -69,6 +78,38 @@ public class UserOrderVO implements Serializable {
 
 	public void setStoreId(long storeId) {
 		this.storeId = storeId;
+	}
+	
+	public String getOrderName() {
+		return orderName;
+	}
+
+	public void setOrderName(String orderName) {
+		this.orderName = orderName;
+	}
+
+	public long getCouponFee() {
+		return couponFee;
+	}
+
+	public void setCouponFee(long couponFee) {
+		this.couponFee = couponFee;
+	}
+
+	public long getGoodsFee() {
+		return goodsFee;
+	}
+
+	public void setGoodsFee(long goodsFee) {
+		this.goodsFee = goodsFee;
+	}
+
+	public String getCardImg() {
+		return cardImg;
+	}
+
+	public void setCardImg(String cardImg) {
+		this.cardImg = cardImg;
 	}
 
 	public Date getCreateTime() {

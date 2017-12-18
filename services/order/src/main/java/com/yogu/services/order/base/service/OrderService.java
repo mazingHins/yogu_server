@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.yogu.services.order.base.dto.Order;
 import com.yogu.services.order.resource.vo.order.AdminOrderVO;
-import com.yogu.services.order.resource.vo.order.UserOrderDetailVO;
+import com.yogu.services.order.resource.vo.order.UserOrderVO;
 
 /**
  * 订单表 <br>
@@ -71,7 +71,7 @@ public interface OrderService {
 	 * @param orderNo - 订单编号
 	 * @return
 	 */
-	public UserOrderDetailVO userOrdeDetail(long uid, long orderNo);
+	public UserOrderVO userOrdeDetail(long uid, long orderNo);
 	
 	/**
 	 * 分页获取所有订单，admin使用<br>
