@@ -43,4 +43,18 @@ public class IndexResourceTest extends HttpResourceTest {
 	}
 	
 
+	@Test
+	public void search() {
+
+		ApiReq<RestResult<?>> req = build("p/v1/search/goods");
+		
+		req.putGet("keyword", "英莱壳ET");
+		req.putGet("lastTime", "0");
+		req.putGet("pageSize", "10");
+		RestResult<?> result = req.doGet();
+
+		Map<?, ?> map = assertMap(result);
+	}
+	
+	
 }
