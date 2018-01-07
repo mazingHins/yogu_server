@@ -24,7 +24,6 @@ import com.yogu.services.order.coupon.dto.Coupon;
 import com.yogu.services.order.coupon.service.CouponService;
 import com.yogu.services.order.coupon.service.OrderCouponService;
 import com.yogu.services.order.resource.vo.coupon.CouponDescVO;
-import com.yogu.services.order.resource.vo.coupon.CouponItemDescVO;
 import com.yogu.services.order.resource.vo.coupon.UserCouponVO;
 import com.yogu.services.order.resource.vo.order.SettleCouponVO;
 import com.yogu.services.order.utils.CouponUtils;
@@ -103,9 +102,6 @@ public class OrderCouponServiceImpl implements OrderCouponService {
 	private List<CouponDescVO> formatDescription(Coupon coupon) {
 		List<CouponDescVO> result = new ArrayList<CouponDescVO>(4);
 
-		// 创建一个空的优惠券适用对象
-		List<CouponItemDescVO> descItems = Collections.emptyList();
-
 		// 加载顺序 适用对象>有效期>使用条件>限制手机号码
 
 		// 2. 加载有效期，兼容只有开始时间/结束时间的情况
@@ -121,7 +117,6 @@ public class OrderCouponServiceImpl implements OrderCouponService {
 
 			desc.setDesc(descStr);
 			desc.setType(CouponDescVO.Type.DEFAULT.getValue());
-			desc.setItems(descItems);
 			result.add(desc);
 		}
 
@@ -176,13 +171,9 @@ public class OrderCouponServiceImpl implements OrderCouponService {
 		}
 
 		if (StringUtils.isNotBlank(validityDesc)) {
-			// 创建一个空的优惠券适用对象(为了返回的列表对象不为null，跟客户端的约定)
-			List<CouponItemDescVO> descItems = Collections.emptyList();
-
 			CouponDescVO desc = new CouponDescVO();
 			desc.setDesc(validityDesc);
 			desc.setType(CouponDescVO.Type.DEFAULT.getValue());
-			desc.setItems(descItems);
 			result.add(desc);
 		}
 	}

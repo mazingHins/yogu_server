@@ -38,7 +38,7 @@
 	</select>
 	
 	<select id="listByName" parameterType="Map" resultType="com.yogu.services.store.business.entry.GoodsPO">
-		SELECT * FROM yg_user.yg_goods WHERE goods_name like '%${goodsName}&' and 
+		SELECT * FROM yg_user.yg_goods WHERE goods_name like '%${goodsName}%' and 
 		<if test="lastTime != null">
 			<![CDATA[
 			create_time<{lastTime} and 

@@ -48,11 +48,6 @@ public class CouponDescVO {
 	 */
 	private short type;
 
-	/**
-	 * 优惠券适用对象列表，可无
-	 */
-	private List<CouponItemDescVO> items;
-
 	public String getDesc() {
 		return desc;
 	}
@@ -69,12 +64,5 @@ public class CouponDescVO {
 		this.type = type;
 	}
 
-	public List<CouponItemDescVO> getItems() {
-		return items;
-	}
-
-	public void setItems(List<CouponItemDescVO> items) {
-		this.items = items;
-	}
 
 }
