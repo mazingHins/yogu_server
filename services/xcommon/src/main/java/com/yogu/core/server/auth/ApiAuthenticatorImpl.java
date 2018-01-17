@@ -166,16 +166,19 @@ public class ApiAuthenticatorImpl implements Authenticator {
 		ThreadLocalContext.putThreadValue(SecurityContext.API_TYPE, type);
 
 		// 对状态检查的URL，不做处理 2015/11/21 ten
-		if ("/open/health/status".equals(path)) {
-			return;
-		}
-		// 增加IP输出，用于查证来源 2015/11/11 ten
-		logger.info("api#interceptor | check token | path: {}, ip: {}", path, ip);
-
 		if (null == type) {
 			logger.warn("api#interceptor | Unknown Request: '{}'.", path);
 			return;
 		}
+		
+		if (type == ApiReqinfoType.OPEN) {
+			logger.warn("api#interceptor | open url: '{}'.", path);
+			return;
+		}
+		
+		// 增加IP输出，用于查证来源 2015/11/11 ten
+		logger.info("api#interceptor | check token | path: {}, ip: {}", path, ip);
+
 
 		// 请求需要验签
 		if (type.isCheck()) {

@@ -5,6 +5,7 @@ import java.util.Map;
 import org.junit.Test;
 
 import com.yogu.core.test.ApiReq;
+import com.yogu.core.test.BaseResourceTest;
 import com.yogu.core.test.HttpResourceTest;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
@@ -13,7 +14,7 @@ import com.yogu.core.web.ResultCode;
  * @author Hins
  * @version createTime：2015年7月16日 下午6:53:47 类说明
  */
-public class UserResourceTest extends HttpResourceTest {
+public class UserResourceTest extends BaseResourceTest {
 
 	public UserResourceTest() {
 		userHost = "http://userapi.yogubc.com/";
@@ -23,6 +24,17 @@ public class UserResourceTest extends HttpResourceTest {
 	@Test
 	public void init() {
 		ApiReq<RestResult<?>> req = build("a/v1/user/profile");
+		req.login("86", "13926426236", "abcd1234");
+
+		RestResult<?> result = req.doGet();
+		Map<?, ?> map = assertMap(result);
+
+		assertNotNull(map.get("nickname"));
+	}
+	
+	@Test
+	public void wxConfig() {
+		ApiReq<RestResult<?>> req = build("open/v1/wx/config");
 		req.login("86", "13926426236", "abcd1234");
 
 		RestResult<?> result = req.doGet();
