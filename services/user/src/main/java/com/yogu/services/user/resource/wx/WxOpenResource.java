@@ -8,6 +8,7 @@ import javax.inject.Singleton;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import com.yogu.commons.utils.JsonUtils;
 import com.yogu.commons.utils.LogUtil;
 import com.yogu.commons.utils.StringUtils;
 import com.yogu.commons.utils.encrypt.EncryptUtil;
+import com.yogu.commons.validation.constraints.NotEmpty;
 import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
@@ -33,10 +35,10 @@ public class WxOpenResource {
 
 	@GET
 	@Path("v1/wx/config")
-	public RestResult<Map<String, Object>> getWxConfig() {
+	public RestResult<Map<String, Object>> getWxConfig(@QueryParam("url") @NotEmpty(message = "url不能为空") String url) {
 		logger.info("api#user#getWxConfig |getWxConfig");
 
-		return new RestResult<>(getWxMpConfig("abc"));
+		return new RestResult<>(getWxMpConfig(url));
 	}
 	
 	/**
