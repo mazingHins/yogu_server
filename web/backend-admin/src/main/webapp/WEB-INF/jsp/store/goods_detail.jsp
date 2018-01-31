@@ -120,8 +120,6 @@
 		}, function(json) {
 			if (json.success) {
 				fillForm(json.object);
-				var htmlTxt = template('storeTagTemplate', json);
-				$('#tagContainer').html(htmlTxt);
 			} else {
 				BootstrapDialog.show({
 					title: '错误',
@@ -150,7 +148,15 @@
 		for(var i=0;i<arr.length;i++){
  			content = content+"<img width='380' src='"+arr[i]+"' /><br/>"
 		}
-		
+		var tags = "";
+		for(var i=0;i<arr.length;i++){
+			if(arr[i].isCheck == 1){
+				tags = tags+"<label><input type='checkbox' name='blackRecord' value='"+arr[i].tagId+"' checked>"+arr[i].tagName+"</label> &nbsp; &nbsp; &nbsp; &nbsp;"
+			}else{
+				tags = tags+"<label><input type='checkbox' name='blackRecord' value='"+arr[i].tagId+"'>"+arr[i].tagName+"</label> &nbsp; &nbsp; &nbsp; &nbsp;"
+			}
+ 		}
+		$('#tagContainer').html(tags);
 		$("#content").html(content);
 	}
 	
