@@ -228,7 +228,7 @@
 	// 加载优惠券数据
 	function loadGoods(goodsKey) {
 		if(goodsKey == null || goodsKey == ''){
-			return;
+			goodsKey = 0;
 		}
 		
 		

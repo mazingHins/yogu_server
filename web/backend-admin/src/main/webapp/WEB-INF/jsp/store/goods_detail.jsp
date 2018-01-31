@@ -62,6 +62,13 @@
 								分
 							</div>
 						</div>
+						
+						<div class="form-group">
+							<label class="col-md-2 control-label">标签</label>
+							<div class="col-sm-6" id="tagContainer"></div>
+						</div>
+						
+						
 						<div class="form-group">
 							<label class="col-md-2 control-label">商品主图</label>
 							<div class="col-md-3">
@@ -141,9 +148,23 @@
 		for(var i=0;i<arr.length;i++){
  			content = content+"<img width='380' src='"+arr[i]+"' /><br/>"
 		}
+		
+		var htmlTxt = template('storeTagTemplate', goods.tagList);
+		$('#tagContainer').html(htmlTxt);
+		
 		$("#content").html(content);
 	}
 	
 </script>
+
+<!-- tag的模版 -->
+<script id="storeTagTemplate" type="text/html">
+		{{each object as value i}}
+			<label><input type="checkbox" name="blackRecord" value="{{value.tagId}}" checked>{{value.tagName}}</label> &nbsp; &nbsp; &nbsp; &nbsp;
+		{{/each}}
+	{{/each}}
+</script>
+
+
 </body>
 </html>

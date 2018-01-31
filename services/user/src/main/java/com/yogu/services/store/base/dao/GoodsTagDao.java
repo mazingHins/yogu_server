@@ -36,4 +36,6 @@ public interface GoodsTagDao {
 	 */
 	public List<GoodsTagPO> listByCategoryId(@Param("categoryId") long categoryId);
 
+	public List<GoodsTagPO> listAll();
+
 }

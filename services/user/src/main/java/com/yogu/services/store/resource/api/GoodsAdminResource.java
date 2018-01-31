@@ -22,6 +22,9 @@ import com.yogu.commons.utils.VOUtil;
 import com.yogu.core.enums.BooleanConstants;
 import com.yogu.core.web.RestResult;
 import com.yogu.services.store.Goods;
+import com.yogu.services.store.GoodsTagsVO;
+import com.yogu.services.store.base.dto.GoodsTag;
+import com.yogu.services.store.base.service.GoodsTagService;
 import com.yogu.services.store.business.service.GoodsService;
 import com.yogu.services.store.resource.params.GoodsParam;
 
@@ -35,6 +38,9 @@ public class GoodsAdminResource {
 	
 	@Inject
 	private GoodsService goodsService;
+	
+	@Inject
+	private GoodsTagService goodsTagService;
 	
 	/**
 	 * 搜索美食数据，按分页形式返回
@@ -66,7 +72,7 @@ public class GoodsAdminResource {
 	}
 	
 	@POST
-	@Path("goods/soldOut。do")
+	@Path("goods/soldOut.do")
 	public RestResult<Integer> soldOut(@FormParam("goodsId") long goodsId) {
 		logger.debug("api#goods#soldOut | 下架商品 | goodsId: {}", goodsId);
 		
@@ -75,11 +81,19 @@ public class GoodsAdminResource {
 	}
 	
 	@POST
-	@Path("goods/shelves。do")
+	@Path("goods/shelves.do")
 	public RestResult<Integer> shelves(@FormParam("goodsId") long goodsId) {
 		logger.debug("api#dish#shelves | 上架商品 | goodsId: {}", goodsId);
 		goodsService.setDishStatus(goodsId, BooleanConstants.TRUE);
 		return new RestResult<>(1);
+	}
+	
+	@GET
+	@Path("tag/listAll")
+	public RestResult<List<GoodsTagsVO>> listAll() {
+		logger.info("api#dish#listAll | 获取所有商品tag");
+		List<GoodsTag> list = goodsTagService.listAll();
+		return new RestResult<>(VOUtil.fromList(list, GoodsTagsVO.class));
 	}
 	
 }

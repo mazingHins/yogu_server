@@ -43,4 +43,14 @@ public class GoodsTagServiceImpl implements GoodsTagService {
 		return null;
 	}
 
+	@Override
+	public List<GoodsTag> listAll() {
+		List<GoodsTagPO> list = goodsTagDao.listAll();
+		if(list.isEmpty()){
+			return Collections.emptyList();
+		}
+		
+		return VOUtil.fromList(list, GoodsTag.class);
+	}
+
 }

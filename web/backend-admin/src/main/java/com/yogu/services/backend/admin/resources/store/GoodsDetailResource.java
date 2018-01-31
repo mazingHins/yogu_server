@@ -1,7 +1,9 @@
 package com.yogu.services.backend.admin.resources.store;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.yogu.commons.utils.VOUtil;
 import com.yogu.commons.utils.resource.Menu;
@@ -47,15 +50,20 @@ public class GoodsDetailResource {
 	public RestResult<GoodsVO> detail(@RequestParam(value = "goodsKey") long goodsKey) {
 
 		logger.info("admin#goodsListResource#query | 查看商品详情 |  goodsKey: {}", goodsKey);
-
-		Goods goods = goodsRemoteService.getGoodsByKey(goodsKey);
-		GoodsVO result = VOUtil.from(goods, GoodsVO.class);
-		String[] imgArray = goods.getContent().split(",");
-		List<String> imgs = new ArrayList<>();
-		for(String img : imgArray){
-			imgs.add(img);
+		GoodsVO result = null;
+		if (goodsKey == 0) {
+			result = new GoodsVO();
+		} else {
+			Goods goods = goodsRemoteService.getGoodsByKey(goodsKey);
+			result = VOUtil.from(goods, GoodsVO.class);
+			String[] imgArray = goods.getContent().split(",");
+			List<String> imgs = new ArrayList<>();
+			for (String img : imgArray) {
+				imgs.add(img);
+			}
+			result.setContentImgs(imgs);
 		}
-		result.setContentImgs(imgs);
+		
 		return new RestResult<>(result);
 	}
 

@@ -18,5 +18,9 @@
 	<select id="listByCategoryId" resultType="com.yogu.services.store.base.entry.GoodsTagPO">
 		SELECT * FROM yg_user.yg_goods_tag where category_id=#{categoryId} order by sequence asc
 	</select>
+	
+	<select id="listAll" resultType="com.yogu.services.store.base.entry.GoodsTagPO">
+		SELECT * FROM yg_user.yg_goods_tag 
+	</select>
 
 </mapper>

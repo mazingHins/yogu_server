@@ -25,6 +25,7 @@ import com.yogu.core.web.RestResult;
 import com.yogu.core.web.ResultCode;
 import com.yogu.core.web.exception.ServiceException;
 import com.yogu.services.store.Goods;
+import com.yogu.services.store.GoodsTagsVO;
 
 /**
  * 对商品的远程操作服务类 <br>
@@ -177,6 +178,27 @@ public class GoodsRemoteService {
 			logger.error("remote#coupon#shelves | 保存优惠券规则错误 | goodsId: {}", goodsId, e);
 			throw new ServiceException(ResultCode.UNKNOWN_ERROR, e.getMessage());
 		}
+	}
+	
+	/**
+	 * 获取所有商品tag
+	 * 
+	 * @return    设定文件 
+	 * @author qiujun 
+	 * @date 2018年1月31日 下午9:01:42 
+	 * @return     返回类型
+	 */
+	public List<GoodsTagsVO> listAllTags(){
+		try {
+			String json = HttpClientUtils.doGet(host + "/api/tag/listAll", 3000);
+			RestResult<List<GoodsTagsVO>> result = JsonUtils.parseObject(json, new TypeReference<RestResult<List<GoodsTagsVO>>>() {
+			});
+			if (result.isSuccess() && null != result.getObject())
+				return result.getObject();
+		} catch (Exception e) {
+			logger.error("remote#goods#query | Error | message: {}", e.getMessage(), e);
+		}
+		return Collections.emptyList();
 	}
 		
 	/**

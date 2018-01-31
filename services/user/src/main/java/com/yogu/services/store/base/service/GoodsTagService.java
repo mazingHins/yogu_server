@@ -28,5 +28,8 @@ public interface GoodsTagService {
 	 * @return
 	 */
 	GoodsTag getById(long tagId);
+	
+	List<GoodsTag> listAll();
+	
 
 }
