@@ -276,7 +276,7 @@
 <!-- tag的模版 -->
 <script id="storeTagTemplate" type="text/html">
 		{{each object as value i}}
-			<label><input type="checkbox" name="blackRecord" value="{{value.tagId}}" {{if value.isCheck}}checked{{/if}}>{{value.tagName}}</label> &nbsp; &nbsp; &nbsp; &nbsp;
+			<label><input type="checkbox" name="blackRecord" value="{{value.tagId}}" {{if value.isCheck==1}}checked{{/if}}>{{value.tagName}}</label> &nbsp; &nbsp; &nbsp; &nbsp;
 		{{/each}}
 	{{/each}}
 	
