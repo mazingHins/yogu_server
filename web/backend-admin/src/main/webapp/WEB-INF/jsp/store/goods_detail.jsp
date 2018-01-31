@@ -149,7 +149,7 @@
  			content = content+"<img width='380' src='"+arr[i]+"' /><br/>"
 		}
 		
-		var htmlTxt = template('storeTagTemplate', goods.tagList);
+		var htmlTxt = template('storeTagTemplate', goods);
 		$('#tagContainer').html(htmlTxt);
 		
 		$("#content").html(content);
@@ -159,7 +159,7 @@
 
 <!-- tag的模版 -->
 <script id="storeTagTemplate" type="text/html">
-		{{each object as value i}}
+		{{each tagList as value i}}
 			<label><input type="checkbox" name="blackRecord" value="{{value.tagId}}" {{if value.isCheck}}checked{{/if}}>{{value.tagName}}</label> &nbsp; &nbsp; &nbsp; &nbsp;
 		{{/each}}
 	{{/each}}

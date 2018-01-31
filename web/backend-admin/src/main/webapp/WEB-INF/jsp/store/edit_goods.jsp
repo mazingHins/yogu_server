@@ -267,7 +267,7 @@
 		$("#tradePrice").val(goods.tradePrice);
 		$("#cardImg").val(goods.cardImg);
 		$("#cardImgPreview").attr("src", goods.cardImg);
-		var htmlTxt = template('storeTagTemplate', goods.tagList);
+		var htmlTxt = template('storeTagTemplate', goods);
 		$('#tagContainer').html(htmlTxt);
 	}
 	
@@ -275,7 +275,7 @@
 
 <!-- tag的模版 -->
 <script id="storeTagTemplate" type="text/html">
-		{{each object as value i}}
+		{{each tagList as value i}}
 			<label><input type="checkbox" name="blackRecord" value="{{value.tagId}}" {{if value.isCheck==1}}checked{{/if}}>{{value.tagName}}</label> &nbsp; &nbsp; &nbsp; &nbsp;
 		{{/each}}
 	{{/each}}
