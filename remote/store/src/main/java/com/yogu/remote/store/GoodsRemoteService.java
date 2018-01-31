@@ -188,9 +188,11 @@ public class GoodsRemoteService {
 	 * @date 2018年1月31日 下午9:01:42 
 	 * @return     返回类型
 	 */
-	public List<GoodsTagsVO> listAllTags(){
+	public List<GoodsTagsVO> listAllTags(long goodsKey){
 		try {
-			String json = HttpClientUtils.doGet(host + "/api/tag/listAll", 3000);
+			Map<String, String> params = new HashMap<>(2);
+			params.put("goodsKey", String.valueOf(goodsKey));
+			String json = HttpClientUtils.doGet(host + "/api/tag/listAll", 3000, params);
 			RestResult<List<GoodsTagsVO>> result = JsonUtils.parseObject(json, new TypeReference<RestResult<List<GoodsTagsVO>>>() {
 			});
 			if (result.isSuccess() && null != result.getObject())

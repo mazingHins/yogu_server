@@ -11,12 +11,16 @@
 	
 	<!-- 根据主键读取记录（主键可能有多个） -->
 	<select id="getById" parameterType="Map" resultType="com.yogu.services.store.base.entry.GoodsTagMpPO">
-		SELECT * FROM yg_user.yg_goods_tag_mp WHERE tag_id=#{tagId} and goods_id=#{goodsId}
+		SELECT * FROM yg_user.yg_goods_tag_mp WHERE tag_id=#{tagId} and goods_id=#{goodsKey}
 	</select>
 
 	<!-- 查询全部记录 -->
 	<select id="listByTagId" resultType="com.yogu.services.store.base.entry.GoodsTagMpPO">
 		SELECT * FROM yg_user.yg_goods_tag_mp where tag_id=#{tagId} 
+	</select>
+	
+	<select id="listByGoodsKey" resultType="com.yogu.services.store.base.entry.GoodsTagMpPO">
+		SELECT * FROM yg_user.yg_goods_tag_mp where goods_id=#{goodsKey} 
 	</select>
 
 </mapper>

@@ -19,6 +19,8 @@ public class GoodsTagsVO {
 	
 	/** 排序，从小到大 */
 	private int sequence;
+	
+	private short isCheck = 0;
 
 	public long getTagId() {
 		return tagId;
@@ -51,5 +53,14 @@ public class GoodsTagsVO {
 	public void setSequence(int sequence) {
 		this.sequence = sequence;
 	}
+
+	public short getIsCheck() {
+		return isCheck;
+	}
+
+	public void setIsCheck(short isCheck) {
+		this.isCheck = isCheck;
+	}
+	
 	
 }

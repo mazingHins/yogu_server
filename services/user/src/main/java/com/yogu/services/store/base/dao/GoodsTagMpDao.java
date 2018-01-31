@@ -26,7 +26,7 @@ public interface GoodsTagMpDao {
 	/**
 	 * 根据主键读取记录
 	 */
-	public GoodsTagMpPO getById(@Param("tagId") long tagId, @Param("goodsId") long goodsId);
+	public GoodsTagMpPO getById(@Param("tagId") long tagId, @Param("goodsKey") long goodsKey);
 
 	/**
 	 * 通过标签id，获取标签下的所有商品，结果无序
@@ -35,5 +35,7 @@ public interface GoodsTagMpDao {
 	 * @return 返回符合的数据，如果没有数据，返回emtpy list
 	 */
 	public List<GoodsTagMpPO> listByTagId(@Param("tagId") long tagId);
+
+	public List<GoodsTagMpPO> listByGoodsKey(@Param("goodsKey") long goodsKey);
 
 }

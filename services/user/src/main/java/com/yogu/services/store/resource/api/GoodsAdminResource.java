@@ -1,6 +1,9 @@
 package com.yogu.services.store.resource.api;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -24,6 +27,8 @@ import com.yogu.core.web.RestResult;
 import com.yogu.services.store.Goods;
 import com.yogu.services.store.GoodsTagsVO;
 import com.yogu.services.store.base.dto.GoodsTag;
+import com.yogu.services.store.base.dto.GoodsTagMp;
+import com.yogu.services.store.base.service.GoodsTagMpService;
 import com.yogu.services.store.base.service.GoodsTagService;
 import com.yogu.services.store.business.service.GoodsService;
 import com.yogu.services.store.resource.params.GoodsParam;
@@ -41,6 +46,9 @@ public class GoodsAdminResource {
 	
 	@Inject
 	private GoodsTagService goodsTagService;
+	
+	@Inject
+	private GoodsTagMpService goodsTagMpService;
 	
 	/**
 	 * 搜索美食数据，按分页形式返回
@@ -90,10 +98,29 @@ public class GoodsAdminResource {
 	
 	@GET
 	@Path("tag/listAll")
-	public RestResult<List<GoodsTagsVO>> listAll() {
+	public RestResult<List<GoodsTagsVO>> listAll(@QueryParam("goodsKey") long goodsKey) {
 		logger.info("api#dish#listAll | 获取所有商品tag");
 		List<GoodsTag> list = goodsTagService.listAll();
-		return new RestResult<>(VOUtil.fromList(list, GoodsTagsVO.class));
+		if(goodsKey == 0){
+			return new RestResult<>(VOUtil.fromList(list, GoodsTagsVO.class));
+		}
+		
+		
+		List<GoodsTagMp> mpList = goodsTagMpService.listByGoods(goodsKey);
+		Set<Long> mpSet = new HashSet<>(mpList.size()*4/3+2);
+		for(GoodsTagMp mp : mpList){
+			mpSet.add(mp.getTagId());
+		}
+		
+		List<GoodsTagsVO> result = new ArrayList<>(list.size());
+		for(GoodsTag tag : list){
+			GoodsTagsVO vo = VOUtil.from(tag, GoodsTagsVO.class);
+			if(mpSet.contains(vo.getTagId())){
+				vo.setIsCheck(BooleanConstants.TRUE);
+			}
+		}
+		return new RestResult<>(result);
+		
 	}
 	
 }

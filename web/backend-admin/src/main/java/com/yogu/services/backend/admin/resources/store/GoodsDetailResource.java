@@ -63,7 +63,7 @@ public class GoodsDetailResource {
 			}
 			result.setContentImgs(imgs);
 		}
-		
+		result.setTagList(goodsRemoteService.listAllTags(goodsKey));
 		return new RestResult<>(result);
 	}
 
