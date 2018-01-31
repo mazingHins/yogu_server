@@ -123,15 +123,17 @@ public class IndexResource {
 		Long uid = SecurityContext.getUserId();
 		pageSize = PageUtils.limitSize(pageSize, MIN_SIZE, MAX_SIZE);
 		
-		// 先获取推送列表
-		List<GoodsRecommend> list = goodsRecommendService.listEffectivve(lastTime, pageSize);
-		List<Long> goodsKeys  = new ArrayList<Long>(list.size());
-		for(GoodsRecommend rm : list){
-			goodsKeys.add(rm.getGoodsKey());
-		}
+		List<Goods> goodsList = goodsService.listByPage(uid, lastTime, pageSize);
 		
-		// 通过推荐列表批量查询商品信息
-		List<Goods> goodsList = goodsService.listBykeys(uid, goodsKeys);
+//		// 先获取推送列表
+//		List<GoodsRecommend> list = goodsRecommendService.listEffectivve(lastTime, pageSize);
+//		List<Long> goodsKeys  = new ArrayList<Long>(list.size());
+//		for(GoodsRecommend rm : list){
+//			goodsKeys.add(rm.getGoodsKey());
+//		}
+//		
+//		// 通过推荐列表批量查询商品信息
+//		List<Goods> goodsList = goodsService.listBykeys(uid, goodsKeys);
 		List<IndexRecommendVO> recommendList = new ArrayList<>(goodsList.size());
 		for (Goods goods : goodsList) {
 			IndexRecommendVO vo = VOUtil.from(goods, IndexRecommendVO.class);
