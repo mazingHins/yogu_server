@@ -118,6 +118,7 @@ public class GoodsAdminResource {
 			if(mpSet.contains(vo.getTagId())){
 				vo.setIsCheck(BooleanConstants.TRUE);
 			}
+			result.add(vo);
 		}
 		return new RestResult<>(result);
 		
