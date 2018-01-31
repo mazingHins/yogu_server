@@ -243,6 +243,8 @@
 		}, function(json) {
 			if (json.success) {
 				fillForm(json.object);
+				var htmlTxt = template('storeTagTemplate', json);
+		$('#tagContainer').html(htmlTxt);
 			} else {
 				BootstrapDialog.show({
 					title: '错误',
@@ -267,15 +269,14 @@
 		$("#tradePrice").val(goods.tradePrice);
 		$("#cardImg").val(goods.cardImg);
 		$("#cardImgPreview").attr("src", goods.cardImg);
-		var htmlTxt = template('storeTagTemplate', goods);
-		$('#tagContainer').html(htmlTxt);
+		
 	}
 	
 </script>
 
 <!-- tag的模版 -->
 <script id="storeTagTemplate" type="text/html">
-		{{each tagList as value i}}
+		{{each object.tagList as value i}}
 			<label><input type="checkbox" name="blackRecord" value="{{value.tagId}}" {{if value.isCheck==1}}checked{{/if}}>{{value.tagName}}</label> &nbsp; &nbsp; &nbsp; &nbsp;
 		{{/each}}
 	{{/each}}
