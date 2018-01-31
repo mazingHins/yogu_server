@@ -22,5 +22,10 @@
 	<select id="listByGoodsKey" resultType="com.yogu.services.store.base.entry.GoodsTagMpPO">
 		SELECT * FROM yg_user.yg_goods_tag_mp where goods_id=#{goodsKey} 
 	</select>
+	
+	<delete id="deleteByGoodKey" parameterType="Map">
+		DELETE FROM yg_user.yg_goods_tag_mp WHERE goods_id=#{goodsKey}
+	</delete>
+	
 
 </mapper>

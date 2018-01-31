@@ -28,6 +28,10 @@ public class GoodsParam {
 	@DefaultValue("")
 	private String content;
 	
+	@FormParam("tagIds")
+	@DefaultValue("")
+	private String tagIds;
+	
 	/** 零售价 */
 	@FormParam("retailPrice")
 	private long retailPrice;
@@ -90,6 +94,14 @@ public class GoodsParam {
 
 	public void setTradePrice(long tradePrice) {
 		this.tradePrice = tradePrice;
+	}
+
+	public String getTagIds() {
+		return tagIds;
+	}
+
+	public void setTagIds(String tagIds) {
+		this.tagIds = tagIds;
 	}
 	
 }

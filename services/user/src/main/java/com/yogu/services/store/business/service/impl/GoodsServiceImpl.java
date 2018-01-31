@@ -26,6 +26,8 @@ import com.yogu.remote.user.dto.UserProfile;
 import com.yogu.remote.user.provider.UserRemoteService;
 import com.yogu.services.store.Goods;
 import com.yogu.services.store.MerchantCacheKey;
+import com.yogu.services.store.base.dao.GoodsTagMpDao;
+import com.yogu.services.store.base.entry.GoodsTagMpPO;
 import com.yogu.services.store.business.dao.GoodsDao;
 import com.yogu.services.store.business.dao.GoodsTrackDao;
 import com.yogu.services.store.business.dto.Store;
@@ -45,6 +47,9 @@ public class GoodsServiceImpl implements GoodsService {
 	
 	@Inject
 	private GoodsTrackDao goodsTrackDao;
+	
+	@Inject
+	private GoodsTagMpDao goodsTagMpDao;
 	
 	@Inject
 	private UserRemoteService userRemoteService;
@@ -297,6 +302,17 @@ public class GoodsServiceImpl implements GoodsService {
 		po.setGoodsKey(goodsKey);
 		
 		unifyDealWithDish(old, po);
+		
+		// 处理tag 映射
+		goodsTagMpDao.deleteByGoodKey(goods.getGoodsKey());
+		long[] tagIds = ParameterUtil.str2longs(goods.getTagIds());
+		for (long id : tagIds) {
+			GoodsTagMpPO tag = new GoodsTagMpPO();
+			tag.setGoodsId(goodsKey);
+			tag.setTagId(id);
+			tag.setCreateTime(DateUtils.getUniformCurrentTimeForThread());
+			goodsTagMpDao.save(tag);
+		}
 	}
 	
 	/**
@@ -322,6 +338,16 @@ public class GoodsServiceImpl implements GoodsService {
 
 		// 新增快照
 		backupDishTrack(po, goodsId);
+		
+		// 处理tag 映射
+		long[] tagIds = ParameterUtil.str2longs(goods.getTagIds());
+		for (long id : tagIds) {
+			GoodsTagMpPO tag = new GoodsTagMpPO();
+			tag.setGoodsId(goodsId);
+			tag.setTagId(id);
+			tag.setCreateTime(DateUtils.getUniformCurrentTimeForThread());
+			goodsTagMpDao.save(tag);
+		}
 	}
 	
 	/**

@@ -37,5 +37,7 @@ public interface GoodsTagMpDao {
 	public List<GoodsTagMpPO> listByTagId(@Param("tagId") long tagId);
 
 	public List<GoodsTagMpPO> listByGoodsKey(@Param("goodsKey") long goodsKey);
+	
+	public void deleteByGoodKey(@Param("goodsKey") long goodsKey);
 
 }

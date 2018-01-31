@@ -41,6 +41,8 @@ public class Goods implements Serializable {
 	/** 状态:1-正常;2-下架 */
 	private short status;
 	
+	private String tagIds;
+	
 	/** 创建时间 */
 	private Date createTime;
 	
@@ -141,6 +143,14 @@ public class Goods implements Serializable {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public String getTagIds() {
+		return tagIds;
+	}
+
+	public void setTagIds(String tagIds) {
+		this.tagIds = tagIds;
 	}
 	
 }

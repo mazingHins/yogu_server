@@ -82,6 +82,7 @@
 							</div>
 							<div class="col-md-3">
 								<img id="cardImgPreview" width="80" src="" />
+								<input id="tagIds" name="tagIds" type="hidden" />
 							</div>
 						</div>
 						<div class="form-group">
@@ -210,6 +211,14 @@
 		if (message != '') {
 			MyDialog.alert(message);
 		}
+		var values = new Array();
+		var storeTag = $('input[name=goodsTags]:checked').each(
+		function(i, item) {
+			values.push(item.value);
+		});
+		if (values.length > 0) {
+			$('#tagIds').val(values.join(','))
+		}
 		return message == '';
 	}
 
@@ -285,7 +294,7 @@
 <!-- tag的模版 -->
 <script id="storeTagTemplate" type="text/html">
 		{{each object.tagList as value i}}
-			<label><input type="checkbox" name="blackRecord" value="{{value.tagId}}" {{if value.isCheck==1}}checked{{/if}}>{{value.tagName}}</label> &nbsp; &nbsp; &nbsp; &nbsp;
+			<label><input type="checkbox" name="goodsTags" value="{{value.tagId}}" {{if value.isCheck==1}}checked{{/if}}>{{value.tagName}}</label> &nbsp; &nbsp; &nbsp; &nbsp;
 		{{/each}}
 	{{/each}}
 	

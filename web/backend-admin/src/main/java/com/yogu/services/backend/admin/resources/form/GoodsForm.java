@@ -23,6 +23,8 @@ public class GoodsForm {
 	/** 排序，从小到大 */
 	private int sequence;
 	
+	private String tagIds;
+	
 	public long getGoodsKey() {
 		return goodsKey;
 	}
@@ -79,4 +81,12 @@ public class GoodsForm {
 		this.sequence = sequence;
 	}
 
+	public String getTagIds() {
+		return tagIds;
+	}
+
+	public void setTagIds(String tagIds) {
+		this.tagIds = tagIds;
+	}
+	
 }
