@@ -148,6 +148,8 @@
 		for(var i=0;i<arr.length;i++){
  			content = content+"<img width='380' src='"+arr[i]+"' /><br/>"
 		}
+		
+		arr = goods.tagList;
 		var tags = "";
 		for(var i=0;i<arr.length;i++){
 			if(arr[i].isCheck == 1){

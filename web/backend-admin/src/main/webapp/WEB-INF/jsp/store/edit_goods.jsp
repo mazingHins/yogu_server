@@ -267,6 +267,8 @@
 		$("#tradePrice").val(goods.tradePrice);
 		$("#cardImg").val(goods.cardImg);
 		$("#cardImgPreview").attr("src", goods.cardImg);
+		
+		var arr = goods.tagList;
 		var tags = "";
 		for(var i=0;i<arr.length;i++){
 			if(arr[i].isCheck == 1){
