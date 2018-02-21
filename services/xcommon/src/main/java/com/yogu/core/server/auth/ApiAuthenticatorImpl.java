@@ -176,11 +176,6 @@ public class ApiAuthenticatorImpl implements Authenticator {
 			return;
 		}
 		
-		if (type == ApiReqinfoType.API) {
-			logger.warn("api#interceptor | api url: '{}'.", path);
-			return;
-		}
-		
 		// 增加IP输出，用于查证来源 2015/11/11 ten
 		logger.info("api#interceptor | check token | path: {}, ip: {}", path, ip);
 

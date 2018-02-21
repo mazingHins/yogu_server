@@ -310,6 +310,7 @@ public class CouponServiceImpl implements CouponService {
 		coupon.setCouponId(couponId);
 		String couponCode = generateCouponCode();
 		coupon.setCouponCode(couponCode);
+		coupon.setCreateTime(DateUtils.getUniformCurrentTimeForThread());
 		try {
 			dao.save(coupon);
 			logger.info("couponService#batchCreateCoupons | 创建优惠券成功 | couponRuleId: {},couponId: {}", couponRuleId, couponId);
