@@ -176,6 +176,11 @@ public class ApiAuthenticatorImpl implements Authenticator {
 			return;
 		}
 		
+		if (type == ApiReqinfoType.API) {
+			logger.warn("api#interceptor | api url: '{}'.", path);
+			return;
+		}
+		
 		// 增加IP输出，用于查证来源 2015/11/11 ten
 		logger.info("api#interceptor | check token | path: {}, ip: {}", path, ip);
 
@@ -184,11 +189,6 @@ public class ApiAuthenticatorImpl implements Authenticator {
 		if (type.isCheck()) {
 			// 装载基础参数 -- 通用参数
 			readBaseParams(request);
-
-			// 启动信息接口不做校验，2016/02/19 jfan
-			if ("/p/v1/config/app/start".equals(path) || "/p/v1/config/upgrade/check".equals(path)
-					|| "/p/v1/config/operation/getBar".equals(path) || "/p/v1/config/operation/getActivity".equals(path))
-				return;
 
 			// 验签
 			String sign = getSign(request);
