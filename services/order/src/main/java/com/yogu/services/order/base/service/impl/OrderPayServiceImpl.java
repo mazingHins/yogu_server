@@ -117,6 +117,9 @@ public class OrderPayServiceImpl implements OrderPayService {
 		// 6. 保存数据
 		List<OrderDetail> detailList = orderDetailService.initOrderDetailByCreateOrder(params.getPurchaseDetails(), storeOrder.getGoodsMap(), orderId);
 		saveOrder(VOUtil.from(order, OrderPO.class), detailList);
+		
+		// 7. 发送优惠券
+		couponService.newOrder(order.getUid());
 		return order;
 	}
 	

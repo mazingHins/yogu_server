@@ -332,6 +332,7 @@ public class GoodsServiceImpl implements GoodsService {
 		GoodsPO po = VOUtil.from(goods, GoodsPO.class);
 		po.setGoodsId(goodsId);
 		po.setGoodsKey(goodsId);
+		po.setStatus(BooleanConstants.TRUE);
 		po.setCreateTime(DateUtils.getUniformCurrentTimeForThread());
 		po.setUpdateTime(DateUtils.getUniformCurrentTimeForThread());
 		goodsDao.save(po);

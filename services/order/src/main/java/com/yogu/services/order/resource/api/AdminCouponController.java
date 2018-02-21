@@ -39,6 +39,7 @@ import com.yogu.remote.order.vo.CouponRuleForm;
 import com.yogu.remote.order.vo.CouponRuleVO;
 import com.yogu.services.order.coupon.dto.CouponRule;
 import com.yogu.services.order.coupon.service.CouponRuleService;
+import com.yogu.services.order.coupon.service.CouponService;
 
 /**
  * 优惠券的后台管理接口。 仅提供给后台管理系统调用
@@ -55,6 +56,9 @@ public class AdminCouponController {
 
 	@Autowired
 	private CouponRuleService couponRuleService;
+	
+	@Autowired
+	private CouponService couponService;
 
 	@Inject
 	@Named("redis")
@@ -173,5 +177,16 @@ public class AdminCouponController {
 		logger.info("admin#coupon#stopCouponExchange | 设置优惠券停止兑换success | adminId: {}, couponRuleId: {}", adminId, couponRuleId);
 		return new RestResult<>(ResultCode.SUCCESS, "操作成功");
 	}
+	
+	@POST
+	@Path("coupon/admin/giftCoupon.do")
+	public RestResult<Object> giftCoupon(@FormParam("uid")long uid) {
+		String ip = ThreadLocalContext.getThreadValue(ThreadLocalContext.REQ_CLIENT_IP);
+		logger.info("admin#coupon#newOrder | 赠送优惠券start | uid: {}", uid);
+		couponService.newOrder(uid);
+		logger.info("admin#coupon#newOrder | 赠送优惠券success | uid: {}", uid);
+		return new RestResult<>(ResultCode.SUCCESS, "操作成功");
+	}
+	
 
 }
