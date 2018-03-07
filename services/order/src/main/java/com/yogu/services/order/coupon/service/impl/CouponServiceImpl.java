@@ -123,6 +123,8 @@ public class CouponServiceImpl implements CouponService {
 		
 		pageSize = PageUtils.limitSize(pageSize, 1, 100);
 		int offset = PageUtils.offset(pageIndex, pageSize);
+		logger.info("order#CouponServicelistUserCouponsByPage | 查询个人优惠券列表 | uid: {}, offset: {}, pageSize: {}",
+				uid, offset, pageSize);
 		List<CouponPO> list = dao.listUserCouponsByPage(uid, offset, pageSize);
 		return VOUtil.fromList(list, Coupon.class);
 	}
