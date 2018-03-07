@@ -279,10 +279,10 @@ public class CouponServiceImpl implements CouponService {
 			return 0;
 		}
 		
-		return createCoupon(rule);
+		return createCoupon(uid, rule);
 	}
 	
-	private long createCoupon(CouponRule rule) {
+	private long createCoupon(long uid, CouponRule rule) {
 
 		logger.info("couponService#batchCreateCoupons | 开始批量创建优惠券 | coupon: {}", JsonUtils.toJSONString(rule));
 
@@ -302,7 +302,7 @@ public class CouponServiceImpl implements CouponService {
 		coupon.setOrderNo(0);
 		coupon.setStartTime(rule.getStartTime());
 		coupon.setStatus(CouponStatus.UNCLAIMED.getValue());
-		coupon.setUid(0);
+		coupon.setUid(uid);
 		coupon.setMostOffer(rule.getMostOffer());
 		coupon.setFaceValue(Long.valueOf(rule.getRegExpression()));
 

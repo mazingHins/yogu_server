@@ -59,9 +59,7 @@ public class CouponResource {
 			, @QueryParam("pageSize") Integer pageSize) {
 		long uid = SecurityContext.getUid();
 		logger.info("order#coupon#listSelfCoupon | 查看我的优惠券列表start | uid: {}, pageIndex: {}, pageSize: {}", uid, pageIndex, pageSize);
-		int index = PageUtils.limitIndex(pageIndex, 1);
-		int size = PageUtils.limitSize(pageSize, MIN_PAGE_SIZE, MAX_PAGE_SIZE); // 最少5条，最多30
-		return new RestResult<List<UserCouponVO>>(orderCouponService.listUserCoupon(uid, index, size));
+		return new RestResult<List<UserCouponVO>>(orderCouponService.listUserCoupon(uid, pageIndex, pageSize));
 	}
 
 	
